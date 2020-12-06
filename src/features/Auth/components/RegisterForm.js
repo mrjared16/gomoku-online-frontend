@@ -21,7 +21,10 @@ const useStyles = makeStyles({
     "& .MuiCardHeader-content": {
       display: "flex",
       justifyContent: "center",
-    },
+		},
+		"& .MuiPaper-elevation1": {
+			boxShadow: "none",
+		},
   },
   logo: {
     width: 80,
@@ -202,9 +205,6 @@ function RegisterForm({ onSubmit = () => {}, onLoginClick = () => {}, isSubmitti
                       Login
                     </Link>
                   </Typography>
-									<Link className="custom-link" to="/">
-                    Back home
-                  </Link>
                 </div>
               </CardActions>
             </Card>
