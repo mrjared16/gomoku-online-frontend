@@ -62,7 +62,7 @@ function Header() {
 
   const history = useHistory();
   // const dispatch = useDispatch();
-  const [value, setValue] = useState(-1);
+  const [value, setValue] = useState(0);
   const location = useLocation();
 
   const handleChange = (event, newValue) => {

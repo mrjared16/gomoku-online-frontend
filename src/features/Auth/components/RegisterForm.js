@@ -104,7 +104,7 @@ function RegisterForm({ onSubmit = () => {}, onLoginClick = () => {}, isSubmitti
                 <div className={classes.formContent}>
                   <Grid container>
                     <Grid
-                      items
+                      item
                       xs={6}
                       className={classes.firstNameInputContainer}
                     >
@@ -120,7 +120,7 @@ function RegisterForm({ onSubmit = () => {}, onLoginClick = () => {}, isSubmitti
                       />
                     </Grid>
                     <Grid
-                      items
+                      item
                       xs={6}
                       className={classes.lastNameInputContainer}
                     >
@@ -196,7 +196,7 @@ function RegisterForm({ onSubmit = () => {}, onLoginClick = () => {}, isSubmitti
                     {isSubmitting ? (
                       <CircularProgress style={{color: "white"}} size={24} />
                     ) : (
-                      "Login"
+                      "Register"
                     )}
                   </Button>
                   <Typography variant="subtitle1" className="text-grey">

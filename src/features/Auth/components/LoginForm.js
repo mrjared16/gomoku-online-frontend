@@ -12,19 +12,21 @@ import {
 import { Form, Formik } from "formik";
 import React from "react";
 import GoogleLogin from "react-google-login";
+import FacebookLogin from "react-facebook-login";
 import { Link } from "react-router-dom";
 import * as Yup from "yup";
 import logo from "assets/images/logo.png";
+import FacebookIcon from '@material-ui/icons/Facebook';
 
 const useStyles = makeStyles({
   root: {
     "& .MuiCardHeader-content": {
       display: "flex",
       justifyContent: "center",
-		},
-		"& .MuiPaper-elevation1": {
-			boxShadow: "none",
-		},
+    },
+    "& .MuiPaper-elevation1": {
+      boxShadow: "none",
+    },
   },
   logo: {
     width: 80,
@@ -44,10 +46,21 @@ const useStyles = makeStyles({
     width: "100%",
     "& button": {
       display: "flex",
-      justifyContent: "center",
+			justifyContent: "center",
+			alignItems: "center",
       width: "100%",
-      marginBottom: 20,
-    },
+			marginBottom: 20,
+		},
+		"& span": {
+			width: "100%",
+			"& button": {
+				height: 43,
+				fontSize: 14,
+				"& svg": {
+					marginRight: 5,
+				}
+			}
+		}
   },
 });
 
@@ -112,19 +125,30 @@ function LoginForm({
 
               <CardActions>
                 <div className={classes.formFooter}>
-                  <Button variant="contained" color="primary" type="submit" className="text-white">
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    type="submit"
+                    className="text-white"
+                  >
                     {isSubmitting ? (
-                      <CircularProgress style={{color: "white"}} size={24} />
+                      <CircularProgress style={{ color: "white" }} size={24} />
                     ) : (
                       "Login"
                     )}
                   </Button>
                   <GoogleLogin
                     clientId="208015310401-qcbrc5im2ajats2h1b2kgotjr73lod7t.apps.googleusercontent.com"
-                    buttonText="Login with Google"
+                    buttonText="LOGIN WITH GOOGLE"
                     onSuccess={onLoginWithGoogle}
                     onFailure={() => {}}
                     cookiePolicy={"single_host_origin"}
+                  />
+                  <FacebookLogin
+                    appId="270414947649207"
+                    fields="name,email,picture"
+										callback={(res) => console.log(res)}
+										icon={<FacebookIcon />}
                   />
                   <Typography variant="subtitle1" className="text-grey">
                     Don't have an account?{" "}
