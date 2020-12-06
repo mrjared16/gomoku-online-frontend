@@ -36,3 +36,19 @@
     transform: rotate(360deg);
   }
 }
+
+.text-white {
+	color: white !important;
+}
+
+.text-grey {
+	color: rgba(0, 0, 0, 0.54) !important;
+}
+
+.custom-link {
+	color: #d4a531;
+	text-decoration: none;
+	&:hover {
+		text-decoration: underline;
+	}
+}
