@@ -18,30 +18,55 @@ const useStyles = makeStyles({
 });
 
 function Login() {
-	const classes = useStyles();
-	
-	const [isSubmitting, setIsSubmitting] = useState(false);
+  const classes = useStyles();
 
-	const dispatch = useDispatch();
-	
-	const handleSubmit = (values) => {
-		setIsSubmitting(true);
-		const { username, password } = values;
-		userApi.login(username, password).then((res) => {
-			dispatch(setToken("testToken"));
-			setIsSubmitting(false);
-		}).catch(err => {
-			console.log(err);
-			dispatch(setToken("testToken"));
-			setIsSubmitting(false);
-		})
-	};
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const handleSubmit = (values) => {
+    setIsSubmitting(true);
+    const { username, password } = values;
+    userApi
+      .login(username, password)
+      .then((res) => {
+        const token = "";
+        dispatch(setToken(token));
+        setIsSubmitting(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsSubmitting(false);
+      });
+  };
+
+  const handleLoginWithGoogle = (res) => {
+    setIsSubmitting(true);
+
+    const token = res.tokenId;
+
+    userApi
+      .loginWithGoogle(token)
+      .then((res) => {
+        const token = "";
+        dispatch(setToken(token));
+        setIsSubmitting(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsSubmitting(false);
+      });
+  };
 
   return (
     <div className={classes.root}>
       <div className={classes.formContainer}>
         <div className={classes.form}>
-          <LoginForm isSubmitting={isSubmitting} onSubmit={handleSubmit} />
+          <LoginForm
+            isSubmitting={isSubmitting}
+            onSubmit={handleSubmit}
+            onLoginWithGoogle={handleLoginWithGoogle}
+          />
         </div>
       </div>
     </div>
