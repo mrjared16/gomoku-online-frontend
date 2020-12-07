@@ -1,6 +1,9 @@
 import { makeStyles } from "@material-ui/core";
-import React from "react";
+import React, { useState } from "react";
 import RegisterForm from "features/Auth/components/RegisterForm";
+import { useDispatch } from "react-redux";
+import userApi from "api/userApi";
+import { setToken } from "app/userSlice";
 
 const useStyles = makeStyles({
   root: {
@@ -15,13 +18,29 @@ const useStyles = makeStyles({
 });
 
 function Register() {
-  const classes = useStyles();
+	const classes = useStyles();
+	
+	const [isSubmitting, setIsSubmitting] = useState(false);
+
+	const dispatch = useDispatch();
+	
+	const handleSubmit = (values) => {
+		setIsSubmitting(true);
+		const { firstName, lastName, username, email, password } = values;
+		userApi.register(firstName, lastName, username, email, password).then((res) => {
+			dispatch(setToken("testToken"));
+			setIsSubmitting(false);
+		}).catch(err => {
+			console.log(err);
+			setIsSubmitting(false);
+		})
+	};
 
   return (
     <div className={classes.root}>
       <div className={classes.formContainer}>
         <div className={classes.form}>
-          <RegisterForm />
+          <RegisterForm isSubmitting={isSubmitting} onSubmit={handleSubmit} />
         </div>
       </div>
     </div>

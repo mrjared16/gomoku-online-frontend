@@ -77,7 +77,6 @@ const validationSchema = Yup.object().shape({
 function LoginForm({
   onSubmit = () => {},
   onLoginWithGoogle = () => {},
-  onRegisterClick = () => {},
   isSubmitting = false,
 }) {
   const classes = useStyles();

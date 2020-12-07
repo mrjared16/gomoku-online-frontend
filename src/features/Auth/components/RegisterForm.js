@@ -83,7 +83,7 @@ const validationSchema = Yup.object().shape({
     .oneOf([Yup.ref("password"), null], "Passwords must match"),
 });
 
-function RegisterForm({ onSubmit = () => {}, onLoginClick = () => {}, isSubmitting = false }) {
+function RegisterForm({ onSubmit = () => {}, isSubmitting = false }) {
   const classes = useStyles();
 
   return (

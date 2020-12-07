@@ -1,6 +1,9 @@
 import { makeStyles } from "@material-ui/core";
-import React from "react";
+import React, { useState } from "react";
 import LoginForm from "features/Auth/components/LoginForm";
+import userApi from "api/userApi";
+import { useDispatch } from "react-redux";
+import { setToken } from "app/userSlice";
 
 const useStyles = makeStyles({
   root: {
@@ -15,13 +18,30 @@ const useStyles = makeStyles({
 });
 
 function Login() {
-  const classes = useStyles();
+	const classes = useStyles();
+	
+	const [isSubmitting, setIsSubmitting] = useState(false);
+
+	const dispatch = useDispatch();
+	
+	const handleSubmit = (values) => {
+		setIsSubmitting(true);
+		const { username, password } = values;
+		userApi.login(username, password).then((res) => {
+			dispatch(setToken("testToken"));
+			setIsSubmitting(false);
+		}).catch(err => {
+			console.log(err);
+			dispatch(setToken("testToken"));
+			setIsSubmitting(false);
+		})
+	};
 
   return (
     <div className={classes.root}>
       <div className={classes.formContainer}>
         <div className={classes.form}>
-          <LoginForm />
+          <LoginForm isSubmitting={isSubmitting} onSubmit={handleSubmit} />
         </div>
       </div>
     </div>
