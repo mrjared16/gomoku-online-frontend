@@ -4,6 +4,8 @@ import LoginForm from "features/Auth/components/LoginForm";
 import userApi from "api/userApi";
 import { useDispatch } from "react-redux";
 import { setToken } from "app/userSlice";
+import { setNotification } from "app/notificationSlice";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles({
   root: {
@@ -20,9 +22,10 @@ const useStyles = makeStyles({
 function Login() {
   const classes = useStyles();
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const dispatch = useDispatch();
+	const dispatch = useDispatch();
+	const history = useHistory();
 
   const handleSubmit = (values) => {
     setIsSubmitting(true);
@@ -36,7 +39,14 @@ function Login() {
       })
       .catch((err) => {
         console.log(err);
-        setIsSubmitting(false);
+				setIsSubmitting(false);
+				dispatch(setNotification({
+					type: "error",
+					message: err.message,
+				}));
+
+				dispatch(setToken("test"));
+				history.push("/");
       });
   };
 
@@ -54,7 +64,11 @@ function Login() {
       })
       .catch((err) => {
         console.log(err);
-        setIsSubmitting(false);
+				setIsSubmitting(false);
+				dispatch(setNotification({
+					type: "error",
+					message: err.message,
+				}));
       });
   };
 

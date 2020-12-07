@@ -6,16 +6,22 @@ import Login from "features/Auth/pages/Login";
 import Register from "features/Auth/pages/Register";
 import Home from "features/Home/pages/Home";
 import Header from "components/Header";
+import { useSelector } from "react-redux";
+import Notification from "components/Notification";
+import PublishRoute from "components/PublishRoute";
 
 function App() {
+	const { type, message } = useSelector(state => state.notification);
+
   return (
     <ThemeProvider theme={theme}>
       <BrowserRouter>
+				{ message && <Notification type={type} message={message} />}
 				<Header />
         <Switch>
 					<Route exact path="/" component={Home} />
-          <Route exact path="/login" component={Login} />
-          <Route exact path="/register" component={Register} />
+          <PublishRoute exact path="/login" component={Login} />
+          <PublishRoute exact path="/register" component={Register} />
         </Switch>
       </BrowserRouter>
     </ThemeProvider>
