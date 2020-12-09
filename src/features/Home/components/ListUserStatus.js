@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Avatar,
   Badge,
@@ -53,7 +53,7 @@ const useStyles = makeStyles({
 });
 
 function ListUserStatus({ list = [] }) {
-  const classes = useStyles();
+	const classes = useStyles();
 
   return (
     <div>
@@ -93,6 +93,7 @@ function ListUserStatus({ list = [] }) {
           )
         )}
       </List>
+
     </div>
   );
 }

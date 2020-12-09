@@ -35,7 +35,7 @@ const useStyles = makeStyles({
 function userDTOToProp({ id, username, name }) {
 	return {
 		online: true,
-		fullname: name,
+		fullName: name,
 		photo: "",
 		// time: null
 	}
@@ -44,17 +44,16 @@ function userDTOToProp({ id, username, name }) {
 function Home() {
 	const classes = useStyles();
 	const [list, setList] = useState([]);
-	// const { token } = useSelector(state => state.user);
+	const { token } = useSelector(state => state.user);
 	// TODO: get Token here
-	const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1YjQzOWExNC04ODViLTQxOGUtYjQ2My05YzQxZDFmYjg2NzEiLCJ1c2VybmFtZSI6InRlc3R1c2VyIiwiaWF0IjoxNjA3NTA2OTg4fQ.-cklTx8PdHrJ7FOdj-jFJ7SV77s3YBWViMNMWKEc6OY'
+	//const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1YjQzOWExNC04ODViLTQxOGUtYjQ2My05YzQxZDFmYjg2NzEiLCJ1c2VybmFtZSI6InRlc3R1c2VyIiwiaWF0IjoxNjA3NTA2OTg4fQ.-cklTx8PdHrJ7FOdj-jFJ7SV77s3YBWViMNMWKEc6OY'
 	// const socketRef = useRef();
 	const fetchUsers = () => {
-		axiosClient.get(`http://localhost:3001/game`)
+		axiosClient.get(`${process.env.REACT_APP_API_URL}/game`)
 			.then((response) => {
 				const { users } = response;
 				const userMap = users.map(user => {
 					const convertedUser = userDTOToProp(user);
-					console.log({ user, convertedUser });
 					return convertedUser;
 				});
 				console.log({ userMap });

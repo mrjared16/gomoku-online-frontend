@@ -5,7 +5,7 @@ import Cookies from "universal-cookie";
 const cookies = new Cookies();
 
 const axiosClient = axios.create({
-  baseURL: "http://localhost:3001",
+  baseURL: process.env.REACT_APP_API_URL,
   headers: {
 		"content-type": "application/json",
   },
