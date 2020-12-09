@@ -2,30 +2,31 @@ import axiosClient from "api/axiosClient";
 
 const userApi = {
   login: (username, password) => {
-    const url = "";
+		const url = "/auth/login";
     const body = {
       username,
       password,
     };
 
-    return axiosClient.post(url, body);
+		return axiosClient.post(url, body);
   },
   register: (firstName, lastName, username, email, password) => {
-    const url = "";
+    const url = "/auth/register";
     const body = {
-      firstName,
-      lastName,
+      // firstName,
+			// lastName,
+			name: firstName + lastName,
       username,
       email,
       password,
     };
 
-    return axiosClient.post(url, body);
+		return axiosClient.post(url, body);
 	},
 	loginWithGoogle: (token) => {
-    const url = "";
+    const url = "/auth/oauth/google";
     const body = {
-      token,
+      idToken: token,
     };
     return axiosClient.post(url, body);
 	},

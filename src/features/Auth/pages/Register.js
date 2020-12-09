@@ -4,6 +4,8 @@ import RegisterForm from "features/Auth/components/RegisterForm";
 import { useDispatch } from "react-redux";
 import userApi from "api/userApi";
 import { setToken } from "app/userSlice";
+import { useHistory } from "react-router-dom";
+import { setNotification } from "app/notificationSlice";
 
 const useStyles = makeStyles({
   root: {
@@ -21,6 +23,7 @@ function Register() {
 	const classes = useStyles();
 	
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const history = useHistory();
 
 	const dispatch = useDispatch();
 	
@@ -28,11 +31,16 @@ function Register() {
 		setIsSubmitting(true);
 		const { firstName, lastName, username, email, password } = values;
 		userApi.register(firstName, lastName, username, email, password).then((res) => {
-			dispatch(setToken("testToken"));
+			const { accessToken } = res;
+			dispatch(setToken(accessToken));
 			setIsSubmitting(false);
+			history.push("/");
 		}).catch(err => {
-			console.log(err);
 			setIsSubmitting(false);
+			dispatch(setNotification({
+				type: "error",
+				message: err.message,
+			}));
 		})
 	};
 

@@ -5,7 +5,7 @@ import Cookies from "universal-cookie";
 const cookies = new Cookies();
 
 const axiosClient = axios.create({
-  baseURL: process.env.REACT_APP_API_URL,
+  baseURL: "http://localhost:3001",
   headers: {
 		"content-type": "application/json",
   },
@@ -14,7 +14,7 @@ const axiosClient = axios.create({
 
 axiosClient.interceptors.request.use(async (config) => {
 	const token = cookies.get("token", { path: "/" });
-	config.headers.Authorization = `Bear ${token}`;
+	if (token) config.headers.Authorization = `Bear ${token}`;
   return config;
 });
 

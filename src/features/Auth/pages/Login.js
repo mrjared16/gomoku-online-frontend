@@ -33,20 +33,17 @@ function Login() {
     userApi
       .login(username, password)
       .then((res) => {
-        const token = "";
-        dispatch(setToken(token));
-        setIsSubmitting(false);
+        const { accessToken } = res;
+        dispatch(setToken(accessToken));
+				setIsSubmitting(false);
+				history.push("/");
       })
       .catch((err) => {
-        console.log(err);
 				setIsSubmitting(false);
 				dispatch(setNotification({
 					type: "error",
 					message: err.message,
 				}));
-
-				dispatch(setToken("test"));
-				history.push("/");
       });
   };
 
@@ -58,12 +55,11 @@ function Login() {
     userApi
       .loginWithGoogle(token)
       .then((res) => {
-        const token = "";
-        dispatch(setToken(token));
+        const { accessToken } = res;
+        dispatch(setToken(accessToken));
         setIsSubmitting(false);
       })
       .catch((err) => {
-        console.log(err);
 				setIsSubmitting(false);
 				dispatch(setNotification({
 					type: "error",

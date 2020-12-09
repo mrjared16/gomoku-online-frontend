@@ -137,7 +137,7 @@ function LoginForm({
                     )}
                   </Button>
                   <GoogleLogin
-                    clientId="208015310401-qcbrc5im2ajats2h1b2kgotjr73lod7t.apps.googleusercontent.com"
+                    clientId="545392822117-njg9uu012uoo6c6nd9m7hjc7fpv3ejun.apps.googleusercontent.com"
                     buttonText="LOGIN WITH GOOGLE"
                     onSuccess={onLoginWithGoogle}
                     onFailure={() => {}}
