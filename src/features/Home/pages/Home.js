@@ -2,8 +2,11 @@ import { Grid, makeStyles } from "@material-ui/core";
 import React, { useState, useRef, useEffect } from "react";
 import ListUserStatus from "features/Home/components/ListUserStatus";
 import { range } from "lodash";
-import socketIOClient from "socket.io-client";
+
 import { useSelector } from 'react-redux';
+import socketIOClient from "socket.io-client";
+import axiosClient from "api/axiosClient";
+
 
 
 const useStyles = makeStyles({
@@ -29,41 +32,69 @@ const useStyles = makeStyles({
 	}
 })
 
-var socket = socketIOClient('localhost:3001', {
-	transports: ['websocket']
-});;
+function userDTOToProp({ id, username, name }) {
+	return {
+		online: true,
+		fullname: name,
+		photo: "",
+		time: null
+	}
+}
 
 function Home() {
 	const classes = useStyles();
 	const [list, setList] = useState([]);
-	const { token } = useSelector(state => state.user);
-	const socketRef = useRef();
+	// const { token } = useSelector(state => state.user);
+	// TODO: get Token here
+	const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1YjQzOWExNC04ODViLTQxOGUtYjQ2My05YzQxZDFmYjg2NzEiLCJ1c2VybmFtZSI6InRlc3R1c2VyIiwiaWF0IjoxNjA3NTA2OTg4fQ.-cklTx8PdHrJ7FOdj-jFJ7SV77s3YBWViMNMWKEc6OY'
+	// const socketRef = useRef();
 	useEffect(() => {
-		if (socket) {
-			return;
-		}
+		axiosClient.get('http://localhost:3001/game')
+			.then((response) => {
+				const { users } = response;
+				const userMap = users.map(user => userDTOToProp(user));
+				console.log({ userMap });
+				setList(userMap);
+			});
 
-		socket.on('new user connected', (user) => {
+		const socketClient = socketIOClient(`${process.env.REACT_APP_SOCKET_URL}/game`, {
+			transports: ['websocket'],
+			query: { token }
+		});
+		console.log('component mount');
+		console.log({ socketClient });
+		socketClient.emit('initial-client', (e) => {
+			console.log('first emit to server');
+			console.log(e);
+		});
+
+		socketClient.on('initial-server', (e) => console.log(e));
+
+		socketClient.on('new user connected', (user) => {
+			console.log({ user });
 			const { id, username } = user;
 			setList(currentList => {
-				const newUserList = list.concat([{
+				const newUserList = currentList.concat([{
 					online: true,
 					fullName: username,
 					photo: "",
 					time: null
 				}]);
-				return newUserList
+				return newUserList;
 			});
 		});
-		socket.on('new user disconnected', (user) => {
+
+		socketClient.on('new user disconnected', (user) => {
+			console.log({ user });
 			const { id } = user;
 			setList(currentList => {
 				const newUserList = currentList.filter(user => user.id != id);
 				return newUserList
 			});
 		});
-		socket.emit('first');
-		console.log('test emit');
+		return () => {
+			socketClient.close();
+		}
 	}, []);
 
 	return (
