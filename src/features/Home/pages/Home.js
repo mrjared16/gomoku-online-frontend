@@ -1,4 +1,4 @@
-import { Grid, makeStyles } from "@material-ui/core";
+import { Grid, makeStyles, Button } from "@material-ui/core";
 import React, { useState, useRef, useEffect } from "react";
 import ListUserStatus from "features/Home/components/ListUserStatus";
 import { range } from "lodash";
@@ -37,7 +37,7 @@ function userDTOToProp({ id, username, name }) {
 		online: true,
 		fullname: name,
 		photo: "",
-		time: null
+		// time: null
 	}
 }
 
@@ -48,15 +48,20 @@ function Home() {
 	// TODO: get Token here
 	const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1YjQzOWExNC04ODViLTQxOGUtYjQ2My05YzQxZDFmYjg2NzEiLCJ1c2VybmFtZSI6InRlc3R1c2VyIiwiaWF0IjoxNjA3NTA2OTg4fQ.-cklTx8PdHrJ7FOdj-jFJ7SV77s3YBWViMNMWKEc6OY'
 	// const socketRef = useRef();
-	useEffect(() => {
-		axiosClient.get('http://localhost:3001/game')
+	const fetchUsers = () => {
+		axiosClient.get(`http://localhost:3001/game`)
 			.then((response) => {
 				const { users } = response;
-				const userMap = users.map(user => userDTOToProp(user));
+				const userMap = users.map(user => {
+					const convertedUser = userDTOToProp(user);
+					console.log({ user, convertedUser });
+					return convertedUser;
+				});
 				console.log({ userMap });
-				setList(userMap);
+				setList(list => userMap);
 			});
-
+	}
+	useEffect(() => {
 		const socketClient = socketIOClient(`${process.env.REACT_APP_SOCKET_URL}/game`, {
 			transports: ['websocket'],
 			query: { token }
@@ -92,16 +97,20 @@ function Home() {
 				return newUserList
 			});
 		});
+
+		fetchUsers();
 		return () => {
 			socketClient.close();
 		}
 	}, []);
 
+
 	return (
 		<div className={classes.root}>
 			<Grid container>
-				<Grid item xs={10}></Grid>
-				<Grid item xs={2}>
+				<Grid item xs={9}></Grid>
+				<Grid item xs={3}>
+					<Button variant='outlined' onClick={() => fetchUsers()}>Load</Button>
 					<ListUserStatus list={list} />
 				</Grid>
 			</Grid>
