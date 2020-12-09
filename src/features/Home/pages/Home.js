@@ -1,7 +1,10 @@
 import { Grid, makeStyles } from "@material-ui/core";
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 import ListUserStatus from "features/Home/components/ListUserStatus";
 import { range } from "lodash";
+import socketIOClient from "socket.io-client";
+import { useSelector } from 'react-redux';
+
 
 const useStyles = makeStyles({
 	root: {
@@ -26,28 +29,45 @@ const useStyles = makeStyles({
 	}
 })
 
-const list = range(0, 50, 1).map((index) => {
-	if (index % 2 === 0) {
-		return {
-			fullName: "Phuc" + index,
-			photo: "",
-			online: true,
-		}
-	} else {
-		return {
-			online: false,
-			fullName: "Tuan" + index,
-			photo: "",
-			time: "2m",
-		}	
-	}
-});
+var socket = socketIOClient('localhost:3001', {
+	transports: ['websocket']
+});;
 
 function Home() {
 	const classes = useStyles();
+	const [list, setList] = useState([]);
+	const { token } = useSelector(state => state.user);
+	const socketRef = useRef();
+	useEffect(() => {
+		if (socket) {
+			return;
+		}
 
-  return (
-    <div className={classes.root}>
+		socket.on('new user connected', (user) => {
+			const { id, username } = user;
+			setList(currentList => {
+				const newUserList = list.concat([{
+					online: true,
+					fullName: username,
+					photo: "",
+					time: null
+				}]);
+				return newUserList
+			});
+		});
+		socket.on('new user disconnected', (user) => {
+			const { id } = user;
+			setList(currentList => {
+				const newUserList = currentList.filter(user => user.id != id);
+				return newUserList
+			});
+		});
+		socket.emit('first');
+		console.log('test emit');
+	}, []);
+
+	return (
+		<div className={classes.root}>
 			<Grid container>
 				<Grid item xs={10}></Grid>
 				<Grid item xs={2}>
@@ -55,7 +75,7 @@ function Home() {
 				</Grid>
 			</Grid>
 		</div>
-  );
+	);
 }
 
 export default Home;
