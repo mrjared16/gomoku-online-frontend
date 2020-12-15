@@ -44,14 +44,10 @@ function userDTOToProp({ id, username, name }) {
 
 const handleChangeListUserEvent = {
 	'connected': (setState, user) => {
-		setState(current => {
-			return current.concat[{ user }]
-		});
+		setState((current = []) => current.concat([{ ...userDTOToProp(user) }]));
 	},
 	'disconnected': (setState, user) => {
-		setState(current => {
-			return current.filter(e => e.id != user.id);
-		});
+		setState((current = []) => current.filter(e => e.id != user.id));
 	}
 }
 
@@ -79,13 +75,8 @@ function Home() {
 			upgrade: false,
 			query: { token }
 		});
-		console.log({ socketClient });
-		socketClient.on('connect', () => {
-			socketClient.emit('ping');
-			console.log('connect');
-		})
+
 		socketClient.on('userEventMsg', (response) => {
-			console.log({ response });
 			const { user, event } = response;
 			if (user == 'anonymous') {
 				return;
@@ -98,7 +89,7 @@ function Home() {
 		return () => {
 			socketClient.close();
 		}
-	}, []);
+	}, [token]);
 
 
 	return (
