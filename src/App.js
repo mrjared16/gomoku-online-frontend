@@ -4,7 +4,7 @@ import theme from "custom-theme";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Login from "features/Auth/pages/Login";
 import Register from "features/Auth/pages/Register";
-import Home from "features/Home";
+import Home from "features/Home/Home";
 import Header from "components/Header";
 import { useSelector } from "react-redux";
 import Notification from "components/Notification";

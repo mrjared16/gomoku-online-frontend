@@ -31,8 +31,8 @@ function ListUserStatus({ list = [] }) {
     <div className={classes.root}>
       <List>
         {list.map(
-          ({ online = false, fullName = "", photo = "", time = "" }, index) => (
-            <ListItem key={index} button>
+          ({ id, online = false, fullName = "", photo = "", time = "" }, index) => (
+            <ListItem key={id} button>
               <ListItemAvatar>
                 <AvatarCustom online={online} photo={photo} />
               </ListItemAvatar>
