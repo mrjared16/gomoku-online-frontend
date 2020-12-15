@@ -34,6 +34,7 @@ const useStyles = makeStyles({
 
 function userDTOToProp({ id, username, name }) {
 	return {
+		id: id,
 		online: true,
 		fullName: name,
 		photo: "",
@@ -41,63 +42,59 @@ function userDTOToProp({ id, username, name }) {
 	}
 }
 
+const handleChangeListUserEvent = {
+	'connected': (setState, user) => {
+		setState(current => {
+			return current.concat[{ user }]
+		});
+	},
+	'disconnected': (setState, user) => {
+		setState(current => {
+			return current.filter(e => e.id != user.id);
+		});
+	}
+}
+
 function Home() {
 	const classes = useStyles();
 	const [list, setList] = useState([]);
 	const { token } = useSelector(state => state.user);
-	// TODO: get Token here
-	//const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1YjQzOWExNC04ODViLTQxOGUtYjQ2My05YzQxZDFmYjg2NzEiLCJ1c2VybmFtZSI6InRlc3R1c2VyIiwiaWF0IjoxNjA3NTA2OTg4fQ.-cklTx8PdHrJ7FOdj-jFJ7SV77s3YBWViMNMWKEc6OY'
-	// const socketRef = useRef();
+
 	const fetchUsers = () => {
-		axiosClient.get(`${process.env.REACT_APP_API_URL}/game`)
+		axiosClient.get(`${process.env.REACT_APP_API_URL}/waitingRoom`)
 			.then((response) => {
 				const { users } = response;
 				const userMap = users.map(user => {
 					const convertedUser = userDTOToProp(user);
 					return convertedUser;
 				});
-				console.log({ userMap });
 				setList(list => userMap);
 			});
 	}
+
+
 	useEffect(() => {
-		const socketClient = socketIOClient(`${process.env.REACT_APP_SOCKET_URL}/game`, {
+		const socketClient = socketIOClient(`${process.env.REACT_APP_SOCKET_URL}/waitingRoom`, {
 			transports: ['websocket'],
+			upgrade: false,
 			query: { token }
 		});
-		console.log('component mount');
 		console.log({ socketClient });
-		socketClient.emit('initial-client', (e) => {
-			console.log('first emit to server');
-			console.log(e);
-		});
-
-		socketClient.on('initial-server', (e) => console.log(e));
-
-		socketClient.on('new user connected', (user) => {
-			console.log({ user });
-			const { id, username } = user;
-			setList(currentList => {
-				const newUserList = currentList.concat([{
-					online: true,
-					fullName: username,
-					photo: "",
-					time: null
-				}]);
-				return newUserList;
-			});
-		});
-
-		socketClient.on('new user disconnected', (user) => {
-			console.log({ user });
-			const { id } = user;
-			setList(currentList => {
-				const newUserList = currentList.filter(user => user.id != id);
-				return newUserList
-			});
+		socketClient.on('connect', () => {
+			socketClient.emit('ping');
+			console.log('connect');
+		})
+		socketClient.on('userEventMsg', (response) => {
+			console.log({ response });
+			const { user, event } = response;
+			if (user == 'anonymous') {
+				return;
+			}
+			handleChangeListUserEvent[event](setList, user);
 		});
 
 		fetchUsers();
+
 		return () => {
 			socketClient.close();
 		}

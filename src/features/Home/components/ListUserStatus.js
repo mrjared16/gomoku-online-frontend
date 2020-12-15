@@ -53,14 +53,14 @@ const useStyles = makeStyles({
 });
 
 function ListUserStatus({ list = [] }) {
-	const classes = useStyles();
+  const classes = useStyles();
 
   return (
     <div>
       <List>
         {list.map(
-          ({ online = false, fullName = "", photo = "", time = "" }, index) => (
-            <ListItem key={index} button>
+          ({ id, online = false, fullName = "", photo = "", time = "" }, index) => (
+            <ListItem key={id} button>
               <ListItemAvatar>
                 {online ? (
                   <StyledBadge
@@ -74,8 +74,8 @@ function ListUserStatus({ list = [] }) {
                     <Avatar alt={fullName} src={photo} />
                   </StyledBadge>
                 ) : (
-                  <Avatar alt={fullName} src={photo} />
-                )}
+                    <Avatar alt={fullName} src={photo} />
+                  )}
               </ListItemAvatar>
               <ListItemText>
                 <div className={classes.fullName}>
