@@ -51,7 +51,7 @@ function UserInfoInRoom({
   winner = true,
 }) {
   const classes = useStyles();
-  const { name, photo } = userInfo | {
+  const { name, photo } = userInfo || {
     name: "",
     photo: ""
   };
