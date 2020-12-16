@@ -21,7 +21,7 @@ const userSlice = createSlice({
       cookies.remove("token", { path: "/" });
     },
     setUser: (state, action) => {
-      state.currentUserInfo = action.payload;
+      state.currentUserInfo = action.payload.user;
     }
   },
 });
