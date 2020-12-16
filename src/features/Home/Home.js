@@ -42,7 +42,7 @@ function userDTOToProp({ id, username, name }) {
   };
 }
 
-const handleChangeListUserEvent = {
+const handleOnlineUsersOnchangeEvent = {
   connected: (setState, user) => {
     setState((current = []) => current.concat([{ ...userDTOToProp(user) }]));
   },
@@ -53,9 +53,10 @@ const handleChangeListUserEvent = {
 
 function Home() {
   const classes = useStyles();
-  const [list, setList] = useState([]);
-  const { token } = useSelector((state) => state.user);
+  const [onlineUsers, setOnlineUsers] = useState([]);
 
+  const { token } = useSelector((state) => state.user);
+  
   const fetchUsers = () => {
     axiosClient
       .get(`${process.env.REACT_APP_API_URL}/waitingRoom`)
@@ -65,9 +66,13 @@ function Home() {
           const convertedUser = userDTOToProp(user);
           return convertedUser;
         });
-        setList((list) => userMap);
+        setOnlineUsers((list) => userMap);
       });
   };
+
+  useEffect(() => {
+    fetchUsers();
+  }, [token]);
 
   useEffect(() => {
     const socketClient = socketIOClient(
@@ -84,10 +89,8 @@ function Home() {
       if (user === "anonymous") {
         return;
       }
-      handleChangeListUserEvent[event](setList, user);
+      handleOnlineUsersOnchangeEvent[event](setOnlineUsers, user);
     });
-
-    fetchUsers();
 
     return () => {
       socketClient.close();
@@ -107,7 +110,7 @@ function Home() {
           <Button variant="outlined" onClick={() => fetchUsers()}>
             Load
           </Button>
-          <ListUserStatus list={list} />
+          <ListUserStatus list={onlineUsers} />
         </Grid>
       </Grid>
     </div>
