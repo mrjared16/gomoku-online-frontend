@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
+  Avatar,
+  Badge,
   List,
   ListItem,
   ListItemAvatar,
@@ -7,13 +9,39 @@ import {
   ListItemText,
   makeStyles,
   Typography,
+  withStyles,
 } from "@material-ui/core";
-import AvatarCustom from "components/AvatarCustom";
+
+const StyledBadge = withStyles((theme) => ({
+  badge: {
+    backgroundColor: "#44b700",
+    color: "#44b700",
+    boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
+    "&::after": {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      borderRadius: "50%",
+      animation: "$ripple 1.2s infinite ease-in-out",
+      border: "1px solid currentColor",
+      content: '""',
+    },
+  },
+  "@keyframes ripple": {
+    "0%": {
+      transform: "scale(.8)",
+      opacity: 1,
+    },
+    "100%": {
+      transform: "scale(2.4)",
+      opacity: 0,
+    },
+  },
+}))(Badge);
 
 const useStyles = makeStyles({
-	root: {
-		padding: "20px 0px",
-	},
   fullName: {
     overflow: "hidden",
     "& h6": {
@@ -25,16 +53,29 @@ const useStyles = makeStyles({
 });
 
 function ListUserStatus({ list = [] }) {
-  const classes = useStyles();
+	const classes = useStyles();
 
   return (
-    <div className={classes.root}>
+    <div>
       <List>
         {list.map(
           ({ id, online = false, fullName = "", photo = "", time = "" }, index) => (
             <ListItem key={id} button>
               <ListItemAvatar>
-                <AvatarCustom online={online} photo={photo} />
+                {online ? (
+                  <StyledBadge
+                    overlap="circle"
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "right",
+                    }}
+                    variant="dot"
+                  >
+                    <Avatar alt={fullName} src={photo} />
+                  </StyledBadge>
+                ) : (
+                  <Avatar alt={fullName} src={photo} />
+                )}
               </ListItemAvatar>
               <ListItemText>
                 <div className={classes.fullName}>
@@ -52,6 +93,7 @@ function ListUserStatus({ list = [] }) {
           )
         )}
       </List>
+
     </div>
   );
 }
