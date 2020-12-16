@@ -1,13 +1,15 @@
-import { Grid, makeStyles, Button } from "@material-ui/core";
-import React, { useState, useEffect } from "react";
-import ListUserStatus from "features/Home/components/ListUserStatus";
-
-import { useSelector } from "react-redux";
-import socketIOClient from "socket.io-client";
+import { Button, Grid, makeStyles } from "@material-ui/core";
 import axiosClient from "api/axiosClient";
-import { Route, Switch } from "react-router-dom";
+import userApi from "api/userApi";
+import { setUser } from "app/userSlice";
+import ListUserStatus from "features/Home/components/ListUserStatus";
 import Main from "features/Home/pages/Main";
 import RoomPage from "features/Home/pages/RoomPage";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Route, Switch } from "react-router-dom";
+import socketIOClient from "socket.io-client";
+
 
 const useStyles = makeStyles({
   root: {
@@ -57,11 +59,18 @@ const handleOnlineUsersOnchangeEvent = {
 
 function Home() {
   const classes = useStyles();
+  const dispatch = useDispatch();
+
   const [onlineUsers, setOnlineUsers] = useState([]);
 
   const { token } = useSelector((state) => state.user);
 
-  const fetchUsers = () => {
+  const fetchUserData = async() => {
+    const response = await userApi.fetch();
+    dispatch(setUser(response));
+  };
+
+  const fetchOnlineUsers = () => {
     axiosClient
       .get(`${process.env.REACT_APP_API_URL}/waitingRoom`)
       .then((response) => {
@@ -75,7 +84,8 @@ function Home() {
   };
 
   useEffect(() => {
-    fetchUsers();
+    fetchOnlineUsers();
+    fetchUserData();
   }, [token]);
 
   useEffect(() => {
@@ -111,7 +121,7 @@ function Home() {
           </Switch>
         </Grid>
         <Grid item xs={3} className={classes.listUserStatus}>
-          <Button variant="outlined" onClick={() => fetchUsers()}>
+          <Button variant="outlined" onClick={() => fetchOnlineUsers()}>
             Load
           </Button>
           <ListUserStatus list={onlineUsers} />

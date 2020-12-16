@@ -4,7 +4,8 @@ import Cookies from "universal-cookie";
 const cookies = new Cookies();
 
 const initialState = {
-	token: cookies.get("token", { path: "/" }),
+  token: cookies.get("token", { path: "/" }),
+  userInfo: {}
 };
 
 const userSlice = createSlice({
@@ -19,6 +20,9 @@ const userSlice = createSlice({
       state.token = "";
       cookies.remove("token", { path: "/" });
     },
+    setUser: (state, action) => {
+      state.user = action.payload;
+    }
   },
 });
 
@@ -26,5 +30,6 @@ const { reducer, actions } = userSlice;
 export const {
   setToken,
   removeToken,
+  setUser
 } = actions;
 export default reducer;
