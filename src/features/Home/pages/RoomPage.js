@@ -8,7 +8,13 @@ import { useHistory, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { roomSocket } from 'socket/roomSocket';
 
-const DEFAULT_SIZE = 30;
+const DEFAULT_SIZE = 20;
+const initialBoard = range(
+  0,
+  DEFAULT_SIZE * DEFAULT_SIZE,
+  1
+).map((index) => -1);
+
 const useStyles = makeStyles({
   root: {
     padding: "20px 25px",
@@ -43,11 +49,11 @@ const defaultResponse = {
 
 function RoomPage() {
   const [sizeBoard, setSizeBoard] = useState(DEFAULT_SIZE);
-  const [board, setBoard] = useState([]);
+  const [board, setBoard] = useState(initialBoard);
   const [host, setHost] = useState(null);
   const [opponent, setOpponent] = useState(null);
   const [idPlayerTurn, setIdPlayerTurn] = useState(null);
-  const [isStart, setIsStart] = useState(true);
+  const [isStart, setIsStart] = useState(false);
   const { token, currentUserInfo } = useSelector((state) => state.user);
   const classes = useStyles();
 
@@ -61,13 +67,18 @@ function RoomPage() {
       token: token,
       roomID: id
     }, (response) => {
-
+      setRoomState(response);
     });
 
     roomSocket.on('roomEventMsg', (response) => {
       const { data, event } = response;
       console.log('receive roomEventMsg emit: ', { response });
-      // handleRoomListOnchangeEvent[event](setRoomList, data);
+      const handleRoomChangeEvent = {
+        'newPlayerJoined': (setState, data) => {
+          setState(data);
+        }
+      };
+      handleRoomChangeEvent[event](setRoomState, data);
     });
 
     return () => {
@@ -75,28 +86,61 @@ function RoomPage() {
     };
   }, [token]);
 
-
   useEffect(() => {
-    const dataResponse = defaultResponse;
-    console.log({ dataResponse });
-    setHost(dataResponse.host);
-    setOpponent(dataResponse.opponent);
+    roomSocket.emit('game', {}, (response) => {
+      if (!response)
+        return;
+      const { board } = response;
+      setBoard(board);
+    });
 
-    setIdPlayerTurn(dataResponse.idPlayerTurn);
+    roomSocket.on('gameEventMsg', (response) => {
+      const { data, event } = response;
+      console.log('receive gameEventMsg emit: ', { response });
+      // const getSetter = {
+      //   'onHit': hit,
+      //   'changeTurn': setIdPlayerTurn
+      // }
+      // const handleRoomChangeEvent = {
+      //   'onHit': (hit, data) => {
+      //     const { index, value } = data;
+      //     hit(index, value);
+      //   },
+      //   'changeTurn': (setTurn, data) => {
+      //     const { currentTurnPlayerID } = data;
+      //     setTurn(currentTurnPlayerID);
+      //   }
+      // };
+      if (event == 'onHit') {
+        const { index, value } = data;
+        hit(index, value);
+      }
+      if (event == 'changeTurn') {
+        const { currentTurnPlayerID } = data;
+        setIdPlayerTurn(currentTurnPlayerID);
+      }
+      // handleRoomChangeEvent[event](getSetter[event], data);
+    });
+    return () => {
+      roomSocket.off('gameEventMsg', () => { });
+    };
+  }, [isStart]);
 
-    setSizeBoard(dataResponse.sizeBoard);
+  const handleStartGame = () => {
+    setIsStart(true);
+    setIdPlayerTurn(host.id);
+    roomSocket.emit('start', {
+      roomID: id
+    });
+  }
 
-    if (dataResponse.board.length !== 0) {
-      setBoard(dataResponse.board);
-    } else {
-      const initialBoard = range(
-        0,
-        dataResponse.sizeBoard * dataResponse.sizeBoard,
-        1
-      ).map((index) => -1);
-      setBoard(initialBoard);
-    }
-  }, []);
+  const setRoomState = (response) => {
+    console.log({ response });
+    const { host, opponent, currentTurnPlayerID, boardSize, board } = response;
+    setHost(host);
+    setOpponent(opponent);
+    setSizeBoard(boardSize);
+  }
 
   const isTurn = (player, currentTurnPlayerId) => isStart && player && player.id == currentTurnPlayerId
 
@@ -104,22 +148,34 @@ function RoomPage() {
     history.push("/");
   };
 
+  const hit = (index, value) => {
+    board[index] = value;
+    setBoard([...board]);
+  }
+
   const handleSquareClick = (index) => {
     if (!isStart)
       return;
     if (board[index] !== -1)
       return;
-    if (isTurn(host, idPlayerTurn)) {
-      board[index] = 0;
-      setIdPlayerTurn(opponent.id);
-    }
-    else {
-      board[index] = 1;
-      setIdPlayerTurn(host.id);
-    }
-    setBoard([...board]);
-    const x = Math.floor(index / sizeBoard);
-    const y = index % sizeBoard;
+    if (!isTurn(currentUserInfo, idPlayerTurn))
+      return;
+    const value = (currentUserInfo.id == host.id) ? 0 : 1;
+    hit(index, value);
+
+    roomSocket.emit('hit', {
+      roomID: id,
+      index: index,
+      value: value
+    })
+    // if (isTurn(host, idPlayerTurn)) {
+    //   board[index] = 0;
+    //   setIdPlayerTurn(opponent.id);
+    // }
+    // else {
+    //   board[index] = 1;
+    //   setIdPlayerTurn(host.id);
+    // }
     //send x, y to server
   };
 
@@ -147,7 +203,8 @@ function RoomPage() {
             variant="contained"
             color="primary"
             className="caro-button"
-            disabled={!host || host.id != currentUserInfo.id}
+            disabled={(!host || host.id != currentUserInfo.id) || (isStart)}
+            onClick={handleStartGame}
           >
             Start
           </Button>
