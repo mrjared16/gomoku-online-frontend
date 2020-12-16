@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
-import BackTo from "features/Home/components/BackTo";
 import { Button, makeStyles } from "@material-ui/core";
-import { useHistory } from "react-router-dom";
+import BackTo from "features/Home/components/BackTo";
 import Board from "features/Home/components/Board";
-import { range } from "lodash";
 import UserInfoInRoom from "features/Home/components/UserInfoInRoom";
+import { range } from "lodash";
+import React, { useEffect, useState } from "react";
+import { useHistory, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { roomSocket } from 'socket/roomSocket';
 
 const useStyles = makeStyles({
   root: {
@@ -21,15 +23,35 @@ const useStyles = makeStyles({
   },
 });
 
-function RoomPage(props) {
+function RoomPage() {
   const classes = useStyles();
   const history = useHistory();
-
+  const { id } = useParams();
   const [sizeBoard, setSizeBoard] = useState(30);
   const [board, setBoard] = useState([]);
   const [hostId, setHostId] = useState(null);
   const [opponentId, setOpponentId] = useState(null);
   const [idPlayerTurn, setIdPlayerTurn] = useState(null);
+  const { token } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    console.log('join room', { roomID: id });
+    roomSocket.emit('join', {
+      action: 'join',
+      token: token,
+      roomID: id
+    });
+
+    roomSocket.on('roomEventMsg', (response) => {
+      const { data, event } = response;
+      console.log('receive roomEventMsg emit: ',{ response });
+      // handleRoomListOnchangeEvent[event](setRoomList, data);
+    });
+
+    return () => {
+      roomSocket.off('roomEventMsg', () => { });
+    };
+  }, [token]);
 
   const handleBackTo = () => {
     history.push("/");
@@ -75,6 +97,7 @@ function RoomPage(props) {
       setBoard(initialBoard);
     }
   }, []);
+
 
   return (
     <div className={classes.root}>
