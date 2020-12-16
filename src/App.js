@@ -19,9 +19,9 @@ function App() {
 				{ message && <Notification type={type} message={message} />}
 				<Header />
         <Switch>
+					<Route path="/" component={Home} />
           <PublishRoute exact path="/login" component={Login} />
           <PublishRoute exact path="/register" component={Register} />
-					<Route path="/" component={Home} />
         </Switch>
       </BrowserRouter>
     </ThemeProvider>
