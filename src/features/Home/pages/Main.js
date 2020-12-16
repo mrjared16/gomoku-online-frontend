@@ -5,38 +5,8 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { roomSocket } from 'socket/roomSocket';
+import axiosClient from "api/axiosClient";
 
-const listRoom = range(0, 4, 1).map((index) => {
-  let board = {};
-
-  if (index % 3 === 0) {
-    board = {
-      id: index,
-      listUser: [
-        {
-          name: "Jhin",
-          photo: "",
-        },
-        {
-          name: "Swift",
-          photo: "",
-        },
-      ],
-    };
-  } else {
-    board = {
-      id: index,
-      listUser: [
-        {
-          name: "Jhin",
-          photo: "",
-        },
-      ],
-    };
-  }
-
-  return board;
-});
 function roomDTOToProp({ id }) {
   return {
     id: id,
@@ -59,9 +29,13 @@ const handleRoomListOnchangeEvent = {
 }
 
 function Main({ }) {
-  const [roomList, setRoomList] = useState(listRoom);
+  const [roomList, setRoomList] = useState([]);
   const history = useHistory();
   const { token } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    fetchRooms();
+  }, [])
 
   useEffect(() => {
     roomSocket.on('waitingRoomEventMsg', (response) => {
@@ -75,6 +49,18 @@ function Main({ }) {
     };
   }, [token]);
 
+  const fetchRooms = async () => {
+    axiosClient
+      .get(`${process.env.REACT_APP_API_URL}/rooms`)
+      .then((response) => {
+        const { rooms } = response;
+        const roomsProp = rooms.map((room) => {
+          const convertedRoom = roomDTOToProp(room);
+          return convertedRoom;
+        });
+        setRoomList((list) => roomsProp);
+      });
+  }
 
   const handleCreateRoom = () => {
     roomSocket.emit('create', {
