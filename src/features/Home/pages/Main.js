@@ -7,26 +7,46 @@ import { useHistory } from "react-router-dom";
 import { roomSocket } from 'socket/roomSocket';
 import axiosClient from "api/axiosClient";
 
-function roomDTOToProp({ id }) {
-  return {
+function roomDTOToProp({ id, host = {}, opponent = {} }) {
+  const hostMapped = host.name ? {
+    name: host.name,
+    photo: ""
+  } : {};
+  const opponentMapped = (opponent && opponent.name) ? {
+    name: opponent.name,
+    photo: ""
+  } : null;
+  const roomConverted = {
     id: id,
-    listUser: [
-      {
-        name: "Jhin",
-        photo: "",
-      },
-      {
-        name: "Swift",
-        photo: "",
-      },
-    ],
+    host: { ...hostMapped },
+    opponent: opponentMapped,
   };
+  return roomConverted;
 }
 const handleRoomListOnchangeEvent = {
-  'newRoomCreated': (setRoomList, { room }) => {
-    setRoomList((current = []) => current.concat([{ ...roomDTOToProp({ id: room }) }]));
+  'roomUpdated': (setRoomList, { room, host = {}, opponent = {} }) => {
+    setRoomList((current = []) => {
+      const changedRoom = {
+        ...roomDTOToProp({
+          id: room,
+          host,
+          opponent
+        })
+      };
+      if (!!current.find(item => item.id = room))
+        return current.map((currentRoom) => {
+          const { id } = currentRoom;
+          if (id == room) {
+            return changedRoom;
+          }
+          return currentRoom;
+        })
+
+      return current.concat([changedRoom]);
+    });
   }
 }
+
 
 function Main({ }) {
   const [roomList, setRoomList] = useState([]);
@@ -67,6 +87,8 @@ function Main({ }) {
       token: token
     }, (response) => {
       console.log('create room response', { response });
+      if (!response)
+        return;
       const { roomID } = response;
       history.push(`/rooms/${roomID}`);
     }
