@@ -44,7 +44,11 @@ function userDTOToProp({ id, username, name }) {
 
 const handleOnlineUsersOnchangeEvent = {
   connected: (setState, user) => {
-    setState((current = []) => current.concat([{ ...userDTOToProp(user) }]));
+    setState((current = []) => {
+      if (!!current.find(item => item.id = user.id))
+        return current;
+      return current.concat([{ ...userDTOToProp(user) }])
+    });
   },
   disconnected: (setState, user) => {
     setState((current = []) => current.filter((e) => e.id !== user.id));
@@ -56,7 +60,7 @@ function Home() {
   const [onlineUsers, setOnlineUsers] = useState([]);
 
   const { token } = useSelector((state) => state.user);
-  
+
   const fetchUsers = () => {
     axiosClient
       .get(`${process.env.REACT_APP_API_URL}/waitingRoom`)
