@@ -5,7 +5,7 @@ const cookies = new Cookies();
 
 const initialState = {
   token: cookies.get("token", { path: "/" }),
-  userInfo: {}
+  currentUserInfo: {}
 };
 
 const userSlice = createSlice({
@@ -21,7 +21,7 @@ const userSlice = createSlice({
       cookies.remove("token", { path: "/" });
     },
     setUser: (state, action) => {
-      state.user = action.payload;
+      state.currentUserInfo = action.payload;
     }
   },
 });

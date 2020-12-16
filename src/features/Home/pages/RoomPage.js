@@ -48,8 +48,7 @@ function RoomPage() {
   const [opponent, setOpponent] = useState(null);
   const [idPlayerTurn, setIdPlayerTurn] = useState(null);
   const [isStart, setIsStart] = useState(true);
-  const { token } = useSelector((state) => state.user);
-  const currentUser = { id: '2' };
+  const { token, currentUserInfo } = useSelector((state) => state.user);
   const classes = useStyles();
 
   const history = useHistory();
@@ -148,7 +147,7 @@ function RoomPage() {
             variant="contained"
             color="primary"
             className="caro-button"
-            disabled={!host || host.id != currentUser.id}
+            disabled={!host || host.id != currentUserInfo.id}
           >
             Start
           </Button>

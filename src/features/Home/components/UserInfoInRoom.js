@@ -51,7 +51,10 @@ function UserInfoInRoom({
   winner = true,
 }) {
   const classes = useStyles();
-  const { name, photo } = userInfo;
+  const { name, photo } = userInfo | {
+    name: "",
+    photo: ""
+  };
   return (
     <div className={classes.root}>
       <AvatarCustom online={true} photo={photo} />
