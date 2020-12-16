@@ -4,7 +4,7 @@ import { range } from "lodash";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import socketIOClient from "socket.io-client";
+import { roomSocket } from 'socket/roomSocket';
 
 const listRoom = range(0, 4, 1).map((index) => {
   let board = {};
@@ -59,31 +59,20 @@ const handleRoomListOnchangeEvent = {
   }
 }
 
-let roomSocket = null;
 function Main({ }) {
   const [roomList, setRoomList] = useState(listRoom);
   const history = useHistory();
   const { token } = useSelector((state) => state.user);
 
   useEffect(() => {
-    roomSocket = socketIOClient(
-      `${process.env.REACT_APP_SOCKET_URL}/room`,
-      {
-        transports: ["websocket"],
-        upgrade: false,
-        query: { token },
-      }
-    );
-
-    roomSocket.on("waitingRoomEventMsg", (response) => {
+    roomSocket.on('waitingRoomEventMsg', (response) => {
       const { data, event } = response;
       console.log({ response });
       handleRoomListOnchangeEvent[event](setRoomList, data);
     });
 
     return () => {
-      // roomSocket.close();
-      // roomSocket = null;
+      roomSocket.off('waitingRoomEventMsg', () => { });
     };
   }, [token]);
 
@@ -93,9 +82,12 @@ function Main({ }) {
     history.push("/rooms/newID");
   };
 
-  const handleRoomClick = (id) => {
-    roomSocket.emit('join', id);
-    history.push(`/rooms/${id}`);
+  const handleRoomClick = (roomID) => {
+    roomSocket.emit('join', {
+      token: token,
+      roomID: roomID
+    });
+    history.push(`/rooms/${roomID}`);
   };
 
 
