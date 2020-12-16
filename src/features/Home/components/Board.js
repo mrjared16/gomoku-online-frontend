@@ -18,7 +18,7 @@ function Board({ sizeBoard = 30, board = [], onSquareClick = () => {} }) {
   return (
     <div className={classes.root}>
       {board.map((value, index) => (
-        <Square value={value} onClick={() => onSquareClick(index)} />
+        <Square key={index} value={value} onClick={() => onSquareClick(index)} />
       ))}
     </div>
   );

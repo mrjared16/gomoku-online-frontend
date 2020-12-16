@@ -21,14 +21,14 @@ const useStyles = makeStyles({
   },
 });
 
-function ListRoomInfo({ list = [], onRoomClick = () => {} }) {
+function ListRoomInfo({ list = [], onRoomClick = (roomID) => { } }) {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
-      {list.map(({ id = "", listUser = [] }, index) => (
+      {list.map(({ id = "", host = { name: "", photo: "" }, opponent = null }, index) => (
         <div key={index}>
-          <RoomInfo id={id} listUser={listUser} index={index} onClick={onRoomClick} />
+          <RoomInfo id={id} host={host} opponent={opponent} index={index} onClick={onRoomClick} />
         </div>
       ))}
     </div>

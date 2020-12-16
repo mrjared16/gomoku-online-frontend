@@ -1,6 +1,10 @@
 import axiosClient from "api/axiosClient";
 
 const userApi = {
+  fetch: () => {
+    const url = "/auth/verify";
+		return axiosClient.get(url);
+  },
   login: (username, password) => {
 		const url = "/auth/login";
     const body = {

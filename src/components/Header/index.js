@@ -66,8 +66,8 @@ function Header() {
 
   const history = useHistory();
   const dispatch = useDispatch();
-  const { token } = useSelector((state) => state.user);
-
+  const { token, currentUserInfo } = useSelector((state) => state.user);
+  const { name } = currentUserInfo;
   const [value, setValue] = useState(0);
   const location = useLocation();
 
@@ -78,11 +78,11 @@ function Header() {
   };
 
   const handleLogout = () => {
-		dispatch(removeToken());
-		dispatch(setNotification({
-			type: "success",
-			message: "Logout successful",
-		}))
+    dispatch(removeToken());
+    dispatch(setNotification({
+      type: "success",
+      message: "Logout successful",
+    }))
     history.push("/");
   };
 
@@ -119,7 +119,7 @@ function Header() {
 
         {token && (
           <div style={{ display: "flex" }}>
-            <UserInfo />
+            <UserInfo fullName={name} />
             <UserDropdown onLogout={handleLogout} />
           </div>
         )}

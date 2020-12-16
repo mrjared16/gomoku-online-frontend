@@ -1,13 +1,15 @@
-import { Grid, makeStyles, Button } from "@material-ui/core";
-import React, { useState, useEffect } from "react";
-import ListUserStatus from "features/Home/components/ListUserStatus";
-
-import { useSelector } from "react-redux";
-import socketIOClient from "socket.io-client";
+import { Button, Grid, makeStyles } from "@material-ui/core";
 import axiosClient from "api/axiosClient";
-import { Route, Switch } from "react-router-dom";
+import userApi from "api/userApi";
+import { setUser } from "app/userSlice";
+import ListUserStatus from "features/Home/components/ListUserStatus";
 import Main from "features/Home/pages/Main";
 import RoomPage from "features/Home/pages/RoomPage";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Route, Switch } from "react-router-dom";
+import socketIOClient from "socket.io-client";
+
 
 const useStyles = makeStyles({
   root: {
@@ -42,9 +44,13 @@ function userDTOToProp({ id, username, name }) {
   };
 }
 
-const handleChangeListUserEvent = {
+const handleOnlineUsersOnchangeEvent = {
   connected: (setState, user) => {
-    setState((current = []) => current.concat([{ ...userDTOToProp(user) }]));
+    setState((current = []) => {
+      if (!!current.find(item => item.id = user.id))
+        return current;
+      return current.concat([{ ...userDTOToProp(user) }])
+    });
   },
   disconnected: (setState, user) => {
     setState((current = []) => current.filter((e) => e.id !== user.id));
@@ -53,10 +59,18 @@ const handleChangeListUserEvent = {
 
 function Home() {
   const classes = useStyles();
-  const [list, setList] = useState([]);
+  const dispatch = useDispatch();
+
+  const [onlineUsers, setOnlineUsers] = useState([]);
+
   const { token } = useSelector((state) => state.user);
 
-  const fetchUsers = () => {
+  const fetchUserData = async() => {
+    const response = await userApi.fetch();
+    dispatch(setUser(response));
+  };
+
+  const fetchOnlineUsers = () => {
     axiosClient
       .get(`${process.env.REACT_APP_API_URL}/waitingRoom`)
       .then((response) => {
@@ -65,9 +79,14 @@ function Home() {
           const convertedUser = userDTOToProp(user);
           return convertedUser;
         });
-        setList((list) => userMap);
+        setOnlineUsers((list) => userMap);
       });
   };
+
+  useEffect(() => {
+    fetchOnlineUsers();
+    fetchUserData();
+  }, [token]);
 
   useEffect(() => {
     const socketClient = socketIOClient(
@@ -84,10 +103,8 @@ function Home() {
       if (user === "anonymous") {
         return;
       }
-      handleChangeListUserEvent[event](setList, user);
+      handleOnlineUsersOnchangeEvent[event](setOnlineUsers, user);
     });
-
-    fetchUsers();
 
     return () => {
       socketClient.close();
@@ -104,10 +121,10 @@ function Home() {
           </Switch>
         </Grid>
         <Grid item xs={3} className={classes.listUserStatus}>
-          <Button variant="outlined" onClick={() => fetchUsers()}>
+          <Button variant="outlined" onClick={() => fetchOnlineUsers()}>
             Load
           </Button>
-          <ListUserStatus list={list} />
+          <ListUserStatus list={onlineUsers} />
         </Grid>
       </Grid>
     </div>
