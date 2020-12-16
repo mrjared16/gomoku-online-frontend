@@ -54,8 +54,7 @@ function roomDTOToProp({ id }) {
 }
 const handleRoomListOnchangeEvent = {
   'newRoomCreated': (setRoomList, { room }) => {
-    console.log({ room });
-    setRoomList((current = []) => current.concat([{ ...roomDTOToProp(room) }]));
+    setRoomList((current = []) => current.concat([{ ...roomDTOToProp({ id: room }) }]));
   }
 }
 
@@ -67,7 +66,7 @@ function Main({ }) {
   useEffect(() => {
     roomSocket.on('waitingRoomEventMsg', (response) => {
       const { data, event } = response;
-      console.log({ response });
+      console.log('receive waitingRoomEventMsg emit: ', { response });
       handleRoomListOnchangeEvent[event](setRoomList, data);
     });
 
@@ -78,15 +77,17 @@ function Main({ }) {
 
 
   const handleCreateRoom = () => {
-    roomSocket.emit('create');
-    history.push("/rooms/newID");
+    roomSocket.emit('create', {
+      token: token
+    }, (response) => {
+      console.log('create room response', { response });
+      const { roomID } = response;
+      history.push(`/rooms/${roomID}`);
+    }
+    );
   };
 
   const handleRoomClick = (roomID) => {
-    roomSocket.emit('join', {
-      token: token,
-      roomID: roomID
-    });
     history.push(`/rooms/${roomID}`);
   };
 
