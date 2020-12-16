@@ -100,7 +100,7 @@ function Header() {
         if (!token) setValue(2);
         return;
       default:
-        setValue(null);
+        setValue(0);
     }
   }, [location]);
 

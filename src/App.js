@@ -4,7 +4,7 @@ import theme from "custom-theme";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Login from "features/Auth/pages/Login";
 import Register from "features/Auth/pages/Register";
-import Home from "features/Home/Home";
+import Home from "features/Home/pages/Home";
 import Header from "components/Header";
 import { useSelector } from "react-redux";
 import Notification from "components/Notification";
@@ -19,9 +19,9 @@ function App() {
 				{ message && <Notification type={type} message={message} />}
 				<Header />
         <Switch>
+					<Route exact path="/" component={Home} />
           <PublishRoute exact path="/login" component={Login} />
           <PublishRoute exact path="/register" component={Register} />
-					<Route path="/" component={Home} />
         </Switch>
       </BrowserRouter>
     </ThemeProvider>
