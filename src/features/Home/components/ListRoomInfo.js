@@ -21,7 +21,7 @@ const useStyles = makeStyles({
   },
 });
 
-function ListRoomInfo({ list = [], onRoomClick = () => {} }) {
+function ListRoomInfo({ list = [], onRoomClick = (roomID) => {} }) {
   const classes = useStyles();
 
   return (
