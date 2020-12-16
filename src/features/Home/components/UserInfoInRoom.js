@@ -42,14 +42,19 @@ const useStyles = makeStyles({
 });
 
 function UserInfoInRoom({
-  name = "",
-  photo = "",
+  userInfo = {
+    name: "",
+    photo: ""
+  },
   symbol = "X",
   playerTurn = false,
   winner = true,
 }) {
   const classes = useStyles();
-
+  const { name, photo } = userInfo || {
+    name: "",
+    photo: ""
+  };
   return (
     <div className={classes.root}>
       <AvatarCustom online={true} photo={photo} />

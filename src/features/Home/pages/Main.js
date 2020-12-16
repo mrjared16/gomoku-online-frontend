@@ -1,56 +1,109 @@
-import React from "react";
-import ListRoomInfo from "features/Home/components/ListRoomInfo";
 import HeaderOption from "features/Home/components/HeaderOption";
+import ListRoomInfo from "features/Home/components/ListRoomInfo";
 import { range } from "lodash";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { roomSocket } from 'socket/roomSocket';
+import axiosClient from "api/axiosClient";
 
-const listRoom = range(0, 50, 1).map((index) => {
-  let board = {};
+function roomDTOToProp({ id, host = {}, opponent = {} }) {
+  const hostMapped = host.name ? {
+    name: host.name,
+    photo: ""
+  } : {};
+  const opponentMapped = (opponent && opponent.name) ? {
+    name: opponent.name,
+    photo: ""
+  } : null;
+  const roomConverted = {
+    id: id,
+    host: { ...hostMapped },
+    opponent: opponentMapped,
+  };
+  return roomConverted;
+}
+const handleRoomListOnchangeEvent = {
+  'roomUpdated': (setRoomList, { room, host = {}, opponent = {} }) => {
+    setRoomList((current = []) => {
+      const changedRoom = {
+        ...roomDTOToProp({
+          id: room,
+          host,
+          opponent
+        })
+      };
+      if (!!current.find(item => item.id = room))
+        return current.map((currentRoom) => {
+          const { id } = currentRoom;
+          if (id == room) {
+            return changedRoom;
+          }
+          return currentRoom;
+        })
 
-  if (index % 3 === 0) {
-    board = {
-      id: index,
-      listUser: [
-        {
-          name: "Jhin",
-          photo: "",
-        },
-        {
-          name: "Swift",
-          photo: "",
-        },
-      ],
+      return current.concat([changedRoom]);
+    });
+  }
+}
+
+
+function Main({ }) {
+  const [roomList, setRoomList] = useState([]);
+  const history = useHistory();
+  const { token } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    fetchRooms();
+  }, [])
+
+  useEffect(() => {
+    roomSocket.on('waitingRoomEventMsg', (response) => {
+      const { data, event } = response;
+      console.log('receive waitingRoomEventMsg emit: ', { response });
+      handleRoomListOnchangeEvent[event](setRoomList, data);
+    });
+
+    return () => {
+      roomSocket.off('waitingRoomEventMsg', () => { });
     };
-  } else {
-    board = {
-      id: index,
-      listUser: [
-        {
-          name: "Jhin",
-          photo: "",
-        },
-      ],
-    };
+  }, [token]);
+
+  const fetchRooms = async () => {
+    axiosClient
+      .get(`${process.env.REACT_APP_API_URL}/rooms`)
+      .then((response) => {
+        const { rooms } = response;
+        const roomsProp = rooms.map((room) => {
+          const convertedRoom = roomDTOToProp(room);
+          return convertedRoom;
+        });
+        setRoomList((list) => roomsProp);
+      });
   }
 
-  return board;
-});
-
-function Main(props) {
-  const history = useHistory();
-
   const handleCreateRoom = () => {
-    history.push("/rooms/newID");
+    roomSocket.emit('create', {
+      token: token
+    }, (response) => {
+      console.log('create room response', { response });
+      if (!response)
+        return;
+      const { roomID } = response;
+      history.push(`/rooms/${roomID}`);
+    }
+    );
   };
 
-  const handleRoomClick = (id) => {
-    history.push(`/rooms/${id}`);
+  const handleRoomClick = (roomID) => {
+    history.push(`/rooms/${roomID}`);
   };
+
 
   return (
     <>
       <HeaderOption onCreateRoom={handleCreateRoom} />
-      <ListRoomInfo list={listRoom} onRoomClick={handleRoomClick} />
+      <ListRoomInfo list={roomList} onRoomClick={handleRoomClick} />
     </>
   );
 }

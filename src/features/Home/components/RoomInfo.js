@@ -22,7 +22,7 @@ const useStyles = makeStyles({
     alignItems: "center",
     width: 40,
     "& span": {
-			textTransform: "none",
+      textTransform: "none",
       marginTop: 10,
     },
   },
@@ -37,24 +37,24 @@ const useStyles = makeStyles({
   },
 });
 
-function RoomInfo({ id = "", index = "", listUser = [], onClick }) {
+function RoomInfo({ id = "", index = "", host = { name: "", photo: "" }, opponent = null, onClick }) {
   const classes = useStyles();
 
   return (
     <Button className={classes.root} onClick={() => onClick(id)}>
       <div className={classes.body}>
         <div className={classes.avatar}>
-          <AvatarCustom online={true} photo={listUser[0].photo} />
-          <span>{listUser[0].name}</span>
+          <AvatarCustom online={true} photo={host.photo} />
+          <span>{host.name}</span>
         </div>
         <div className={classes.board}>
           <span>{index}</span>
         </div>
         <div className={classes.avatar}>
-          {listUser[1] && (
+          {opponent && (
             <>
-              <AvatarCustom online={true} photo={listUser[1].photo} />
-              <span>{listUser[1].name}</span>
+              <AvatarCustom online={true} photo={opponent.photo} />
+              <span>{opponent.name}</span>
             </>
           )}
         </div>
