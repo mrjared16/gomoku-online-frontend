@@ -24,19 +24,19 @@ function roomDTOToProp({ id, host = {}, opponent = {} }) {
   return roomConverted;
 }
 const handleRoomListOnchangeEvent = {
-  'roomUpdated': (setRoomList, { room, host = {}, opponent = {} }) => {
+  'roomUpdated': (setRoomList, { id, host = {}, opponent = {} }) => {
     setRoomList((current = []) => {
       const changedRoom = {
         ...roomDTOToProp({
-          id: room,
+          id: id,
           host,
           opponent
         })
       };
-      if (!!current.find(item => item.id = room))
+      if (!!current.find(item => item.id == id))
         return current.map((currentRoom) => {
-          const { id } = currentRoom;
-          if (id == room) {
+          // const { id } = currentRoom;
+          if (currentRoom.id == id) {
             return changedRoom;
           }
           return currentRoom;
