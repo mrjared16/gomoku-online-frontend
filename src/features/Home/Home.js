@@ -10,7 +10,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { Route, Switch } from "react-router-dom";
 import socketIOClient from "socket.io-client";
 
-
 const useStyles = makeStyles({
   root: {
     height: "calc(100vh - 48px)",
@@ -47,9 +46,8 @@ function userDTOToProp({ id, username, name }) {
 const handleOnlineUsersOnchangeEvent = {
   connected: (setState, user) => {
     setState((current = []) => {
-      if (!!current.find(item => item.id = user.id))
-        return current;
-      return current.concat([{ ...userDTOToProp(user) }])
+      if (!!current.find((item) => (item.id == user.id))) return current;
+      return current.concat([{ ...userDTOToProp(user) }]);
     });
   },
   disconnected: (setState, user) => {
@@ -65,7 +63,7 @@ function Home() {
 
   const { token } = useSelector((state) => state.user);
 
-  const fetchUserData = async() => {
+  const fetchUserData = async () => {
     const response = await userApi.fetch();
     dispatch(setUser(response));
   };
