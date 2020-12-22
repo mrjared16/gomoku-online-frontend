@@ -37,24 +37,24 @@ const useStyles = makeStyles({
   },
 });
 
-function RoomInfo({ id = "", index = "", host = { name: "", photo: "" }, opponent = null, onClick }) {
+function RoomInfo({ id = "", index = "", host, XPlayer, OPlayer, onClick }) {
   const classes = useStyles();
 
   return (
     <Button className={classes.root} onClick={() => onClick(id)}>
       <div className={classes.body}>
         <div className={classes.avatar}>
-          <AvatarCustom online={true} photo={host.photo} />
-          <span>{host.name}</span>
+          <AvatarCustom online={true} photo={XPlayer.photo} />
+          <span>{XPlayer.name}</span>
         </div>
         <div className={classes.board}>
           <span>{index}</span>
         </div>
         <div className={classes.avatar}>
-          {opponent && (
+          {OPlayer && (
             <>
-              <AvatarCustom online={true} photo={opponent.photo} />
-              <span>{opponent.name}</span>
+              <AvatarCustom online={true} photo={OPlayer.photo} />
+              <span>{OPlayer.name}</span>
             </>
           )}
         </div>

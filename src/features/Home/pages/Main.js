@@ -7,7 +7,24 @@ import { useHistory } from "react-router-dom";
 import { roomSocket } from 'socket/roomSocket';
 import axiosClient from "api/axiosClient";
 
-function roomDTOToProp({ id, host, players }) {
+const DEFAULT_ROOM_RESPONSE = {
+  id: '',
+  host: {
+    id: '',
+    name: '',
+    username: ''
+  },
+  players: { X: null, O: null },
+  numberOfUsers: 0,
+  roomOption: {
+    boardSize: 20,
+    hasPassword: false,
+    time: 60
+  },
+  gameID: null
+}
+
+function roomDTOToProp({ id, host, players, numberOfUsers, roomOption, gameID }) {
   const XPlayer = (players['X'] && players['X'].name) ? {
     name: players['X'].name,
     photo: ""
@@ -21,17 +38,31 @@ function roomDTOToProp({ id, host, players }) {
     host,
     XPlayer: { ...XPlayer },
     OPlayer: { ...OPlayer },
+    numberOfUsers,
+    roomOption,
+    gameID
   };
   return roomConverted;
 }
+
 const handleRoomListOnchangeEvent = {
-  'roomUpdated': (setRoomList, { id, host = {}, players }) => {
+  'roomUpdated': (setRoomList, {
+    id,
+    host = {},
+    players = { X: null, O: null },
+    numberOfUsers = 0,
+    roomOption,
+    gameID
+  } = DEFAULT_ROOM_RESPONSE) => {
     setRoomList((current = []) => {
       const changedRoom = {
         ...roomDTOToProp({
-          id: id,
+          id,
           players,
-          host
+          host,
+          numberOfUsers,
+          roomOption,
+          gameID
         })
       };
       if (!!current.find(item => item.id === id))
