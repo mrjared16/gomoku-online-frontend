@@ -149,7 +149,6 @@ function RoomPage() {
   const setRoomState = (response) => {
     //TODO: add waiting stage for room
     const { players, boardSize } = response;
-    console.log({players});
     setSizeBoard(boardSize);
     if (players['X']) {
       setHost(players['X']);

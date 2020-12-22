@@ -26,9 +26,9 @@ function ListRoomInfo({ list = [], onRoomClick = (roomID) => { } }) {
 
   return (
     <div className={classes.root}>
-      {list.map(({ id = "", host = { name: "", photo: "" }, opponent = null }, index) => (
+      {list.map(({ id = "", host = { name: "", photo: "" }, XPlayer, OPlayer }, index) => (
         <div key={index}>
-          <RoomInfo id={id} host={host} opponent={opponent} index={index} onClick={onRoomClick} />
+          <RoomInfo id={id} host={XPlayer} opponent={OPlayer} index={index} onClick={onRoomClick} />
         </div>
       ))}
     </div>
