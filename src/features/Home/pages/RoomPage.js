@@ -62,12 +62,15 @@ function RoomPage() {
         newPlayerJoined: (setState, data) => {
           setState(data);
         },
+        roomUpdated: (setState, data) => {
+          setState(data);
+        },
       };
       handleRoomChangeEvent[event](setRoomState, data);
     });
 
     return () => {
-      roomSocket.off('roomEventMsg', () => {});
+      roomSocket.off('roomEventMsg', () => { });
     };
   }, [token]);
   // useEffect(() => {
@@ -131,7 +134,7 @@ function RoomPage() {
       handleRoomChangeEvent[event](getSetter[event], data);
     });
     return () => {
-      roomSocket.off('gameEventMsg', () => {});
+      roomSocket.off('gameEventMsg', () => { });
     };
   }, []);
 
@@ -144,10 +147,16 @@ function RoomPage() {
   };
 
   const setRoomState = (response) => {
-    const { host, opponent, boardSize } = response;
-    setHost(host);
-    setOpponent(opponent);
+    //TODO: add waiting stage for room
+    const { players, boardSize } = response;
+    console.log({players});
     setSizeBoard(boardSize);
+    if (players['X']) {
+      setHost(players['X']);
+    }
+    if (players['O']) {
+      setOpponent(players['O']);
+    }
   };
 
   const isTurn = (player, currentTurnPlayerId) =>
