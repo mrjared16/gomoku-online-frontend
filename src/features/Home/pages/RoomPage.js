@@ -3,15 +3,30 @@ import BackTo from 'features/Home/components/BackTo';
 import Board from 'features/Home/components/Board';
 import UserInfoInRoom from 'features/Home/components/UserInfoInRoom';
 import { range } from 'lodash';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { roomSocket } from 'socket/roomSocket';
+import { gameSocket } from 'socket/gameSocket';
+import axiosClient from "api/axiosClient";
 
 const DEFAULT_SIZE = 20;
 const initialBoard = range(0, DEFAULT_SIZE * DEFAULT_SIZE, 1).map(
   (index) => -1
 );
+
+const handleRoomChangeEvent = {
+  onHit: (hit, data) => {
+    const { index, value } = data;
+    hit(index, value);
+  },
+  changeTurn: (setTurn, data) => {
+    const { currentTurnPlayerID } = data;
+    setTurn(() => {
+      return currentTurnPlayerID;
+    });
+  },
+};
 
 const useStyles = makeStyles({
   root: {
@@ -31,24 +46,27 @@ const useStyles = makeStyles({
 function RoomPage() {
   const [sizeBoard, setSizeBoard] = useState(DEFAULT_SIZE);
   const [board, setBoard] = useState(initialBoard);
-  const [host, setHost] = useState(null);
-  const [opponent, setOpponent] = useState(null);
+  const [XPlayer, setXPlayer] = useState(null);
+  const [OPlayer, setOPlayer] = useState(null);
   const [idPlayerTurn, setIdPlayerTurn] = useState(null);
-  const [isStart, setIsStart] = useState(false);
+  const [gameID, setGameID] = useState(null);
   const { token, currentUserInfo } = useSelector((state) => state.user);
   const classes = useStyles();
 
   const history = useHistory();
-  const { id } = useParams();
+  const { id: roomID } = useParams();
 
+  const isStart = useMemo(() => (gameID !== null), [gameID]);
+
+  // handle room event
   useEffect(() => {
-    console.log('join room', { roomID: id });
+    console.log('join room', { roomID: roomID });
     roomSocket.emit(
       'join',
       {
         action: 'join',
         token: token,
-        roomID: id,
+        roomID: roomID,
       },
       (response) => {
         setRoomState(response);
@@ -73,6 +91,7 @@ function RoomPage() {
       roomSocket.off('roomEventMsg', () => { });
     };
   }, [token]);
+
   // useEffect(() => {
   // 	fetchGameState();
   // }, []);
@@ -97,64 +116,80 @@ function RoomPage() {
   //   roomStatus: 'start' | 'waiting',
   // };
   // }
-  useEffect(() => {
-    roomSocket.emit('game', {}, (response) => {
-      if (!response) return;
-      const { board } = response;
-      setBoard(board);
-      // TODO: set isStart
-    });
+  const fetchGameState = async (roomID) => {
+    const response = await axiosClient
+      .get(`${process.env.REACT_APP_API_URL}/game/room/${roomID}`);
+    console.log({ response });
+    const { boardSize } = response;
+    setSizeBoard(boardSize);
+    if (!response.id) {
+      return;
+    }
+    const { id, gameState } = response;
+    const { move, turn } = gameState;
+    const { playerID, remainingTime } = turn;
+    if (!isStart) {
+      setGameID(id);
+    }
+    setIdPlayerTurn(playerID);
+  }
 
-    roomSocket.on('gameEventMsg', (response) => {
+  useEffect(() => {
+
+    fetchGameState(roomID);
+  }, [gameID]);
+
+  // handle game event
+  useEffect(() => {
+    if (gameID === null) {
+      return;
+    }
+    console.log('listening on game event!');
+
+    gameSocket.on('gameEventMsg', (response) => {
       const { data, event } = response;
       console.log('receive gameEventMsg emit: ', { response });
       const getSetter = {
         onHit: hit,
-        onStart: setIsStart,
         changeTurn: setIdPlayerTurn,
       };
-      const handleRoomChangeEvent = {
-        onStart: (setIsStart, data) => {
-          setIsStart(true);
-        },
-        onHit: (hit, data) => {
-          const { index, value } = data;
-          hit(index, value);
-        },
-        changeTurn: (setTurn, data) => {
-          if (!isStart) {
-            setIsStart(true);
-          }
-          const { currentTurnPlayerID } = data;
-          setTurn(() => {
-            return currentTurnPlayerID;
-          });
-        },
-      };
+
       handleRoomChangeEvent[event](getSetter[event], data);
     });
     return () => {
-      roomSocket.off('gameEventMsg', () => { });
+      gameSocket.off('gameEventMsg', () => { });
     };
-  }, []);
+  }, [gameID]);
 
   const handleStartGame = () => {
-    setIsStart(true);
-    setIdPlayerTurn(host.id);
     roomSocket.emit('start', {
-      roomID: id,
-    });
+      roomID: roomID,
+    }, (response) => {
+      console.log('game start response', { response });
+      if (!response)
+        return;
+      const { gameID } = response;
+      setGameID(gameID);
+    }
+    );
   };
 
   const setRoomState = (response) => {
     //TODO: add waiting stage for room
-    const { players, boardSize } = response;
+    const { players, roomOption, gameID } = response;
+
+    const { boardSize } = roomOption;
     setSizeBoard(boardSize);
+
     if (players['X']) {
-      setHost(players['X']);
+      setXPlayer(players['X']);
     }
     if (players['O']) {
-      setOpponent(players['O']);
+      setOPlayer(players['O']);
+    }
+
+    if (gameID) {
+      setGameID(gameID);
     }
   };
 
@@ -177,11 +212,11 @@ function RoomPage() {
     if (!isStart) return;
     if (board[index] !== -1) return;
     if (!isTurn(currentUserInfo, idPlayerTurn)) return;
-    const value = currentUserInfo.id === host.id ? 0 : 1;
+    const value = currentUserInfo.id === XPlayer.id ? 0 : 1;
     hit(index, value);
 
-    roomSocket.emit('hit', {
-      roomID: id,
+    gameSocket.emit('hit', {
+      roomID: roomID,
       index: index,
       value: value,
     });
@@ -207,20 +242,20 @@ function RoomPage() {
         />
         <div className={classes.userInfoContainer}>
           <UserInfoInRoom
-            userInfo={host}
+            userInfo={XPlayer}
             symbol="X"
-            playerTurn={isTurn(host, idPlayerTurn)}
+            playerTurn={isTurn(XPlayer, idPlayerTurn)}
           />
           <UserInfoInRoom
-            userInfo={opponent}
+            userInfo={OPlayer}
             symbol="O"
-            playerTurn={isTurn(opponent, idPlayerTurn)}
+            playerTurn={isTurn(OPlayer, idPlayerTurn)}
           />
           <Button
             variant="contained"
             color="primary"
             className="caro-button"
-            disabled={!host || host.id != currentUserInfo.id || isStart}
+            disabled={!XPlayer || XPlayer.id != currentUserInfo.id || isStart}
             onClick={handleStartGame}
           >
             Start
