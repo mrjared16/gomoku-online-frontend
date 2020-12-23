@@ -27,9 +27,10 @@ const handleGameEvent = {
     hit(position, value);
   },
   changeTurn: (setTurn, data) => {
-    const { currentTurnPlayerID } = data;
+    const { turn } = data;
+    const { playerID, remainingTime } = turn;
     setTurn(() => {
-      return currentTurnPlayerID;
+      return playerID;
     });
   },
 };
@@ -163,16 +164,16 @@ function RoomPage() {
     // const { boardSize } = response;
     // setSizeBoard(boardSize);
     // 	gameState ={
-    // 		board: [],
+    // 		move: [],
     // 		turn: {
-    // 			id: '',
+    // 			playerID: '',
     // 			remainingTime: 0
     // 		}
     // 	}
     if (!response.id) {
       return;
     }
-    const { id, gameState } = response;
+    const { id, gameState, startAt } = response;
     const { move, turn } = gameState;
     const { playerID, remainingTime } = turn;
     if (!isStart) {
