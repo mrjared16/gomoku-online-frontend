@@ -33,6 +33,9 @@ const handleGameEvent = {
       return playerID;
     });
   },
+  onFinish: (handleEndGame, data) => {
+    handleEndGame(data);
+  }
 };
 
 
@@ -197,9 +200,18 @@ function RoomPage() {
     gameSocket.on('gameEventMsg', (response) => {
       const { data, event } = response;
       console.log('receive gameEventMsg emit: ', { response });
+      const handleEndGame = (state, data) => {
+        console.log({ data });
+        const { winnerID, line, rankRecord, duration } = data;
+        // TODO: handle end game
+        setGameID(null);
+        setGameMoves([]);
+        setIdPlayerTurn(null);
+      };
       const getSetter = {
         onHit: hit,
         changeTurn: setIdPlayerTurn,
+        onFinish: handleEndGame
       };
 
       handleGameEvent[event](getSetter[event], data);
