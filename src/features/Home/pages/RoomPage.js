@@ -16,6 +16,15 @@ const initialBoard = range(0, DEFAULT_SIZE * DEFAULT_SIZE, 1).map(
 );
 
 const handleRoomChangeEvent = {
+  newPlayerJoined: (setState, data) => {
+    setState(data);
+  },
+  roomUpdated: (setState, data) => {
+    setState(data);
+  },
+};
+
+const handleGameEvent = {
   onHit: (hit, data) => {
     const { index, value } = data;
     hit(index, value);
@@ -27,6 +36,7 @@ const handleRoomChangeEvent = {
     });
   },
 };
+
 
 const useStyles = makeStyles({
   root: {
@@ -58,6 +68,12 @@ function RoomPage() {
 
   const isStart = useMemo(() => (gameID !== null), [gameID]);
 
+
+  const handleBackTo = () => {
+    history.push('/');
+  };
+
+  // }
   // handle room event
   useEffect(() => {
     console.log('join room', { roomID: roomID });
@@ -76,14 +92,7 @@ function RoomPage() {
     roomSocket.on('roomEventMsg', (response) => {
       const { data, event } = response;
       console.log('receive roomEventMsg emit: ', { response });
-      const handleRoomChangeEvent = {
-        newPlayerJoined: (setState, data) => {
-          setState(data);
-        },
-        roomUpdated: (setState, data) => {
-          setState(data);
-        },
-      };
+
       handleRoomChangeEvent[event](setRoomState, data);
     });
 
@@ -92,9 +101,6 @@ function RoomPage() {
     };
   }, [token]);
 
-  // useEffect(() => {
-  // 	fetchGameState();
-  // }, []);
   // const fetchGameState = () => {
   // 	const [gameState] = useState([]);
   // 	const [currentStateIndex] = useState(0);
@@ -102,79 +108,14 @@ function RoomPage() {
   // 		() => gameState.slice(0, currentStateIndex),
   // 		[currentStateIndex, gameState]
   // 	);
-
-  // 	gameState ={
-  // 		board: [],
-  // 		turn: {
-  // 			id: '',
-  // 			remainingTime: 0
-  // 		}
-  // 	}
-  // roomState = {
-  //   host: { id: '2', name: '', username: '', photo: '' },
-  //   opponent: {},
-  //   roomStatus: 'start' | 'waiting',
-  // };
-  // }
-  const fetchGameState = async (roomID) => {
-    const response = await axiosClient
-      .get(`${process.env.REACT_APP_API_URL}/game/room/${roomID}`);
-    console.log({ response });
-    const { boardSize } = response;
-    setSizeBoard(boardSize);
-    if (!response.id) {
-      return;
-    }
-    const { id, gameState } = response;
-    const { move, turn } = gameState;
-    const { playerID, remainingTime } = turn;
-    if (!isStart) {
-      setGameID(id);
-    }
-    setIdPlayerTurn(playerID);
-  }
-
-  useEffect(() => {
-
-    fetchGameState(roomID);
-  }, [gameID]);
-
-  // handle game event
-  useEffect(() => {
-    if (gameID === null) {
-      return;
-    }
-    console.log('listening on game event!');
-
-    gameSocket.on('gameEventMsg', (response) => {
-      const { data, event } = response;
-      console.log('receive gameEventMsg emit: ', { response });
-      const getSetter = {
-        onHit: hit,
-        changeTurn: setIdPlayerTurn,
-      };
-
-      handleRoomChangeEvent[event](getSetter[event], data);
-    });
-    return () => {
-      gameSocket.off('gameEventMsg', () => { });
-    };
-  }, [gameID]);
-
-  const handleStartGame = () => {
-    roomSocket.emit('start', {
-      roomID: roomID,
-    }, (response) => {
-      console.log('game start response', { response });
-      if (!response)
-        return;
-      const { gameID } = response;
-      setGameID(gameID);
-    }
-    );
-  };
-
+  
   const setRoomState = (response) => {
+    // roomState = {
+    //   host: { id: '2', name: '', username: '', photo: '' },
+    //   opponent: {},
+    //   roomStatus: 'start' | 'waiting',
+    // };
+
     //TODO: add waiting stage for room
     const { players, roomOption, gameID } = response;
 
@@ -193,12 +134,76 @@ function RoomPage() {
     }
   };
 
+  const handleStartGame = () => {
+    roomSocket.emit('start', {
+      roomID: roomID,
+    }, (response) => {
+      console.log('game start response', { response });
+      if (!response)
+        return;
+      const { gameID } = response;
+      setGameID(gameID);
+    }
+    );
+  };
+
+  const fetchGameState = async (roomID) => {
+    const response = await axiosClient
+      .get(`${process.env.REACT_APP_API_URL}/game/room/${roomID}`);
+    console.log({ response });
+    // const { boardSize } = response;
+    // setSizeBoard(boardSize);
+    // 	gameState ={
+    // 		board: [],
+    // 		turn: {
+    // 			id: '',
+    // 			remainingTime: 0
+    // 		}
+    // 	}
+    if (!response.id) {
+      return;
+    }
+    const { id, gameState } = response;
+    const { move, turn } = gameState;
+    const { playerID, remainingTime } = turn;
+    if (!isStart) {
+      setGameID(id);
+    }
+    setIdPlayerTurn(playerID);
+  }
+
+  // handle game event
+  useEffect(() => {
+    if (gameID === null) {
+      return;
+    }
+
+    // fetch game state of current room 
+    fetchGameState(roomID);
+
+    console.log('listening on game event!');
+    gameSocket.emit('join', {
+      gameID,
+      roomID
+    })
+    gameSocket.on('gameEventMsg', (response) => {
+      const { data, event } = response;
+      console.log('receive gameEventMsg emit: ', { response });
+      const getSetter = {
+        onHit: hit,
+        changeTurn: setIdPlayerTurn,
+      };
+
+      handleGameEvent[event](getSetter[event], data);
+    });
+    return () => {
+      gameSocket.off('gameEventMsg', () => { });
+    };
+  }, [gameID]);
+
+
   const isTurn = (player, currentTurnPlayerId) =>
     isStart && player && player.id === currentTurnPlayerId;
-
-  const handleBackTo = () => {
-    history.push('/');
-  };
 
   const hit = (index, value) => {
     setBoard((currentBoard) => {
@@ -217,18 +222,10 @@ function RoomPage() {
 
     gameSocket.emit('hit', {
       roomID: roomID,
+      gameID: gameID,
       index: index,
       value: value,
     });
-    // if (isTurn(host, idPlayerTurn)) {
-    //   board[index] = 0;
-    //   setIdPlayerTurn(opponent.id);
-    // }
-    // else {
-    //   board[index] = 1;
-    //   setIdPlayerTurn(host.id);
-    // }
-    //send x, y to server
   };
 
   return (
@@ -251,6 +248,7 @@ function RoomPage() {
             symbol="O"
             playerTurn={isTurn(OPlayer, idPlayerTurn)}
           />
+
           <Button
             variant="contained"
             color="primary"
