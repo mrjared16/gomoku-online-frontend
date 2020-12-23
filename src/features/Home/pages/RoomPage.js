@@ -61,6 +61,7 @@ function RoomPage() {
   const [idPlayerTurn, setIdPlayerTurn] = useState(null);
 
   const [gameMoves, setGameMoves] = useState([]);
+  const [moveIndex, setMoveIndex] = useState(0);
   // const [board, setBoard] = useState(initialBoard);
 
   const { token, currentUserInfo } = useSelector((state) => state.user);
@@ -70,14 +71,19 @@ function RoomPage() {
   const { id: roomID } = useParams();
 
   const isStart = useMemo(() => (gameID !== null), [gameID]);
+
   const board = useMemo(() => {
     const size = sizeBoard * sizeBoard;
     const newBoard = Array(size).fill(-1);
-    gameMoves.forEach(({ position, value }) => {
+    gameMoves.slice(0, moveIndex).forEach(({ position, value }) => {
       newBoard[position] = value;
     });
     return newBoard;
-  }, [gameMoves, sizeBoard])
+  }, [gameMoves, sizeBoard, moveIndex])
+
+  useEffect(() => {
+    setMoveIndex(gameMoves.length);
+  }, [gameMoves]);
 
   const handleBackTo = () => {
     history.push('/');
@@ -161,15 +167,6 @@ function RoomPage() {
     const response = await axiosClient
       .get(`${process.env.REACT_APP_API_URL}/game/room/${roomID}`);
     console.log({ response });
-    // const { boardSize } = response;
-    // setSizeBoard(boardSize);
-    // 	gameState ={
-    // 		move: [],
-    // 		turn: {
-    // 			playerID: '',
-    // 			remainingTime: 0
-    // 		}
-    // 	}
     if (!response.id) {
       return;
     }
@@ -179,6 +176,7 @@ function RoomPage() {
     if (!isStart) {
       setGameID(id);
     }
+    setGameMoves(move);
     setIdPlayerTurn(playerID);
   }
 
