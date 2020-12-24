@@ -42,7 +42,7 @@ const StyledBadge = withStyles((theme) => ({
 }))(Badge);
 
 const useStyles = makeStyles({
-  fullName: {
+  name: {
     overflow: "hidden",
     "& h6": {
       whiteSpace: "nowrap",
@@ -59,7 +59,7 @@ function ListUserStatus({ list = [] }) {
     <div>
       <List>
         {list.map(
-          ({ id, online = false, fullName = "", photo = "", time = "" }, index) => (
+          ({ id, online = false, name = "", photo = "", time = "" }, index) => (
             <ListItem key={id} button>
               <ListItemAvatar>
                 {online ? (
@@ -71,15 +71,15 @@ function ListUserStatus({ list = [] }) {
                     }}
                     variant="dot"
                   >
-                    <Avatar alt={fullName} src={photo} />
+                    <Avatar alt={name} src={photo} />
                   </StyledBadge>
                 ) : (
-                  <Avatar alt={fullName} src={photo} />
+                  <Avatar alt={name} src={photo} />
                 )}
               </ListItemAvatar>
               <ListItemText>
-                <div className={classes.fullName}>
-                  <Typography variant="subtitle1">{fullName}</Typography>
+                <div className={classes.name}>
+                  <Typography variant="subtitle1">{name}</Typography>
                 </div>
               </ListItemText>
               <ListItemSecondaryAction>

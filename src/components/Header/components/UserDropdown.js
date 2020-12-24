@@ -70,12 +70,12 @@ function UserDropdown({ onLogout = () => {} }) {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        <StyledMenuItem>
+        {/* <StyledMenuItem>
           <ListItemIcon>
             <AccountBoxIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText primary="Profile" />
-        </StyledMenuItem>
+        </StyledMenuItem> */}
         <StyledMenuItem onClick={onLogout}>
           <ListItemIcon>
             <ExitToAppIcon fontSize="small" />

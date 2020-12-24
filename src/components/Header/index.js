@@ -9,7 +9,7 @@ import Logo from "components/Header/components/Logo";
 import UserInfo from "components/Header/components/UserInfo";
 import UserDropdown from "components/Header/components/UserDropdown";
 import { removeToken } from "app/userSlice";
-import { setNotification } from "app/notificationSlice";
+import { showToast } from "utils/showToast";
 
 function a11yProps(index) {
   return {
@@ -42,6 +42,9 @@ const useStyles = makeStyles((theme) => ({
     },
     "& #simple-tab-2": {
       color: "white",
+		},
+		"& #simple-tab-3": {
+      color: "white",
     },
   },
 }));
@@ -49,15 +52,23 @@ const useStyles = makeStyles((theme) => ({
 const tabs = [
   {
     label: "Home",
-    url: "/",
+		url: "/",
+		value: 0,
   },
   {
-    label: "Login",
-    url: "/login",
+    label: "Overview",
+		url: "/overview",
+		value: 1,
   },
   {
-    label: "Register",
-    url: "/register",
+    label: "History",
+		url: "/history",
+		value: 2,
+	},
+	{
+    label: "Rank",
+		url: "/rank",
+		value: 3,
   },
 ];
 
@@ -79,11 +90,8 @@ function Header() {
 
   const handleLogout = () => {
     dispatch(removeToken());
-    dispatch(setNotification({
-      type: "success",
-      message: "Logout successful",
-    }))
-    history.push("/");
+		history.push("/login");
+		showToast("success", "Logout successful")
   };
 
   useEffect(() => {
@@ -93,12 +101,15 @@ function Header() {
       case "/":
         setValue(0);
         return;
-      case "/login":
-        if (!token) setValue(1);
+      case "/overview":
+        setValue(1);
         return;
-      case "/register":
-        if (!token) setValue(2);
-        return;
+      case "/history":
+        setValue(2);
+				return;
+			case "/rank":
+				setValue(3);
+				return;
       default:
         setValue(0);
     }
@@ -112,9 +123,12 @@ function Header() {
           onChange={handleChange}
           aria-label="simple tabs example"
         >
-          <Tab label={<Logo />} {...a11yProps(0)} />
+          {/* <Tab label={<Logo />} {...a11yProps(0)} />
           {!token && <Tab label="Login" {...a11yProps(1)} />}
-          {!token && <Tab label="Register" {...a11yProps(2)} />}
+          {!token && <Tab label="Register" {...a11yProps(2)} />} */}
+					{tabs.map(({label, value}) => (
+						<Tab label={label} {...a11yProps(value)}/>
+					))}
         </Tabs>
 
         {token && (
