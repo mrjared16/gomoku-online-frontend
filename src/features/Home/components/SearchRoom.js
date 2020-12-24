@@ -1,16 +1,14 @@
 import { Fab, makeStyles, Tooltip } from '@material-ui/core';
 import React from 'react';
-import AddIcon from '@material-ui/icons/Add';
+import SearchIcon from '@material-ui/icons/Search';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     '& .MuiFab-root': {
       width: 50,
       height: 50,
-    },
-    '& .MuiFab-primary': {
-      color: 'white',
-    },
-    '& button': {
+		},
+		'& button': {
       margin: 0,
     },
   },
@@ -24,18 +22,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function CreateRoom({ onSubmit = () => {} }) {
+function SearchRoom({ onSubmit = () => {} }) {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
-      <Tooltip title="Create room" aria-label="create">
-        <Fab color="primary" className={classes.fab}>
-          <AddIcon />
+      <Tooltip title="Search room" aria-label="search">
+        <Fab color="secondary" className={classes.fab}>
+          <SearchIcon />
         </Fab>
       </Tooltip>
     </div>
   );
 }
 
-export default CreateRoom;
+export default SearchRoom;

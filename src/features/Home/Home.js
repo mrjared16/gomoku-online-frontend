@@ -2,6 +2,7 @@ import { Button, Grid, makeStyles } from "@material-ui/core";
 import axiosClient from "api/axiosClient";
 import userApi from "api/userApi";
 import { setUser } from "app/userSlice";
+import Header from "components/Header";
 import ListUserStatus from "features/Home/components/ListUserStatus";
 import Main from "features/Home/pages/Main";
 import RoomPage from "features/Home/pages/RoomPage";
@@ -13,23 +14,6 @@ import socketIOClient from "socket.io-client";
 const useStyles = makeStyles({
   root: {
     height: "calc(100vh - 48px)",
-    "& .MuiGrid-container": {
-      height: "100%",
-      "& .MuiGrid-item": {
-        maxHeight: "100%",
-        overflow: "auto",
-        "&::-webkit-scrollbar": {
-          width: "0.3em",
-        },
-        "&::-webkit-scrollbar-track": {
-          boxShadow: "inset 0 0 6px rgba(0,0,0,0.00)",
-          webkitBoxShadow: "inset 0 0 6px rgba(0,0,0,0.00)",
-        },
-        "&::-webkit-scrollbar-thumb": {
-          backgroundColor: "#d4a531",
-        },
-      },
-    },
   },
 });
 
@@ -37,7 +21,7 @@ function userDTOToProp({ id, username, name }) {
   return {
     id: id,
     online: true,
-    fullName: name,
+    name,
     photo: "",
     // time: null
   };
@@ -110,22 +94,25 @@ function Home() {
   }, [token]);
 
   return (
-    <div className={classes.root}>
-      <Grid container>
-        <Grid item xs={9}>
-          <Switch>
-            <Route exact path="/" component={Main} />
-            <Route exact path="/rooms/:id" component={RoomPage} />
-          </Switch>
-        </Grid>
-        <Grid item xs={3} className={classes.listUserStatus}>
-          <Button variant="outlined" onClick={() => fetchOnlineUsers()}>
-            Load
-          </Button>
-          <ListUserStatus list={onlineUsers} />
-        </Grid>
-      </Grid>
-    </div>
+    <>
+			<Header />
+			<div className={classes.root}>
+				<Grid container>
+					<Grid item xs={10}>
+						<Switch>
+							<Route exact path="/" component={Main} />
+							<Route exact path="/rooms/:id" component={RoomPage} />
+						</Switch>
+					</Grid>
+					<Grid item xs={2} className={classes.listUserStatus}>
+						<Button variant="outlined" onClick={() => fetchOnlineUsers()}>
+							Load
+						</Button>
+						<ListUserStatus list={onlineUsers} />
+					</Grid>
+				</Grid>
+			</div>
+		</>
   );
 }
 

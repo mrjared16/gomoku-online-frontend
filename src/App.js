@@ -1,27 +1,24 @@
-import { ThemeProvider } from "@material-ui/core";
-import "./App.scss";
-import theme from "custom-theme";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
-import Login from "features/Auth/pages/Login";
-import Register from "features/Auth/pages/Register";
-import Home from "features/Home/Home";
-import Header from "components/Header";
-import { useSelector } from "react-redux";
-import Notification from "components/Notification";
-import PublishRoute from "components/PublishRoute";
+import { ThemeProvider } from '@material-ui/core';
+import './App.scss';
+import theme from 'custom-theme';
+import { BrowserRouter, Switch } from 'react-router-dom';
+import Login from 'features/Auth/pages/Login';
+import Register from 'features/Auth/pages/Register';
+import Home from 'features/Home/Home';
+import PublishRoute from 'components/PublishRoute';
+import PrivateRoute from 'components/PrivateRoute';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
-	const { type, message } = useSelector(state => state.notification);
-
   return (
     <ThemeProvider theme={theme}>
       <BrowserRouter>
-				{ message && <Notification type={type} message={message} />}
-				<Header />
+        <ToastContainer />
         <Switch>
           <PublishRoute exact path="/login" component={Login} />
           <PublishRoute exact path="/register" component={Register} />
-					<Route path="/" component={Home} />
+          <PrivateRoute path="/" component={Home} />
         </Switch>
       </BrowserRouter>
     </ThemeProvider>

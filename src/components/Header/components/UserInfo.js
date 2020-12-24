@@ -6,18 +6,20 @@ const useStyles = makeStyles({
     display: "flex",
     alignItems: "center",
     "& .fullName": {
-      marginLeft: 10,
       marginRight: 10,
     },
-  },
+	},
+	avatar: {
+		marginLeft: 10,
+	}
 });
 
-function UserInfo({ fullName = "Phuc", photo = "" }) {
+function UserInfo({ fullName = "", photo = "" }) {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
-      <Avatar alt={fullName} src={photo} />
+      <Avatar alt={fullName} src={photo} className={classes.avatar} />
       <div className="fullName">{fullName}</div>
     </div>
   );

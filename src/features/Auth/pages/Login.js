@@ -1,26 +1,39 @@
-import { makeStyles } from "@material-ui/core";
+import { Grid, makeStyles } from "@material-ui/core";
 import React, { useState } from "react";
 import LoginForm from "features/Auth/components/LoginForm";
 import userApi from "api/userApi";
 import { useDispatch } from "react-redux";
 import { setToken } from "app/userSlice";
-import { setNotification } from "app/notificationSlice";
 import { useHistory } from "react-router-dom";
+import background from "assets/images/background.png";
+import { showToast } from "utils/showToast";
 
 const useStyles = makeStyles({
   root: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    height: "calc(100vh - 48px)",
-  },
-  form: {
+		display: "flex",
+		alignItems: "center",
+		height: "100vh",
+	},
+	background: {
+		position: "absolute",
+		width: "100%",
+		height: "100%",
+		maxHeight: "100%",
+		maxWidth: "100%",
+		zIndex: "-1",
+	},
+	formContainer: {
+		display: "flex",
+		justifyContent: "center",
+	},
+	form: {
     width: 370,
+		boxShadow: "0 2px 8px 0 rgba(62,62,82,0.1)",
   },
 });
 
 function Login() {
-  const classes = useStyles();
+	const classes = useStyles();
 
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -37,13 +50,11 @@ function Login() {
         dispatch(setToken(accessToken));
 				setIsSubmitting(false);
 				history.push("/");
+				showToast("success", "Login successful")
       })
       .catch((err) => {
 				setIsSubmitting(false);
-				dispatch(setNotification({
-					type: "error",
-					message: err.message,
-				}));
+				showToast("error", err.message);
       });
   };
 
@@ -57,28 +68,33 @@ function Login() {
       .then((res) => {
         const { accessToken } = res;
         dispatch(setToken(accessToken));
-        setIsSubmitting(false);
+				setIsSubmitting(false);
+				history.push("/");
+				showToast("success", "Login successful")
       })
       .catch((err) => {
 				setIsSubmitting(false);
-				dispatch(setNotification({
-					type: "error",
-					message: err.message,
-				}));
+				showToast("error", err.message);
       });
   };
 
   return (
     <div className={classes.root}>
-      <div className={classes.formContainer}>
-        <div className={classes.form}>
-          <LoginForm
+			<img src={background} alt="background" className={classes.background} />
+			<Grid container>
+				<Grid item xs={6}></Grid>
+				<Grid item xs={6}>
+					<div className={classes.formContainer}>
+						<div className={classes.form}>
+						<LoginForm
             isSubmitting={isSubmitting}
             onSubmit={handleSubmit}
             onLoginWithGoogle={handleLoginWithGoogle}
           />
-        </div>
-      </div>
+						</div>
+					</div>
+				</Grid>
+			</Grid>
     </div>
   );
 }

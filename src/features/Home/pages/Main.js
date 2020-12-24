@@ -1,5 +1,5 @@
 import HeaderOption from "features/Home/components/HeaderOption";
-import ListRoomInfo from "features/Home/components/ListRoomInfo";
+import ListRoom from "features/Home/components/ListRoom";
 import { range } from "lodash";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -79,6 +79,12 @@ const handleRoomListOnchangeEvent = {
   }
 }
 
+const listTest = range(0,100,1).map(index => ({
+	id: index,
+	host: "Phuc",
+	XPlayer: "Phuc X",
+	OPlayer: "Phuc O",
+}))
 
 function Main() {
   const [roomList, setRoomList] = useState([]);
@@ -135,7 +141,8 @@ function Main() {
   return (
     <>
       <HeaderOption onCreateRoom={handleCreateRoom} />
-      <ListRoomInfo list={roomList} onRoomClick={handleRoomClick} />
+      {/* <ListRoom list={roomList} onRoomClick={handleRoomClick} /> */}
+      <ListRoom list={listTest} onRoomClick={handleRoomClick} />
     </>
   );
 }
