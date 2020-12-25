@@ -12,9 +12,6 @@ import axiosClient from 'api/axiosClient';
 import OptionTabs from 'features/Home/components/OptionTabs';
 
 const DEFAULT_SIZE = 20;
-const initialBoard = range(0, DEFAULT_SIZE * DEFAULT_SIZE, 1).map(
-  (index) => -1
-);
 
 const handleRoomChangeEvent = {
   newPlayerJoined: (setState, data) => {
@@ -27,15 +24,19 @@ const handleRoomChangeEvent = {
 
 const handleGameEvent = {
   onHit: (hit, data) => {
-    const { index, value } = data;
-    hit(index, value);
+    const { position, value } = data;
+    hit(position, value);
   },
   changeTurn: (setTurn, data) => {
-    const { currentTurnPlayerID } = data;
+    const { turn } = data;
+    const { playerID, remainingTime } = turn;
     setTurn(() => {
-      return currentTurnPlayerID;
+      return playerID;
     });
   },
+  onFinish: (handleEndGame, data) => {
+    handleEndGame(data);
+  }
 };
 
 const useStyles = makeStyles({
@@ -61,19 +62,38 @@ const useStyles = makeStyles({
 });
 
 function RoomPage() {
-  const [sizeBoard, setSizeBoard] = useState(DEFAULT_SIZE);
-  const [board, setBoard] = useState(initialBoard);
   const [XPlayer, setXPlayer] = useState(null);
   const [OPlayer, setOPlayer] = useState(null);
-  const [idPlayerTurn, setIdPlayerTurn] = useState(null);
+
+  const [sizeBoard, setSizeBoard] = useState(DEFAULT_SIZE);
   const [gameID, setGameID] = useState(null);
+
+  const [idPlayerTurn, setIdPlayerTurn] = useState(null);
+
+  const [gameMoves, setGameMoves] = useState([]);
+  const [moveIndex, setMoveIndex] = useState(0);
+  // const [board, setBoard] = useState(initialBoard);
+
   const { token, currentUserInfo } = useSelector((state) => state.user);
   const classes = useStyles();
 
   const history = useHistory();
   const { id: roomID } = useParams();
 
-  const isStart = useMemo(() => gameID !== null, [gameID]);
+  const isStart = useMemo(() => (gameID !== null), [gameID]);
+
+  const board = useMemo(() => {
+    const size = sizeBoard * sizeBoard;
+    const newBoard = Array(size).fill(-1);
+    gameMoves.slice(0, moveIndex).forEach(({ position, value }) => {
+      newBoard[position] = value;
+    });
+    return newBoard;
+  }, [gameMoves, sizeBoard, moveIndex])
+
+  useEffect(() => {
+    setMoveIndex(gameMoves.length);
+  }, [gameMoves]);
 
   const handleBackTo = () => {
     history.push('/');
@@ -160,24 +180,16 @@ function RoomPage() {
       `${process.env.REACT_APP_API_URL}/game/room/${roomID}`
     );
     console.log({ response });
-    // const { boardSize } = response;
-    // setSizeBoard(boardSize);
-    // 	gameState ={
-    // 		board: [],
-    // 		turn: {
-    // 			id: '',
-    // 			remainingTime: 0
-    // 		}
-    // 	}
     if (!response.id) {
       return;
     }
-    const { id, gameState } = response;
+    const { id, gameState, startAt } = response;
     const { move, turn } = gameState;
     const { playerID, remainingTime } = turn;
     if (!isStart) {
       setGameID(id);
     }
+    setGameMoves(move);
     setIdPlayerTurn(playerID);
   };
 
@@ -198,9 +210,18 @@ function RoomPage() {
     gameSocket.on('gameEventMsg', (response) => {
       const { data, event } = response;
       console.log('receive gameEventMsg emit: ', { response });
+      const handleEndGame = (state, data) => {
+        console.log({ data });
+        const { winnerID, line, rankRecord, duration } = data;
+        // TODO: handle end game
+        setGameID(null);
+        setGameMoves([]);
+        setIdPlayerTurn(null);
+      };
       const getSetter = {
         onHit: hit,
         changeTurn: setIdPlayerTurn,
+        onFinish: handleEndGame
       };
 
       handleGameEvent[event](getSetter[event], data);
@@ -213,25 +234,21 @@ function RoomPage() {
   const isTurn = (player, currentTurnPlayerId) =>
     isStart && player && player.id === currentTurnPlayerId;
 
-  const hit = (index, value) => {
-    setBoard((currentBoard) => {
-      const newBoard = [...currentBoard];
-      newBoard[index] = value;
-      return newBoard;
-    });
+  const hit = (position, value) => {
+    setGameMoves(currentMoves => currentMoves.concat([{ position, value }]));
   };
 
-  const handleSquareClick = (index) => {
+  const handleSquareClick = (position) => {
     if (!isStart) return;
-    if (board[index] !== -1) return;
+    if (board[position] !== -1) return;
     if (!isTurn(currentUserInfo, idPlayerTurn)) return;
     const value = currentUserInfo.id === XPlayer.id ? 0 : 1;
-    hit(index, value);
+    hit(position, value);
 
     gameSocket.emit('hit', {
       roomID: roomID,
       gameID: gameID,
-      index: index,
+      position: position,
       value: value,
     });
   };
