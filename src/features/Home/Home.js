@@ -1,19 +1,26 @@
-import { Button, Grid, makeStyles } from "@material-ui/core";
-import axiosClient from "api/axiosClient";
-import userApi from "api/userApi";
-import { setUser } from "app/userSlice";
-import Header from "components/Header";
-import ListUserStatus from "features/Home/components/ListUserStatus";
-import Main from "features/Home/pages/Main";
-import RoomPage from "features/Home/pages/RoomPage";
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Route, Switch } from "react-router-dom";
-import socketIOClient from "socket.io-client";
+import { Button, Grid, makeStyles } from '@material-ui/core';
+import axiosClient from 'api/axiosClient';
+import userApi from 'api/userApi';
+import { setUser } from 'app/userSlice';
+import Header from 'components/Header';
+import ListUserStatus from 'features/Home/components/ListUserStatus';
+import Main from 'features/Home/pages/Main';
+import RoomPage from 'features/Home/pages/RoomPage';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Route, Switch } from 'react-router-dom';
+import socketIOClient from 'socket.io-client';
+import Search from './components/Search';
 
 const useStyles = makeStyles({
   root: {
-    height: "calc(100vh - 48px)",
+    height: 'calc(100vh - 48px)',
+  },
+  listUserStatus: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    padding: '20px 10px 10px 0px',
   },
 });
 
@@ -22,7 +29,7 @@ function userDTOToProp({ id, username, name }) {
     id: id,
     online: true,
     name,
-    photo: "",
+    photo: '',
     // time: null
   };
 }
@@ -30,7 +37,7 @@ function userDTOToProp({ id, username, name }) {
 const handleOnlineUsersOnchangeEvent = {
   connected: (setState, user) => {
     setState((current = []) => {
-      if (!!current.find((item) => (item.id == user.id))) return current;
+      if (!!current.find((item) => item.id == user.id)) return current;
       return current.concat([{ ...userDTOToProp(user) }]);
     });
   },
@@ -74,15 +81,15 @@ function Home() {
     const socketClient = socketIOClient(
       `${process.env.REACT_APP_SOCKET_URL}/waitingRoom`,
       {
-        transports: ["websocket"],
+        transports: ['websocket'],
         upgrade: false,
         query: { token },
       }
     );
 
-    socketClient.on("userEventMsg", (response) => {
+    socketClient.on('userEventMsg', (response) => {
       const { user, event } = response;
-      if (user === "anonymous") {
+      if (user === 'anonymous') {
         return;
       }
       handleOnlineUsersOnchangeEvent[event](setOnlineUsers, user);
@@ -95,24 +102,14 @@ function Home() {
 
   return (
     <>
-			<Header />
-			<div className={classes.root}>
-				<Grid container>
-					<Grid item xs={10}>
-						<Switch>
-							<Route exact path="/" component={Main} />
-							<Route exact path="/rooms/:id" component={RoomPage} />
-						</Switch>
-					</Grid>
-					<Grid item xs={2} className={classes.listUserStatus}>
-						<Button variant="outlined" onClick={() => fetchOnlineUsers()}>
-							Load
-						</Button>
-						<ListUserStatus list={onlineUsers} />
-					</Grid>
-				</Grid>
-			</div>
-		</>
+      <Header />
+      <div className={classes.root}>
+        <Switch>
+          <Route exact path="/" component={() => <Main onlineUsers={onlineUsers} />} />
+          <Route exact path="/rooms/:id" component={RoomPage} />
+        </Switch>
+      </div>
+    </>
   );
 }
 

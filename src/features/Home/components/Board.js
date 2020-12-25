@@ -7,12 +7,12 @@ const useStyles = (sizeBoard = 0) =>
     root: {
       display: "flex",
       flexWrap: "wrap",
-      width: sizeBoard * 32,
+      width: sizeBoard * 22,
       border: "5px solid #d4a531",
     },
   });
 
-function Board({ sizeBoard = 30, board = [], onSquareClick = () => {} }) {
+function Board({ sizeBoard = 20, board = [], onSquareClick = () => {} }) {
   const classes = useStyles(sizeBoard)();
   
   return (

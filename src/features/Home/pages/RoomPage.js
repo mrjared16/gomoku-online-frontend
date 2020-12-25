@@ -1,5 +1,5 @@
 import { Button, makeStyles } from '@material-ui/core';
-import BackTo from 'features/Home/components/BackTo';
+import BackToListRoom from 'features/Home/components/BackToListRoom';
 import Board from 'features/Home/components/Board';
 import UserInfoInRoom from 'features/Home/components/UserInfoInRoom';
 import { range } from 'lodash';
@@ -8,7 +8,8 @@ import { useHistory, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { roomSocket } from 'socket/roomSocket';
 import { gameSocket } from 'socket/gameSocket';
-import axiosClient from "api/axiosClient";
+import axiosClient from 'api/axiosClient';
+import OptionTabs from 'features/Home/components/OptionTabs';
 
 const DEFAULT_SIZE = 20;
 const initialBoard = range(0, DEFAULT_SIZE * DEFAULT_SIZE, 1).map(
@@ -37,19 +38,25 @@ const handleGameEvent = {
   },
 };
 
-
 const useStyles = makeStyles({
   root: {
     padding: '20px 25px',
   },
   container: {
     display: 'flex',
+    justifyContent: 'center',
+    marginTop: 20,
   },
   userInfoContainer: {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-around',
-    marginLeft: 25,
+    marginLeft: 100,
+    marginRight: 100,
+  },
+  footerButton: {
+    display: 'flex',
+    justifyContent: 'space-between',
   },
 });
 
@@ -66,8 +73,7 @@ function RoomPage() {
   const history = useHistory();
   const { id: roomID } = useParams();
 
-  const isStart = useMemo(() => (gameID !== null), [gameID]);
-
+  const isStart = useMemo(() => gameID !== null, [gameID]);
 
   const handleBackTo = () => {
     history.push('/');
@@ -97,7 +103,7 @@ function RoomPage() {
     });
 
     return () => {
-      roomSocket.off('roomEventMsg', () => { });
+      roomSocket.off('roomEventMsg', () => {});
     };
   }, [token]);
 
@@ -108,7 +114,7 @@ function RoomPage() {
   // 		() => gameState.slice(0, currentStateIndex),
   // 		[currentStateIndex, gameState]
   // 	);
-  
+
   const setRoomState = (response) => {
     // roomState = {
     //   host: { id: '2', name: '', username: '', photo: '' },
@@ -135,21 +141,24 @@ function RoomPage() {
   };
 
   const handleStartGame = () => {
-    roomSocket.emit('start', {
-      roomID: roomID,
-    }, (response) => {
-      console.log('game start response', { response });
-      if (!response)
-        return;
-      const { gameID } = response;
-      setGameID(gameID);
-    }
+    roomSocket.emit(
+      'start',
+      {
+        roomID: roomID,
+      },
+      (response) => {
+        console.log('game start response', { response });
+        if (!response) return;
+        const { gameID } = response;
+        setGameID(gameID);
+      }
     );
   };
 
   const fetchGameState = async (roomID) => {
-    const response = await axiosClient
-      .get(`${process.env.REACT_APP_API_URL}/game/room/${roomID}`);
+    const response = await axiosClient.get(
+      `${process.env.REACT_APP_API_URL}/game/room/${roomID}`
+    );
     console.log({ response });
     // const { boardSize } = response;
     // setSizeBoard(boardSize);
@@ -170,7 +179,7 @@ function RoomPage() {
       setGameID(id);
     }
     setIdPlayerTurn(playerID);
-  }
+  };
 
   // handle game event
   useEffect(() => {
@@ -178,14 +187,14 @@ function RoomPage() {
       return;
     }
 
-    // fetch game state of current room 
+    // fetch game state of current room
     fetchGameState(roomID);
 
     console.log('listening on game event!');
     gameSocket.emit('join', {
       gameID,
-      roomID
-    })
+      roomID,
+    });
     gameSocket.on('gameEventMsg', (response) => {
       const { data, event } = response;
       console.log('receive gameEventMsg emit: ', { response });
@@ -197,10 +206,9 @@ function RoomPage() {
       handleGameEvent[event](getSetter[event], data);
     });
     return () => {
-      gameSocket.off('gameEventMsg', () => { });
+      gameSocket.off('gameEventMsg', () => {});
     };
   }, [gameID]);
-
 
   const isTurn = (player, currentTurnPlayerId) =>
     isStart && player && player.id === currentTurnPlayerId;
@@ -230,7 +238,7 @@ function RoomPage() {
 
   return (
     <div className={classes.root}>
-      <BackTo onSubmit={handleBackTo} />
+      <BackToListRoom onClick={handleBackTo} />
       <div className={classes.container}>
         <Board
           sizeBoard={sizeBoard}
@@ -238,6 +246,16 @@ function RoomPage() {
           onSquareClick={handleSquareClick}
         />
         <div className={classes.userInfoContainer}>
+          <Button
+            variant="contained"
+            color="primary"
+            className="caro-button"
+            disabled={!XPlayer || XPlayer.id != currentUserInfo.id || isStart}
+            onClick={handleStartGame}
+          >
+            Start
+          </Button>
+
           <UserInfoInRoom
             userInfo={XPlayer}
             symbol="X"
@@ -249,16 +267,25 @@ function RoomPage() {
             playerTurn={isTurn(OPlayer, idPlayerTurn)}
           />
 
-          <Button
-            variant="contained"
-            color="primary"
-            className="caro-button"
-            disabled={!XPlayer || XPlayer.id != currentUserInfo.id || isStart}
-            onClick={handleStartGame}
-          >
-            Start
-          </Button>
+          <div className={classes.footerButton}>
+            <Button
+              className="text-white"
+              variant="contained"
+              style={{ backgroundColor: '#2D9CDB' }}
+            >
+              Lose
+            </Button>
+
+            <Button
+              variant="contained"
+              color="secondary"
+              className="caro-button"
+            >
+              Tie
+            </Button>
+          </div>
         </div>
+        <OptionTabs />
       </div>
     </div>
   );

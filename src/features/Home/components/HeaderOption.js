@@ -1,7 +1,8 @@
 import { makeStyles } from '@material-ui/core';
-import React from 'react';
+import React, { useState } from 'react';
 import CreateRoom from 'features/Home/components/CreateRoom';
 import SearchRoom from './SearchRoom';
+import ModalCreateRoom from './ModalCreateRoom';
 
 const useStyles = makeStyles({
   root: {
@@ -15,10 +16,17 @@ const useStyles = makeStyles({
 function HeaderOption({ onCreateRoom = () => {} }) {
   const classes = useStyles();
 
+  const [openModalCreate, setOpenModalCreate] = useState(false);
+
+  const toggleModalCreate = () => {
+    setOpenModalCreate(!openModalCreate);
+  };
+
   return (
     <div className={classes.root}>
-      <CreateRoom onSubmit={onCreateRoom} />
+      <CreateRoom onClick={toggleModalCreate} />
       <SearchRoom />
+      <ModalCreateRoom open={openModalCreate} toggle={toggleModalCreate} onSubmit={onCreateRoom} />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import { Fab, makeStyles, Tooltip } from '@material-ui/core';
 import React from 'react';
-import AddIcon from '@material-ui/icons/Add';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     '& .MuiFab-root': {
@@ -24,18 +25,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function CreateRoom({ onClick = () => {} }) {
+function BackToListRoom({ onClick = () => {} }) {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
-      <Tooltip title="Create room" aria-label="create" onClick={onClick}>
+      <Tooltip title="Back to home" aria-label="back" onClick={onClick}>
         <Fab color="primary" className={classes.fab}>
-          <AddIcon />
+          <ArrowBackIcon />
         </Fab>
       </Tooltip>
     </div>
   );
 }
 
-export default CreateRoom;
+export default BackToListRoom;
