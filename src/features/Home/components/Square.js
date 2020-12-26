@@ -1,13 +1,13 @@
 import { makeStyles } from "@material-ui/core";
 import React from "react";
 
-const useStyles = (sizeSquare) =>  makeStyles({
+const useStyles = makeStyles({
   root: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    height: sizeSquare,
-    width: sizeSquare,
+    height: 30,
+    width: 30,
     border: "1px solid #d4a531",
 		cursor: "pointer",
     userSelect: "none",
@@ -17,8 +17,8 @@ const useStyles = (sizeSquare) =>  makeStyles({
   },
 });
 
-function Square({ value = -1, onClick = () => {}, size = 30 }) {
-  const classes = useStyles(size)();
+function Square({ value = -1, onClick = () => {} }) {
+  const classes = useStyles();
 
   const renderValue = () => {
     switch (value) {
