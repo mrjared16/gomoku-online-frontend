@@ -25,7 +25,7 @@ function Board({ sizeBoard = 20, board = [], onSquareClick = () => { } }) {
 			<div className={classes.row}>
 				{range(0, sizeBoard, 1).map(indexCol => {
 					const indexBoard = indexRow * sizeBoard + indexCol;
-					return <Square size={DEFAULT_SQUARE_SIZE} key={indexBoard} value={board[indexBoard]} onClick={onSquareClick} />
+					return <Square size={DEFAULT_SQUARE_SIZE} key={indexBoard} value={board[indexBoard]} onClick={() => onSquareClick(indexBoard)} />
 				})}
 			</div>
 		))
