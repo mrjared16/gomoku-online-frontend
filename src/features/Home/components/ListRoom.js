@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Button, LinearProgress, makeStyles } from '@material-ui/core';
 import { DataGrid, GridOverlay } from '@material-ui/data-grid';
 import LockIcon from '@material-ui/icons/Lock';
@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
       userSelect: 'none',
     },
     '& .MuiDataGrid-row.Mui-selected': {
-      backgroundColor: '#828282 !important',
+      backgroundColor: '#ffda77 !important',
     },
     '& .MuiPaginationItem-textPrimary.Mui-selected': {
       color: 'white',
@@ -126,78 +126,88 @@ function CustomNoRowsOverlay() {
 }
 
 const columns = [
-  {
-    field: 'id',
-    headerName: 'ID',
-    headerAlign: 'center',
-    cellClassName: 'custom-cell__center',
-    renderCell: (param) => <span>{param.value + 1}</span>,
-    flex: 1,
-  },
-  {
-    field: 'host',
-    headerName: 'Host',
-    headerAlign: 'center',
-    cellClassName: 'custom-cell__center',
-    renderCell: (param) => <span>{param.value.name}</span>,
-    sortable: false,
-    flex: 4,
-  },
-  {
-    field: 'XPlayer',
-    headerName: 'X Player',
-    headerAlign: 'center',
-    cellClassName: 'custom-cell__center',
-    renderCell: (param) => <span>{param.value.name}</span>,
-    sortable: false,
-    flex: 4,
-  },
-  {
-    field: 'OPlayer',
-    headerName: 'O Player',
-    headerAlign: 'center',
-    cellClassName: 'custom-cell__center',
-    renderCell: (param) => <span>{param.value.name}</span>,
-    sortable: false,
-    flex: 4,
-  },
-  {
-    field: 'status',
-    headerName: 'Status',
-    headerAlign: 'center',
-    cellClassName: 'custom-cell__center',
-    renderCell: (param) => (
-      <span style={{ color: param.value === 'Playing' ? 'red' : 'green' }}>
-        {param.value}
-      </span>
-    ),
-    flex: 2,
-  },
-  {
-    field: 'requirePass',
-    headerName: 'Password',
-    headerAlign: 'center',
-    cellClassName: 'custom-cell__center',
-    renderCell: (param) => (param.value ? <LockIcon fontSize="small" /> : ''),
-    sortable: false,
-    flex: 1,
-  },
+	{
+		field: 'index',
+		headerName: 'ID',
+		headerAlign: 'center',
+		cellClassName: 'custom-cell__center',
+		renderCell: (param) => <span>{param.value + 1}</span>,
+		width: 100,
+	},
+	{
+		field: 'host',
+		headerName: 'Host',
+		headerAlign: 'center',
+		cellClassName: 'custom-cell__center',
+		renderCell: (param) => <span>{param.value.name}</span>,
+		sortable: false,
+		width: 400,
+	},
+	{
+		field: 'XPlayer',
+		headerName: 'X Player',
+		headerAlign: 'center',
+		cellClassName: 'custom-cell__center',
+		renderCell: (param) => <span>{param.value.name}</span>,
+		sortable: false,
+		width: 400,
+	},
+	{
+		field: 'OPlayer',
+		headerName: 'O Player',
+		headerAlign: 'center',
+		cellClassName: 'custom-cell__center',
+		renderCell: (param) => <span>{param.value.name}</span>,
+		sortable: false,
+		width: 400,
+	},
+	{
+		field: 'status',
+		headerName: 'Status',
+		headerAlign: 'center',
+		cellClassName: 'custom-cell__center',
+		renderCell: (param) => (
+			<span style={{ color: param.value === 'Playing' ? 'red' : 'green' }}>
+				{param.value}
+			</span>
+		),
+		width: 140,
+	},
+	{
+		field: 'requirePass',
+		headerName: 'Password',
+		headerAlign: 'center',
+		cellClassName: 'custom-cell__center',
+		renderCell: (param) => (param.value ? <LockIcon fontSize="small" /> : ''),
+		sortable: false,
+		width: 100,
+	},
 ];
+
 
 function ListRoom({
   list = [],
   onRoomSelected = () => {},
-  onJoin = () => {},
+	onJoin = () => {},
+	roomSelected = null,
 }) {
 	const classes = useStyles();
+
+	const customList = list.map((data, index) => (
+		{
+			...data,
+			index,
+		}
+	));
 	
   return (
     <div className={classes.root}>
       <div className={classes.table}>
         <DataGrid
           loading={false}
-          rows={list}
+          rows={customList}
           columns={columns}
+					onSelectionChange={val => console.log(val)}
           hideFooterSelectedRowCount={true}
           pagination
           pageSize={20}
@@ -205,15 +215,15 @@ function ListRoom({
             loadingOverlay: CustomLoadingOverlay,
             pagination: CustomPagination,
             noRowsOverlay: CustomNoRowsOverlay,
-          }}
-          onRowSelected={onRoomSelected}
+					}}
+					onRowSelected={onRoomSelected}
         />
       </div>
       <div className={classes.buttons}>
         <Button
-          className="text-white"
           variant="contained"
-          style={{ backgroundColor: '#EB5757' }}
+					color="primary"
+					disabled={!roomSelected}
           onClick={onJoin}
         >
           Join

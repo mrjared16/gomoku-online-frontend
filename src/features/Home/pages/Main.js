@@ -1,7 +1,7 @@
 import HeaderOption from 'features/Home/components/HeaderOption';
 import ListRoom from 'features/Home/components/ListRoom';
 import { range } from 'lodash';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { roomSocket } from 'socket/roomSocket';
@@ -98,23 +98,23 @@ const handleRoomListOnchangeEvent = {
   },
 };
 
-// const listTest = range(0, 100, 1).map((index) => ({
-//   id: index,
-//   host: {
-//     name: 'Phuc ' + index,
-//     photo: '',
-//   },
-//   XPlayer: {
-//     name: 'Phuc X ' + index,
-//     photo: '',
-//   },
-//   OPlayer: {
-//     name: 'Phuc O ' + index,
-//     photo: '',
-//   },
-//   status: index % 3 === 0 ? 'Waiting' : 'Playing',
-//   requirePass: index % 3 === 0,
-// }));
+const listTest = range(0, 100, 1).map((index) => ({
+  id: index,
+  host: {
+    name: 'Phuc ' + index,
+    photo: '',
+  },
+  XPlayer: {
+    name: 'Phuc X ' + index,
+    photo: '',
+  },
+  OPlayer: {
+    name: 'Phuc O ' + index,
+    photo: '',
+  },
+  status: index % 3 === 0 ? 'Waiting' : 'Playing',
+  requirePass: index % 3 === 0,
+}));
 
 const useStyles = makeStyles({
 	listUserStatus: {
@@ -183,18 +183,20 @@ function Main({onlineUsers = []}) {
 
   const handleRoomSelected = (row) => {
     setRoomSelected(row.data);
-  };
+	};
+	
+	const containerLeftRef = useRef(null);
 
   return (
     <>
       <Grid container>
-        <Grid item xs={10}>
+        <Grid item xs={10} innerRef={containerLeftRef}>
           <HeaderOption onCreateRoom={handleCreateRoom} />
-          {/* <ListRoom list={roomList} onRoomClick={handleRoomClick} /> */}
           <ListRoom
             list={roomList}
             onRoomSelected={handleRoomSelected}
-            onJoin={handleJoinClick}
+						onJoin={handleJoinClick}
+						roomSelected={roomSelected}
           />
         </Grid>
         <Grid item xs={2} className={classes.listUserStatus}>
