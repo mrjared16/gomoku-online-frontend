@@ -71,8 +71,10 @@ const useStyles = makeStyles({
 });
 
 function RoomPage() {
+	const [hostInfo, setHostInfo] = useState(null);
 	const [XPlayer, setXPlayer] = useState(null);
 	const [OPlayer, setOPlayer] = useState(null);
+	const [spectator, setSpectator] = useState(null);
 
 	const [sizeBoard, setSizeBoard] = useState(DEFAULT_SIZE);
 	const [gameID, setGameID] = useState(null);
@@ -132,7 +134,7 @@ function RoomPage() {
 		});
 
 		return () => {
-			roomSocket.off('roomEventMsg', () => {});
+			roomSocket.off('roomEventMsg', () => { });
 		};
 	}, [token]);
 
@@ -152,16 +154,22 @@ function RoomPage() {
 		// };
 
 		//TODO: add waiting stage for room
-		const { players, roomOption, gameID } = response;
+		const { players, roomOption, gameID, host, users } = response;
 
 		const { boardSize } = roomOption;
 		setSizeBoard(boardSize);
 
+		if (host) {
+			setHostInfo(host);
+		}
 		if (players['X']) {
 			setXPlayer(players['X']);
 		}
 		if (players['O']) {
 			setOPlayer(players['O']);
+		}
+		if (users) {
+			setSpectator(users);
 		}
 
 		if (gameID) {
@@ -236,7 +244,7 @@ function RoomPage() {
 			handleGameEvent[event](getSetter[event], data);
 		});
 		return () => {
-			gameSocket.off('gameEventMsg', () => {});
+			gameSocket.off('gameEventMsg', () => { });
 		};
 	}, [gameID]);
 
@@ -262,6 +270,15 @@ function RoomPage() {
 		});
 	};
 
+	const canStartGame = () => XPlayer && OPlayer && hostInfo.id === currentUserInfo.id && !isStart;
+
+	const handleClickUserInfo = (side = 0) => {
+		roomSocket.emit('joinTable', {
+			token: token,
+			side: side,
+		})
+	}
+
 	return (
 		<div className={classes.root}>
 			<BackToListRoom onClick={handleBackTo} />
@@ -276,7 +293,7 @@ function RoomPage() {
 						variant="contained"
 						color="primary"
 						className="caro-button"
-						disabled={!XPlayer || XPlayer.id != currentUserInfo.id || isStart}
+						disabled={!canStartGame()}
 						onClick={handleStartGame}
 					>
 						Start
@@ -287,11 +304,13 @@ function RoomPage() {
 						userInfo={XPlayer}
 						symbol="X"
 						playerTurn={isTurn(XPlayer, idPlayerTurn)}
+						onClick={() => handleClickUserInfo(0)}
 					/>
 					<UserInfoInRoom
 						userInfo={OPlayer}
 						symbol="O"
 						playerTurn={isTurn(OPlayer, idPlayerTurn)}
+						onClick={() => handleClickUserInfo(1)}
 					/>
 
 					<div className={classes.footerButton}>
@@ -312,7 +331,7 @@ function RoomPage() {
             </Button>
 					</div>
 				</div>
-				<OptionTabs />
+				<OptionTabs spectator={spectator} />
 			</div>
 		</div>
 	);

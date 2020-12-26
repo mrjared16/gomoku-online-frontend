@@ -8,6 +8,10 @@ const DEFAULT_SQUARE_SIZE = 30;
 const useStyles = (sizeBoard = 0) =>
 	makeStyles({
 		root: {
+			display: 'flex',
+			alignItems: 'center',
+		},
+		board: {
 			width: sizeBoard * (DEFAULT_SQUARE_SIZE + 2),
 			height: sizeBoard * (DEFAULT_SQUARE_SIZE + 2),
 			border: "5px solid #d4a531",
@@ -33,7 +37,9 @@ function Board({ sizeBoard = 20, board = [], onSquareClick = () => { } }) {
 
 	return (
 		<div className={classes.root}>
-			{renderRows()}
+			<div className={classes.board}>
+				{renderRows()}
+			</div>
 		</div>
 	);
 }

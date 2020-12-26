@@ -15,7 +15,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function IconLabelTabs() {
+function OptionTabs({ spectator = [] }) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
@@ -30,7 +30,7 @@ export default function IconLabelTabs() {
 			case 1:
 				return <span>Turn History</span>
 			case 2:
-				return <span>Spectator</span>
+				return spectator && spectator.map(({ username }) => username)
 			default:
 				return <span>Chat</span>
 		}
@@ -56,3 +56,5 @@ export default function IconLabelTabs() {
 		</>
   );
 }
+
+export default OptionTabs;
