@@ -8,14 +8,15 @@ const useStyles = makeStyles((theme) => ({
   root: {
     '& .MuiDataGrid-cell:focus, .MuiDataGrid-colCell:focus': {
       outline: 'none',
-      userSelect: 'none',
+			userSelect: 'none',
     },
-    '& .MuiDataGrid-row.Mui-selected': {
+		'& .MuiDataGrid-row:hover': {
+			backgroundColor: '#ffda77',
+			opacity: '0.6',
+		},
+		'& .MuiDataGrid-row.Mui-selected': {
       backgroundColor: '#ffda77 !important',
-    },
-    '& .MuiPaginationItem-textPrimary.Mui-selected': {
-      color: 'white',
-    },
+		},
   },
   customNoRow: {
     flexDirection: 'column',
@@ -186,6 +187,7 @@ const columns = [
 
 
 function ListRoom({
+	loading = true,
   list = [],
   onRoomSelected = () => {},
 	onJoin = () => {},
@@ -204,8 +206,8 @@ function ListRoom({
     <div className={classes.root}>
       <div className={classes.table}>
         <DataGrid
-          loading={false}
-          rows={customList}
+          loading={true}
+          rows={[]}
           columns={columns}
 					onSelectionChange={val => console.log(val)}
           hideFooterSelectedRowCount={true}
@@ -229,7 +231,7 @@ function ListRoom({
           Join
         </Button>
         <Button
-          className="text-white"
+          // className="text-white"
           variant="contained"
           style={{ backgroundColor: '#2D9CDB' }}
         >

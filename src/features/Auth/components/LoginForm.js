@@ -128,7 +128,7 @@ function LoginForm({
                     variant="contained"
                     color="primary"
                     type="submit"
-                    className="text-white"
+                    // className="text-white"
                   >
                     {isSubmitting ? (
                       <CircularProgress style={{ color: "white" }} size={24} />

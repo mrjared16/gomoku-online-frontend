@@ -10,6 +10,8 @@ import { roomSocket } from 'socket/roomSocket';
 import { gameSocket } from 'socket/gameSocket';
 import axiosClient from 'api/axiosClient';
 import OptionTabs from 'features/Home/components/OptionTabs';
+import ModalStatusGameFinish from 'features/Home/components/ModalStatusGameFinish';
+import ModalConfirmNewGame from '../components/ModalConfirmNewGame';
 
 const DEFAULT_SIZE = 20;
 
@@ -75,6 +77,7 @@ function RoomPage() {
 	const [XPlayer, setXPlayer] = useState(null);
 	const [OPlayer, setOPlayer] = useState(null);
 	const [spectator, setSpectator] = useState(null);
+	const [statusFinishGame, setStatusFinishGame] = useState(null);
 
 	const [sizeBoard, setSizeBoard] = useState(DEFAULT_SIZE);
 	const [gameID, setGameID] = useState(null);
@@ -84,6 +87,9 @@ function RoomPage() {
 	const [gameMoves, setGameMoves] = useState([]);
 	const [moveIndex, setMoveIndex] = useState(0);
 	// const [board, setBoard] = useState(initialBoard);
+
+	const [openModalStatusGameFinish, setOpenModalStatusGameFinish] = useState(false);
+	const [openModalConfirmNewGame, setOpenModalConfirmNewGame] = useState(false);
 
 	const { token, currentUserInfo } = useSelector((state) => state.user);
 	const classes = useStyles();
@@ -192,6 +198,12 @@ function RoomPage() {
 		);
 	};
 
+	const handleNewGame = () => {
+		setGameMoves([]);
+		setStatusFinishGame(null);
+		setOpenModalConfirmNewGame(false);
+	};
+
 	const fetchGameState = async (roomID) => {
 		const response = await axiosClient.get(
 			`${process.env.REACT_APP_API_URL}/game/room/${roomID}`
@@ -229,10 +241,20 @@ function RoomPage() {
 			console.log('receive gameEventMsg emit: ', { response });
 			const handleEndGame = (state, data) => {
 				console.log({ data });
-				const { winnerID, line, rankRecord, duration } = data;
+				// const { winnerID, line, rankRecord, duration } = data;
+				const winnerID = XPlayer.id;
+				const line = '1-3-4-5-6';
+				const winner = winnerID === XPlayer.id ? XPlayer : OPlayer;
+				const loser = winnerID === XPlayer.id ? OPlayer : XPlayer;
+				setStatusFinishGame({
+					winner: winner || null,
+					loser: loser || null,
+					winLine: line ? getWinLinePosition(line) : [],
+				})
+				setOpenModalStatusGameFinish(true);
 				// TODO: handle end game
 				setGameID(null);
-				setGameMoves([]);
+				// setGameMoves([]);
 				setIdPlayerTurn(null);
 			};
 			const getSetter = {
@@ -279,6 +301,11 @@ function RoomPage() {
 		})
 	}
 
+	const getWinLinePosition = (line) => {
+		const winLine = line.split('-').map(item => parseInt(item));
+		return winLine;
+	}
+
 	return (
 		<div className={classes.root}>
 			<BackToListRoom onClick={handleBackTo} />
@@ -287,9 +314,10 @@ function RoomPage() {
 					sizeBoard={sizeBoard}
 					board={board}
 					onSquareClick={handleSquareClick}
+					winLine={statusFinishGame?.winLine}
 				/>
 				<div className={classes.userInfoContainer}>
-					<Button
+					{!statusFinishGame && <Button
 						variant="contained"
 						color="primary"
 						className="caro-button"
@@ -297,7 +325,16 @@ function RoomPage() {
 						onClick={handleStartGame}
 					>
 						Start
-          </Button>
+					</Button>}
+
+					{statusFinishGame && <Button
+						variant="contained"
+						color="primary"
+						className="caro-button"
+						onClick={() => setOpenModalConfirmNewGame(true)}
+					>
+						New Game
+					</Button>}
 
 
 					<UserInfoInRoom
@@ -305,17 +342,19 @@ function RoomPage() {
 						symbol="X"
 						playerTurn={isTurn(XPlayer, idPlayerTurn)}
 						onClick={() => handleClickUserInfo(0)}
+						isWinner={XPlayer && statusFinishGame?.winner?.id === XPlayer?.id}
 					/>
 					<UserInfoInRoom
 						userInfo={OPlayer}
 						symbol="O"
 						playerTurn={isTurn(OPlayer, idPlayerTurn)}
 						onClick={() => handleClickUserInfo(1)}
+						isWinner={OPlayer && statusFinishGame?.winner?.id === OPlayer?.id}
 					/>
 
 					<div className={classes.footerButton}>
 						<Button
-							className="text-white surrender-button"
+							className="surrender-button"
 							variant="contained"
 							style={{ backgroundColor: '#2D9CDB' }}
 						>
@@ -333,6 +372,13 @@ function RoomPage() {
 				</div>
 				<OptionTabs spectator={spectator} />
 			</div>
+			<ModalStatusGameFinish
+				open={openModalStatusGameFinish}
+				toggle={() => setOpenModalStatusGameFinish(!openModalStatusGameFinish)}
+				winnerInfo={statusFinishGame?.winner}
+				loserInfo={statusFinishGame?.loser}
+			/>
+			<ModalConfirmNewGame open={openModalConfirmNewGame} toggle={() => setOpenModalConfirmNewGame(!openModalConfirmNewGame)} onSubmit={handleNewGame} />
 		</div>
 	);
 }

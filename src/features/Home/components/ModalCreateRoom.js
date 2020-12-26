@@ -94,7 +94,7 @@ function ModalCreateRoom({
         <Button
           variant="contained"
           color="primary"
-					className="text-white"
+					// className="text-white"
 					onClick={onSubmit}
         >
 					Create
@@ -102,7 +102,7 @@ function ModalCreateRoom({
 				<Button
           variant="contained"
           color="secondary"
-					className="text-white"
+					// className="text-white"
 					onClick={toggle}
         >
 					Cancel

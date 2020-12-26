@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import AccessAlarmsIcon from '@material-ui/icons/AccessAlarms';
 import moment from 'moment';
-import BrushIcon from '@material-ui/icons/Brush';
 
 function Timer({ value = 0 }) {
 	const [timer, setTimer] = useState(value * 1000);
@@ -26,7 +25,6 @@ function Timer({ value = 0 }) {
 						? '0' + moment(timer).second()
 						: moment(timer).second())}
 			</span>
-			<BrushIcon style={{ color: 'blue' }} />
 		</>
 	);
 }

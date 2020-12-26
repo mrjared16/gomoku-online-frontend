@@ -13,11 +13,11 @@ const useStyles = makeStyles({
     userSelect: "none",
     "& span": {
       fontSize: 25,
-    },
+		},
   },
 });
 
-function Square({ value = -1, onClick = () => {} }) {
+function Square({ value = -1, onClick = () => {}, isBelongWinLine = false }) {
   const classes = useStyles();
 
   const renderValue = () => {
@@ -32,7 +32,7 @@ function Square({ value = -1, onClick = () => {} }) {
   };
 
   return (
-    <div className={classes.root} onClick={onClick}>
+    <div className={classes.root} onClick={onClick} style={{backgroundColor: isBelongWinLine ? '#aee6e6': 'white'}}>
       {renderValue()}
     </div>
   );

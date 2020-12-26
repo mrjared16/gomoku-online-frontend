@@ -130,7 +130,8 @@ function Main({onlineUsers = []}) {
   const [roomList, setRoomList] = useState([]);
   const history = useHistory();
   const { token } = useSelector((state) => state.user);
-  const [roomSelected, setRoomSelected] = useState(null);
+	const [roomSelected, setRoomSelected] = useState(null);
+	const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchRooms();
@@ -157,7 +158,8 @@ function Main({onlineUsers = []}) {
           const convertedRoom = roomDTOToProp(room);
           return convertedRoom;
         });
-        setRoomList((list) => roomsProp);
+				setRoomList((list) => roomsProp);
+				setLoading(false);
       });
   };
 
@@ -193,6 +195,7 @@ function Main({onlineUsers = []}) {
         <Grid item xs={10} innerRef={containerLeftRef}>
           <HeaderOption onCreateRoom={handleCreateRoom} />
           <ListRoom
+						loading={loading}
             list={roomList}
             onRoomSelected={handleRoomSelected}
 						onJoin={handleJoinClick}

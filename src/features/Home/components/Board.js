@@ -1,7 +1,7 @@
 import { makeStyles } from "@material-ui/core";
 import React from "react";
 import Square from "features/Home/components/Square";
-import { range } from "lodash";
+import { includes, range } from "lodash";
 
 const DEFAULT_SQUARE_SIZE = 30;
 
@@ -21,7 +21,7 @@ const useStyles = (sizeBoard = 0) =>
 		}
 	});
 
-function Board({ sizeBoard = 20, board = [], onSquareClick = () => { } }) {
+function Board({ sizeBoard = 20, board = [], onSquareClick = () => { }, winLine = [] }) {
 	const classes = useStyles(sizeBoard)();
 
 	const renderRows = () => (
@@ -29,7 +29,8 @@ function Board({ sizeBoard = 20, board = [], onSquareClick = () => { } }) {
 			<div className={classes.row}>
 				{range(0, sizeBoard, 1).map(indexCol => {
 					const indexBoard = indexRow * sizeBoard + indexCol;
-					return <Square key={indexBoard} value={board[indexBoard]} onClick={() => onSquareClick(indexBoard)} />
+					const isBelongWinLine = includes(winLine, indexBoard);
+					return <Square key={indexBoard} value={board[indexBoard]} onClick={() => onSquareClick(indexBoard)}  isBelongWinLine={isBelongWinLine} />
 				})}
 			</div>
 		))
