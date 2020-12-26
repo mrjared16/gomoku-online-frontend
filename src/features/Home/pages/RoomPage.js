@@ -198,6 +198,17 @@ function RoomPage() {
 		);
 	};
 
+	const isPlayer = () => {
+		if (!currentUserInfo || !XPlayer || !OPlayer)
+		{
+			return -1;
+		}
+		if (currentUserInfo.id === XPlayer.id)
+			return 0;
+		if (currentUserInfo.id === OPlayer.id)
+			return 1;
+	}
+
 	const handleNewGame = () => {
 		setGameMoves([]);
 		setStatusFinishGame(null);
@@ -238,17 +249,18 @@ function RoomPage() {
 		});
 		gameSocket.on('gameEventMsg', (response) => {
 			const { data, event } = response;
-			console.log('receive gameEventMsg emit: ', { response });
+			console.log('receive gameEventMsg emit: ', { response })
 			const handleEndGame = (state, data) => {
 				console.log({ data });
 				// const { winnerID, line, rankRecord, duration } = data;
-				const winnerID = XPlayer.id;
+				const gameResult = 0;
+				const isDraw = gameResult === 2;
+				const isXWin = gameResult === 0;
+
 				const line = '1-3-4-5-6';
-				const winner = winnerID === XPlayer.id ? XPlayer : OPlayer;
-				const loser = winnerID === XPlayer.id ? OPlayer : XPlayer;
 				setStatusFinishGame({
-					winner: winner || null,
-					loser: loser || null,
+					isDraw,
+					isXWin,
 					winLine: line ? getWinLinePosition(line) : [],
 				})
 				setOpenModalStatusGameFinish(true);
@@ -306,6 +318,7 @@ function RoomPage() {
 		return winLine;
 	}
 
+
 	return (
 		<div className={classes.root}>
 			<BackToListRoom onClick={handleBackTo} />
@@ -342,14 +355,14 @@ function RoomPage() {
 						symbol="X"
 						playerTurn={isTurn(XPlayer, idPlayerTurn)}
 						onClick={() => handleClickUserInfo(0)}
-						isWinner={XPlayer && statusFinishGame?.winner?.id === XPlayer?.id}
+						isWinner={statusFinishGame?.isXWin}
 					/>
 					<UserInfoInRoom
 						userInfo={OPlayer}
 						symbol="O"
 						playerTurn={isTurn(OPlayer, idPlayerTurn)}
 						onClick={() => handleClickUserInfo(1)}
-						isWinner={OPlayer && statusFinishGame?.winner?.id === OPlayer?.id}
+						isWinner={statusFinishGame && !statusFinishGame.isXWin}
 					/>
 
 					<div className={classes.footerButton}>
@@ -375,8 +388,15 @@ function RoomPage() {
 			<ModalStatusGameFinish
 				open={openModalStatusGameFinish}
 				toggle={() => setOpenModalStatusGameFinish(!openModalStatusGameFinish)}
-				winnerInfo={statusFinishGame?.winner}
-				loserInfo={statusFinishGame?.loser}
+				// title={getTitleStatusGameFinish()}
+				duration={620}
+				XPlayer={XPlayer}
+				OPlayer={OPlayer}
+				isDraw={statusFinishGame?.isDraw}
+				isXWin={statusFinishGame?.isXWin}
+				isPlayer={isPlayer()}
+			// winnerInfo={statusFinishGame?.winner}
+			// loserInfo={statusFinishGame?.loser}
 			/>
 			<ModalConfirmNewGame open={openModalConfirmNewGame} toggle={() => setOpenModalConfirmNewGame(!openModalConfirmNewGame)} onSubmit={handleNewGame} />
 		</div>

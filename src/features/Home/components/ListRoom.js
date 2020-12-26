@@ -206,8 +206,8 @@ function ListRoom({
     <div className={classes.root}>
       <div className={classes.table}>
         <DataGrid
-          loading={true}
-          rows={[]}
+          loading={loading}
+          rows={customList}
           columns={columns}
 					onSelectionChange={val => console.log(val)}
           hideFooterSelectedRowCount={true}
