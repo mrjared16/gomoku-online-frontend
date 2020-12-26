@@ -1,29 +1,27 @@
 import { makeStyles } from "@material-ui/core";
 import React from "react";
 
-const useStyles = makeStyles({
+const useStyles = (sizeSquare) =>  makeStyles({
   root: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    height: 20,
-    width: 20,
+    height: sizeSquare,
+    width: sizeSquare,
     border: "1px solid #d4a531",
 		cursor: "pointer",
     userSelect: "none",
     "& span": {
-      fontSize: 20,
+      fontSize: 25,
     },
   },
 });
 
-function Square({ value = -1, onClick = () => {} }) {
-  const classes = useStyles();
+function Square({ value = -1, onClick = () => {}, size = 30 }) {
+  const classes = useStyles(size)();
 
   const renderValue = () => {
     switch (value) {
-      case -1:
-        return "";
       case 0:
         return <span style={{ color: "red" }}>X</span>;
       case 1:

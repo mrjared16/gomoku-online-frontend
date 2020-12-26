@@ -1,27 +1,41 @@
 import { makeStyles } from "@material-ui/core";
 import React from "react";
 import Square from "features/Home/components/Square";
+import { range } from "lodash";
+
+const DEFAULT_SQUARE_SIZE = 30;
 
 const useStyles = (sizeBoard = 0) =>
-  makeStyles({
-    root: {
-      display: "flex",
-      flexWrap: "wrap",
-      width: sizeBoard * 22,
-      border: "5px solid #d4a531",
-    },
-  });
+	makeStyles({
+		root: {
+			width: sizeBoard * (DEFAULT_SQUARE_SIZE + 2),
+			height: sizeBoard * (DEFAULT_SQUARE_SIZE + 2),
+			border: "5px solid #d4a531",
+		},
+		row: {
+			display: 'flex',
+		}
+	});
 
-function Board({ sizeBoard = 20, board = [], onSquareClick = () => {} }) {
-  const classes = useStyles(sizeBoard)();
-  
-  return (
-    <div className={classes.root}>
-      {board.map((value, index) => (
-        <Square key={index} value={value} onClick={() => onSquareClick(index)} />
-      ))}
-    </div>
-  );
+function Board({ sizeBoard = 20, board = [], onSquareClick = () => { } }) {
+	const classes = useStyles(sizeBoard)();
+
+	const renderRows = () => (
+		range(0, sizeBoard, 1).map(indexRow => (
+			<div className={classes.row}>
+				{range(0, sizeBoard, 1).map(indexCol => {
+					const indexBoard = indexRow * sizeBoard + indexCol;
+					return <Square size={DEFAULT_SQUARE_SIZE} key={indexBoard} value={board[indexBoard]} onClick={onSquareClick} />
+				})}
+			</div>
+		))
+	)
+
+	return (
+		<div className={classes.root}>
+			{renderRows()}
+		</div>
+	);
 }
 
 export default Board;

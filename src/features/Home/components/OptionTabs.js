@@ -10,7 +10,8 @@ import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 const useStyles = makeStyles({
   root: {
     flexGrow: 1,
-    maxWidth: 500,
+		maxWidth: 500,
+		boxShadow: 'none',
   },
 });
 

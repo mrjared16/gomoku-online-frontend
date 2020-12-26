@@ -10,7 +10,7 @@ const useStyles = makeStyles({
     },
 	},
 	avatar: {
-		marginLeft: 10,
+		marginRight: 10,
 	}
 });
 
