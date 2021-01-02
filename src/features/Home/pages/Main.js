@@ -67,7 +67,7 @@ const handleRoomListOnchangeEvent = {
 		setRoomList,
 		{
 			id,
-			host = {},
+			host,
 			players = { X: null, O: null },
 			numberOfUsers = 0,
 			roomOption,
@@ -75,6 +75,9 @@ const handleRoomListOnchangeEvent = {
 		} = DEFAULT_ROOM_RESPONSE
 	) => {
 		setRoomList((current = []) => {
+			if (!host) {
+				return current.filter((room) => room.id !== id);
+			}
 			const changedRoom = {
 				...roomDTOToProp({
 					id,
@@ -108,7 +111,7 @@ const useStyles = makeStyles({
 	},
 	profile: {
 		padding: '20px 10px 10px 20px',
-		}
+	}
 })
 
 function Main({ onlineUsers = [] }) {

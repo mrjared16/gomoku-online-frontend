@@ -87,7 +87,6 @@ function RoomPage() {
 
 	const [gameMoves, setGameMoves] = useState([]);
 	const [moveIndex, setMoveIndex] = useState(0);
-	// const [board, setBoard] = useState(initialBoard);
 
 	//Modal
 	const [openModalStatusGameFinish, setOpenModalStatusGameFinish] = useState(false);
@@ -119,9 +118,15 @@ function RoomPage() {
 	const handleExitRoom = () => {
 		dispatch(removeRoomID())
 		history.push('/');
+		roomSocket.emit('join', {
+			action: 'leave',
+			data: {
+				token: token,
+				roomID: roomID,
+			}
+		})
 	};
 
-	// }
 	// handle room event
 	useEffect(() => {
 		console.log('join room', { roomID: roomID });
@@ -151,30 +156,23 @@ function RoomPage() {
 		};
 	}, [token]);
 
-	// const fetchGameState = () => {
-	// 	const [gameState] = useState([]);
-	// 	const [currentStateIndex] = useState(0);
-	// 	const currentGameState = useMemo(
-	// 		() => gameState.slice(0, currentStateIndex),
-	// 		[currentStateIndex, gameState]
-	// 	);
 
 	const setRoomState = (response) => {
-		// roomState = {
-		//   host: { id: '2', name: '', username: '', photo: '' },
-		//   opponent: {},
-		//   roomStatus: 'start' | 'waiting',
-		// };
+		const { host } = response;
+		if (!host) {
+			// TODO: show message for user
+			console.log('this room is no longer exist');
+			history.push('/');
+			return;
+		}
 
-		//TODO: add waiting stage for room
-		const { players, roomOption, gameID, host, users } = response;
+		const { players, roomOption, gameID, users } = response;
+
+		setHostInfo(host);
 
 		const { boardSize } = roomOption;
 		setSizeBoard(boardSize);
 
-		if (host) {
-			setHostInfo(host);
-		}
 		setXPlayer(players['X']);
 		setOPlayer(players['O']);
 		if (users) {
