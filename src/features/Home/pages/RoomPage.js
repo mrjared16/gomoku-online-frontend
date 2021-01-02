@@ -129,8 +129,10 @@ function RoomPage() {
 			'join',
 			{
 				action: 'join',
-				token: token,
-				roomID: roomID,
+				data: {
+					token: token,
+					roomID: roomID,
+				}
 			},
 			(response) => {
 				setRoomState(response);
@@ -173,12 +175,8 @@ function RoomPage() {
 		if (host) {
 			setHostInfo(host);
 		}
-		if (players['X']) {
-			setXPlayer(players['X']);
-		}
-		if (players['O']) {
-			setOPlayer(players['O']);
-		}
+		setXPlayer(players['X']);
+		setOPlayer(players['O']);
 		if (users) {
 			setSpectator(users);
 		}
@@ -312,9 +310,12 @@ function RoomPage() {
 
 	const handleClickUserInfo = (side = 0) => {
 		roomSocket.emit('joinTable', {
-			token: token,
-			side: side,
-			roomID: roomID,
+			action: 'join',
+			data: {
+				token: token,
+				side: side,
+				roomID: roomID,
+			}
 		})
 	}
 
@@ -350,7 +351,7 @@ function RoomPage() {
 						>
 							Start
 						</Button>}
-					
+
 						{statusFinishGame && <Button
 							variant="contained"
 							color="primary"
@@ -360,8 +361,8 @@ function RoomPage() {
 						>
 							New Game
 						</Button>}
-					
-					
+
+
 						<UserInfoInRoom
 							userInfo={XPlayer}
 							symbol="X"
@@ -376,7 +377,7 @@ function RoomPage() {
 							onClick={() => handleClickUserInfo(1)}
 							isWinner={statusFinishGame && !statusFinishGame.isXWin}
 						/>
-					
+
 						<div className={classes.footerButton}>
 							<Button
 								className="surrender-button"
@@ -386,7 +387,7 @@ function RoomPage() {
 							>
 								Surrender
 									</Button>
-					
+
 							<Button
 								variant="contained"
 								color="secondary"
