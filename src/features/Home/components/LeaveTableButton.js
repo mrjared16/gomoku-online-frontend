@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme) => ({
   },
   fab: {
 		margin: theme.spacing(2),
+		backgroundColor: '#EB5757',
   },
   absolute: {
     position: 'absolute',
@@ -27,18 +28,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function ExitRoomButton({ onClick = () => {} }) {
+function LeaveTableButton({ onClick = () => {} }) {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
-      <Tooltip title="Exit room" aria-label="back" onClick={onClick}>
-        <Fab color="primary" className={classes.fab}>
-					<Icon className="fas fa-sign-out-alt" style={{fontSize: 15}} />
+      <Tooltip title="Leave" aria-label="leave" onClick={onClick}>
+        <Fab className={classes.fab}>
+					<Icon className="fas fa-share" style={{fontSize: 15	}} />
         </Fab>
       </Tooltip>
     </div>
   );
 }
 
-export default ExitRoomButton;
+export default LeaveTableButton;

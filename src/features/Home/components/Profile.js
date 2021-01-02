@@ -1,14 +1,16 @@
-import { Box, Icon, makeStyles, Typography } from '@material-ui/core';
+import { Box, makeStyles, Typography } from '@material-ui/core';
 import AvatarCustom from 'components/AvatarCustom';
 import React from 'react';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { useSelector } from 'react-redux';
+import formatRank from 'utils/formatRank';
 
 const useStyles = makeStyles({
   root: {
 		height: '100%',
     '& h6': {
-      fontWeight: 'normal',
+			fontWeight: 'normal',
+			marginRight: 10,
     },
     '& .MuiIcon-root': {
       width: 'fit-content',
@@ -50,35 +52,36 @@ function Profile({ userInfo = {} }) {
             </Box>
             <Box display="flex" alignItems="center" marginTop={1}>
               <Typography variant="subtitle2">Rank:</Typography>
-              <Typography variant="subtitle2" style={{ marginLeft: 10 }}>
+              {/* <Typography variant="subtitle2" style={{ marginLeft: 10 }}>
                 Diamond
               </Typography>
               <Icon
                 className="fas fa-gem"
                 style={{ fontSize: 15, marginLeft: 10, color: '#13B0E2' }}
-              />
+              /> */}
+							{formatRank(550)}
             </Box>
             <Box display="flex" marginTop={1}>
               <Typography variant="subtitle2">Win Rate:</Typography>
-              <Typography variant="subtitle2" style={{ marginLeft: 10 }}>
+              <Typography variant="subtitle2">
                 90%
               </Typography>
             </Box>
             <Box display="flex" marginTop={1}>
               <Typography variant="subtitle2">Number of win games:</Typography>
-              <Typography variant="subtitle2" style={{ marginLeft: 10 }}>
+              <Typography variant="subtitle2">
                 900
               </Typography>
             </Box>
             <Box display="flex" marginTop={1}>
               <Typography variant="subtitle2">Number of games:</Typography>
-              <Typography variant="subtitle2" style={{ marginLeft: 10 }}>
+              <Typography variant="subtitle2">
                 1000
               </Typography>
             </Box>
             <Box display="flex" marginTop={1}>
               <Typography variant="subtitle2">Join date:</Typography>
-              <Typography variant="subtitle2" style={{ marginLeft: 10 }}>
+              <Typography variant="subtitle2">
                 02/01/2020
               </Typography>
             </Box>

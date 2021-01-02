@@ -10,6 +10,9 @@ import {
 	ListItemAvatar,
 	ListItemText,
 	DialogTitle,
+	ListItemSecondaryAction,
+	IconButton,
+	Icon,
 } from '@material-ui/core';
 import AvatarCustom from 'components/AvatarCustom';
 import React from 'react';
@@ -17,7 +20,13 @@ import React from 'react';
 const useStyles = makeStyles({
 	root: {
 		'& .MuiDialog-paper': {
-			width: 250,
+			width: 300,
+		},
+	},
+	name: {
+		display: 'flex',
+		'& span': {
+			marginLeft: 10,
 		},
 	},
 });
@@ -26,6 +35,7 @@ function ModalSpectator({
 	open = false,
 	toggle = () => { },
 	list = [],
+	hostID = null,
 }) {
 	const classes = useStyles();
 
@@ -34,8 +44,8 @@ function ModalSpectator({
 			<DialogTitle>Spectators</DialogTitle>
 			<DialogContent>
 				<List>
-					{list && list.map(
-						({ id, online = false, name = "", photo = "" }, index) => (
+					{list &&
+						list.map(({ id, online = false, name = '', photo = '' }, index) => (
 							<ListItem key={id} button>
 								<ListItemAvatar>
 									<AvatarCustom photo={photo} online={true} />
@@ -43,11 +53,26 @@ function ModalSpectator({
 								<ListItemText>
 									<div className={classes.name}>
 										<Typography variant="subtitle1">{name}</Typography>
+										{id === hostID && (
+											<Icon
+												className="fas fa-chess-king"
+												style={{ color: 'yellow', fontSize: 20 }}
+											/>
+										)}
 									</div>
 								</ListItemText>
+								{id !== hostID && (
+									<ListItemSecondaryAction>
+										<IconButton>
+											<Icon
+												className="fas fa-times-circle"
+												style={{ color: 'red', fontSize: 20 }}
+											/>
+										</IconButton>
+									</ListItemSecondaryAction>
+								)}
 							</ListItem>
-						)
-					)}
+						))}
 				</List>
 			</DialogContent>
 			<DialogActions>
@@ -58,7 +83,7 @@ function ModalSpectator({
 					size="small"
 				>
 					Close
-				</Button>
+        </Button>
 			</DialogActions>
 		</Dialog>
 	);
