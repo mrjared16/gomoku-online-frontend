@@ -1,8 +1,9 @@
 import React from 'react';
-import { Button, LinearProgress, makeStyles } from '@material-ui/core';
+import { Box, Button, makeStyles } from '@material-ui/core';
 import { DataGrid, GridOverlay } from '@material-ui/data-grid';
 import LockIcon from '@material-ui/icons/Lock';
 import Pagination from '@material-ui/lab/Pagination';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
   },
   table: {
-    height: 'calc(100vh - 196px)',
+    height: 'calc(100vh - 174.4px)',
     margin: '0px 25px',
   },
   buttons: {
@@ -70,9 +71,9 @@ function CustomPagination(props) {
 function CustomLoadingOverlay() {
   return (
     <GridOverlay>
-      <div style={{ position: 'absolute', top: 0, width: '100%' }}>
-        <LinearProgress />
-      </div>
+      <Box display="flex" alignItems="center" justifyContent="center">
+				<CircularProgress color="secondary" size={30} />
+      </Box>
     </GridOverlay>
   );
 }
@@ -133,7 +134,7 @@ const columns = [
 		headerAlign: 'center',
 		cellClassName: 'custom-cell__center',
 		renderCell: (param) => <span>{param.value + 1}</span>,
-		width: 100,
+		width: 70,
 	},
 	{
 		field: 'host',
@@ -142,7 +143,7 @@ const columns = [
 		cellClassName: 'custom-cell__center',
 		renderCell: (param) => <span>{param.value.name}</span>,
 		sortable: false,
-		width: 400,
+		width: 230,
 	},
 	{
 		field: 'XPlayer',
@@ -151,7 +152,7 @@ const columns = [
 		cellClassName: 'custom-cell__center',
 		renderCell: (param) => <span>{param.value.name}</span>,
 		sortable: false,
-		width: 400,
+		width: 230,
 	},
 	{
 		field: 'OPlayer',
@@ -160,7 +161,7 @@ const columns = [
 		cellClassName: 'custom-cell__center',
 		renderCell: (param) => <span>{param.value.name}</span>,
 		sortable: false,
-		width: 400,
+		width: 230,
 	},
 	{
 		field: 'status',
@@ -172,7 +173,7 @@ const columns = [
 				{param.value}
 			</span>
 		),
-		width: 140,
+		width: 100,
 	},
 	{
 		field: 'requirePass',
@@ -181,7 +182,7 @@ const columns = [
 		cellClassName: 'custom-cell__center',
 		renderCell: (param) => (param.value ? <LockIcon fontSize="small" /> : ''),
 		sortable: false,
-		width: 100,
+		width: 100,	
 	},
 ];
 
@@ -226,14 +227,15 @@ function ListRoom({
           variant="contained"
 					color="primary"
 					disabled={!roomSelected}
-          onClick={onJoin}
+					onClick={onJoin}
+					size="small"
         >
           Join
         </Button>
         <Button
-          // className="text-white"
           variant="contained"
-          style={{ backgroundColor: '#2D9CDB' }}
+					style={{ backgroundColor: '#EB5757' }}
+					size="small"
         >
           Quick Play
         </Button>

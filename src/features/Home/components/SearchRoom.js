@@ -5,12 +5,15 @@ import SearchIcon from '@material-ui/icons/Search';
 const useStyles = makeStyles((theme) => ({
   root: {
     '& .MuiFab-root': {
-      width: 50,
-      height: 50,
+      width: 36,
+      height: 36,
 		},
 		'& button': {
       margin: 0,
-    },
+		},
+		'& .MuiIcon-root': {
+			width: 'fit-content',
+		},
   },
   fab: {
     margin: theme.spacing(2),
@@ -29,7 +32,7 @@ function SearchRoom({ onSubmit = () => {} }) {
     <div className={classes.root}>
       <Tooltip title="Search room" aria-label="search">
         <Fab color="secondary" className={classes.fab}>
-          <SearchIcon />
+          <SearchIcon style={{fontSize: 15	}} />
         </Fab>
       </Tooltip>
     </div>

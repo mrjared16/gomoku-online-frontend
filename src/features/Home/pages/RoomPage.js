@@ -1,17 +1,20 @@
-import { Button, makeStyles } from '@material-ui/core';
-import BackToListRoom from 'features/Home/components/BackToListRoom';
+import { Box, Button, makeStyles } from '@material-ui/core';
+import ExitRoomButton from 'features/Home/components/ExitRoomButton';
 import Board from 'features/Home/components/Board';
 import UserInfoInRoom from 'features/Home/components/UserInfoInRoom';
-import { range } from 'lodash';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { roomSocket } from 'socket/roomSocket';
 import { gameSocket } from 'socket/gameSocket';
 import axiosClient from 'api/axiosClient';
-import OptionTabs from 'features/Home/components/OptionTabs';
 import ModalStatusGameFinish from 'features/Home/components/ModalStatusGameFinish';
-import ModalConfirmNewGame from '../components/ModalConfirmNewGame';
+import ModalConfirmNewGame from 'features/Home/components/ModalConfirmNewGame';
+import SpectatorButton from 'features/Home/components/SpectatorButton';
+import ModalSpectator from 'features/Home/components/ModalSpectator';
+import TurnHistory from 'features/Home/components/TurnHistory';
+import Chat from 'features/Home/components/Chat';
+import { removeRoomID } from 'app/roomSlice';
 
 const DEFAULT_SIZE = 20;
 
@@ -47,9 +50,8 @@ const useStyles = makeStyles({
 	},
 	container: {
 		display: 'flex',
-		// justifyContent: 'center',
-		marginTop: 20,
-		height: 'calc(100vh - 168px)',
+		justifyContent: 'space-between',
+		height: 'calc(100vh - 88px)',
 		overflow: 'auto',
 	},
 	userInfoContainer: {
@@ -57,8 +59,7 @@ const useStyles = makeStyles({
 		flexDirection: 'column',
 		justifyContent: 'space-around',
 		alignItems: 'center',
-		marginLeft: 100,
-		marginRight: 100,
+		marginLeft: 30,
 		'& button': {
 			width: 115,
 		}
@@ -88,10 +89,13 @@ function RoomPage() {
 	const [moveIndex, setMoveIndex] = useState(0);
 	// const [board, setBoard] = useState(initialBoard);
 
+	//Modal
 	const [openModalStatusGameFinish, setOpenModalStatusGameFinish] = useState(false);
 	const [openModalConfirmNewGame, setOpenModalConfirmNewGame] = useState(false);
+	const [openModalSpectator, setOpenModalSpectator] = useState(false);
 
 	const { token, currentUserInfo } = useSelector((state) => state.user);
+	const dispatch = useDispatch();
 	const classes = useStyles();
 
 	const history = useHistory();
@@ -112,7 +116,8 @@ function RoomPage() {
 		setMoveIndex(gameMoves.length);
 	}, [gameMoves]);
 
-	const handleBackTo = () => {
+	const handleExitRoom = () => {
+		dispatch(removeRoomID())
 		history.push('/');
 	};
 
@@ -199,8 +204,7 @@ function RoomPage() {
 	};
 
 	const isPlayer = () => {
-		if (!currentUserInfo || !XPlayer || !OPlayer)
-		{
+		if (!currentUserInfo || !XPlayer || !OPlayer) {
 			return -1;
 		}
 		if (currentUserInfo.id === XPlayer.id)
@@ -310,6 +314,7 @@ function RoomPage() {
 		roomSocket.emit('joinTable', {
 			token: token,
 			side: side,
+			roomID: roomID,
 		})
 	}
 
@@ -318,87 +323,98 @@ function RoomPage() {
 		return winLine;
 	}
 
-
 	return (
 		<div className={classes.root}>
-			<BackToListRoom onClick={handleBackTo} />
 			<div className={classes.container}>
-				<Board
-					sizeBoard={sizeBoard}
-					board={board}
-					onSquareClick={handleSquareClick}
-					winLine={statusFinishGame?.winLine}
-				/>
-				<div className={classes.userInfoContainer}>
-					{!statusFinishGame && <Button
-						variant="contained"
-						color="primary"
-						className="caro-button"
-						disabled={!canStartGame()}
-						onClick={handleStartGame}
-					>
-						Start
-					</Button>}
-
-					{statusFinishGame && <Button
-						variant="contained"
-						color="primary"
-						className="caro-button"
-						onClick={() => setOpenModalConfirmNewGame(true)}
-					>
-						New Game
-					</Button>}
-
-
-					<UserInfoInRoom
-						userInfo={XPlayer}
-						symbol="X"
-						playerTurn={isTurn(XPlayer, idPlayerTurn)}
-						onClick={() => handleClickUserInfo(0)}
-						isWinner={statusFinishGame?.isXWin}
-					/>
-					<UserInfoInRoom
-						userInfo={OPlayer}
-						symbol="O"
-						playerTurn={isTurn(OPlayer, idPlayerTurn)}
-						onClick={() => handleClickUserInfo(1)}
-						isWinner={statusFinishGame && !statusFinishGame.isXWin}
-					/>
-
-					<div className={classes.footerButton}>
-						<Button
-							className="surrender-button"
+				<Box display="flex">
+					<Box display="flex" flexDirection="column">
+						<Box display="flex" justifyContent="space-between" marginBottom={2}>
+							<ExitRoomButton onClick={handleExitRoom} />
+							<SpectatorButton onClick={() => setOpenModalSpectator(!openModalSpectator)} />
+						</Box>
+						<Board
+							sizeBoard={sizeBoard}
+							board={board}
+							onSquareClick={handleSquareClick}
+							winLine={statusFinishGame?.winLine}
+						/>
+					</Box>
+					<div className={classes.userInfoContainer}>
+						{!statusFinishGame && <Button
 							variant="contained"
-							style={{ backgroundColor: '#2D9CDB' }}
-						>
-							Surrender
-            </Button>
-
-						<Button
-							variant="contained"
-							color="secondary"
+							color="primary"
 							className="caro-button"
+							disabled={!canStartGame()}
+							onClick={handleStartGame}
+							size="small"
 						>
-							Tie
-            </Button>
+							Start
+						</Button>}
+					
+						{statusFinishGame && <Button
+							variant="contained"
+							color="primary"
+							className="caro-button"
+							onClick={() => setOpenModalConfirmNewGame(true)}
+							size="small"
+						>
+							New Game
+						</Button>}
+					
+					
+						<UserInfoInRoom
+							userInfo={XPlayer}
+							symbol="X"
+							playerTurn={isTurn(XPlayer, idPlayerTurn)}
+							onClick={() => handleClickUserInfo(0)}
+							isWinner={statusFinishGame?.isXWin}
+						/>
+						<UserInfoInRoom
+							userInfo={OPlayer}
+							symbol="O"
+							playerTurn={isTurn(OPlayer, idPlayerTurn)}
+							onClick={() => handleClickUserInfo(1)}
+							isWinner={statusFinishGame && !statusFinishGame.isXWin}
+						/>
+					
+						<div className={classes.footerButton}>
+							<Button
+								className="surrender-button"
+								variant="contained"
+								style={{ backgroundColor: '#2D9CDB' }}
+								size="small"
+							>
+								Surrender
+									</Button>
+					
+							<Button
+								variant="contained"
+								color="secondary"
+								className="caro-button"
+								size="small"
+							>
+								Tie
+									</Button>
+						</div>
 					</div>
-				</div>
-				<OptionTabs spectator={spectator} />
+				</Box>
+				<Box display="flex">
+					<Chat />
+					<TurnHistory />
+				</Box>
 			</div>
 			<ModalStatusGameFinish
 				open={openModalStatusGameFinish}
 				toggle={() => setOpenModalStatusGameFinish(!openModalStatusGameFinish)}
-				// title={getTitleStatusGameFinish()}
 				duration={620}
 				XPlayer={XPlayer}
 				OPlayer={OPlayer}
 				isDraw={statusFinishGame?.isDraw}
 				isXWin={statusFinishGame?.isXWin}
 				isPlayer={isPlayer()}
-			// winnerInfo={statusFinishGame?.winner}
-			// loserInfo={statusFinishGame?.loser}
 			/>
 			<ModalConfirmNewGame open={openModalConfirmNewGame} toggle={() => setOpenModalConfirmNewGame(!openModalConfirmNewGame)} onSubmit={handleNewGame} />
+			<ModalSpectator open={openModalSpectator} toggle={() => setOpenModalSpectator(!openModalSpectator)} list={spectator} />
 		</div>
 	);
 }

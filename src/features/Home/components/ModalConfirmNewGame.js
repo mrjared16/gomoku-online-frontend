@@ -31,6 +31,7 @@ function ModalConfirmNewGame({
 					color="primary"
 					// className="text-white"
 					onClick={onSubmit}
+					size="small"
 				>
 					Yes
 				</Button>
@@ -39,6 +40,7 @@ function ModalConfirmNewGame({
 					color="secondary"
 					// className="text-white"
 					onClick={toggle}
+					size="small"
 				>
 					No
 				</Button>

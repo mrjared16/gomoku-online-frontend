@@ -1,19 +1,21 @@
-import { Fab, makeStyles, Tooltip } from '@material-ui/core';
+import { Fab, Icon, makeStyles, Tooltip } from '@material-ui/core';
 import React from 'react';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     '& .MuiFab-root': {
-      width: 50,
-      height: 50,
+      width: 36,
+      height: 36,
     },
     '& .MuiFab-primary': {
       color: 'white',
     },
     '& button': {
       margin: 0,
-    },
+		},
+		'& .MuiIcon-root': {
+			width: 'fit-content',
+		},
   },
   fab: {
     margin: theme.spacing(2),
@@ -25,18 +27,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function BackToListRoom({ onClick = () => {} }) {
+function SpectatorButton({ onClick = () => {} }) {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
-      <Tooltip title="Back to home" aria-label="back" onClick={onClick}>
-        <Fab color="primary" className={classes.fab}>
-          <ArrowBackIcon />
+      <Tooltip title="Spectators" aria-label="show" onClick={onClick}>
+        <Fab color="secondary" className={classes.fab}>
+          <Icon className="fas fa-users" style={{fontSize: 15	}} />
         </Fab>
       </Tooltip>
     </div>
   );
 }
 
-export default BackToListRoom;
+export default SpectatorButton;

@@ -3,13 +3,13 @@ import React from "react";
 import Square from "features/Home/components/Square";
 import { includes, range } from "lodash";
 
-const DEFAULT_SQUARE_SIZE = 30;
+const DEFAULT_SQUARE_SIZE = 22;
 
 const useStyles = (sizeBoard = 0) =>
 	makeStyles({
 		root: {
-			display: 'flex',
-			alignItems: 'center',
+			// display: 'flex',
+			// alignItems: 'center',
 		},
 		board: {
 			width: sizeBoard * (DEFAULT_SQUARE_SIZE + 2),

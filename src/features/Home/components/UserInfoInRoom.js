@@ -87,7 +87,7 @@ function UserInfoInRoom({
 
 	return (
 		<div className={classes.root} onClick={onClick}>
-			{userInfo && <AvatarCustom online={true} photo={photo} />}
+			{userInfo && <AvatarCustom online={true} photo={photo} size="large" />}
 			<p>{name}</p>
 			<div className={classes.time}>
 				{playerTurn && <>

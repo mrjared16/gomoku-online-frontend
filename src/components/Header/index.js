@@ -7,9 +7,10 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import Logo from "components/Header/components/Logo";
 import UserInfo from "components/Header/components/UserInfo";
-import UserDropdown from "components/Header/components/UserDropdown";
+import Dropdown from "components/Header/components/Dropdown";
 import { removeToken } from "app/userSlice";
 import { showToast } from "utils/showToast";
+import { setRoomID } from 'app/roomSlice';
 
 function a11yProps(index) {
 	return {
@@ -59,24 +60,14 @@ const tabs = [
 		value: 0,
 	},
 	{
-		label: "Overview",
-		url: "/overview",
-		value: 1,
-	},
-	{
 		label: "History",
 		url: "/history",
-		value: 2,
+		value: 1,
 	},
 	{
 		label: "Rank",
 		url: "/rank",
-		value: 3,
-	},
-	{
-		label: "Game",
-		url: "/rooms/1",
-		value: 4,
+		value: 2,
 	},
 ];
 
@@ -89,10 +80,12 @@ function Header() {
 	const { name } = currentUserInfo;
 	const [value, setValue] = useState(0);
 	const location = useLocation();
+	const { currentRoomID } = useSelector((state) => state.room);
+	const [currentTabs, setCurrentTabs] = useState(tabs);
 
 	const handleChange = (event, newValue) => {
 		setValue(newValue);
-		const newUrl = tabs[newValue].url;
+		const newUrl = currentTabs[newValue].url;
 		history.push(newUrl);
 	};
 
@@ -109,22 +102,39 @@ function Header() {
 			case "/":
 				setValue(0);
 				return;
-			case "/overview":
+			case "/history":
 				setValue(1);
 				return;
-			case "/history":
-				setValue(2);
-				return;
 			case "/rank":
-				setValue(3);
+				setValue(2);
 				return;
 			case "":
 			default:
 				setValue(0);
 		}
 
-		if (path.match(/rooms/)) setValue(4);
+		if (path.match(/rooms/)) {
+			const id = path.split('/').pop();
+			dispatch(setRoomID(id));
+			setValue(3);
+		}
 	}, [location]);
+
+	useEffect(() => {
+		if (currentRoomID) {
+			setCurrentTabs([
+				...tabs,
+				{
+					label: "Game",
+					url: `/rooms/${currentRoomID}`,
+					value: 3,
+				},
+			])
+		} else {
+			const newCurrentTabs = currentTabs.filter(tab => tab.label !== 'Game');
+			setCurrentTabs(newCurrentTabs);
+		}
+	}, [currentRoomID])
 
 	return (
 		<div className={classes.root}>
@@ -134,7 +144,7 @@ function Header() {
 					onChange={handleChange}
 					aria-label="simple tabs example"
 				>
-					{tabs.map(({ label, value }) => {
+					{currentTabs.map(({ label, value }) => {
 						if (value === 0) {
 							return <Tab label={<Logo />} {...a11yProps(value)} />
 						} else {
@@ -145,8 +155,8 @@ function Header() {
 
 				{token && (
 					<div style={{ display: "flex" }}>
-						<UserInfo fullName={name} />
-						<UserDropdown onLogout={handleLogout} />
+						{/* <UserInfo fullName={name} /> */}
+						<Dropdown onLogout={handleLogout} />
 					</div>
 				)}
 			</AppBar>

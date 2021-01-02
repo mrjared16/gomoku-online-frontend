@@ -124,6 +124,7 @@ function ModalStatusGameFinish({
 					color="primary"
 					// className="text-white"
 					onClick={toggle}
+					size="small"
 				>
 					Close
 				</Button>
