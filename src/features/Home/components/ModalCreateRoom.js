@@ -71,9 +71,9 @@ function ModalCreateRoom({
 						label="Select size board"
 					>
 						<MenuItem value={20}>20x20</MenuItem>
-						<MenuItem value={30}>30x30</MenuItem>
+						{/* <MenuItem value={30}>30x30</MenuItem>
 						<MenuItem value={40}>40x40</MenuItem>
-						<MenuItem value={50}>50x50</MenuItem>
+						<MenuItem value={50}>50x50</MenuItem> */}
 					</Select>
 				</FormControl>
 				<FormControl variant="outlined" fullWidth>
@@ -94,7 +94,6 @@ function ModalCreateRoom({
 				<Button
 					variant="contained"
 					color="primary"
-					// className="text-white"
 					onClick={onSubmit}
 					size="small"
 				>
@@ -103,7 +102,6 @@ function ModalCreateRoom({
 				<Button
 					variant="contained"
 					color="secondary"
-					// className="text-white"
 					onClick={toggle}
 					size="small"
 				>

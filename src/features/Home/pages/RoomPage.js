@@ -60,6 +60,7 @@ const useStyles = makeStyles({
 		justifyContent: 'space-around',
 		alignItems: 'center',
 		marginLeft: 30,
+		marginRight: 30,
 		'& button': {
 			width: 115,
 		}
@@ -88,7 +89,6 @@ function RoomPage() {
 	const [gameMoves, setGameMoves] = useState([]);
 	const [moveIndex, setMoveIndex] = useState(0);
 	// const [board, setBoard] = useState(initialBoard);
-
 	//Modal
 	const [openModalStatusGameFinish, setOpenModalStatusGameFinish] = useState(false);
 	const [openModalConfirmNewGame, setOpenModalConfirmNewGame] = useState(false);
@@ -400,7 +400,7 @@ function RoomPage() {
 				</Box>
 				<Box display="flex">
 					<Chat />
-					<TurnHistory />
+					<TurnHistory list={gameMoves} onChangeMoveIndex={(index) => setMoveIndex(index)} />
 				</Box>
 			</div>
 			<ModalStatusGameFinish

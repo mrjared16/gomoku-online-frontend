@@ -15,7 +15,7 @@ import moment from 'moment';
 const useStyles = makeStyles({
 	root: {
 		'& .MuiDialog-paper': {
-			width: 600,
+			width: 400,
 		},
 	},
 	content: {
@@ -122,7 +122,6 @@ function ModalStatusGameFinish({
 				<Button
 					variant="contained"
 					color="primary"
-					// className="text-white"
 					onClick={toggle}
 					size="small"
 				>
