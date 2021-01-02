@@ -1,9 +1,9 @@
 import { Button, Grid, makeStyles } from '@material-ui/core';
 import axiosClient from 'api/axiosClient';
 import userApi from 'api/userApi';
-import { setUser } from 'app/userSlice';
+import { setUser, setLoadingUserInfo } from 'app/userSlice';
 import Header from 'components/Header';
-import ListUserStatus from 'features/Home/components/ListUserStatus';
+import ListUserStatus from 'features/Home/components/ListUserOnline';
 import Main from 'features/Home/pages/Main';
 import RoomPage from 'features/Home/pages/RoomPage';
 import React, { useEffect, useState } from 'react';
@@ -56,7 +56,8 @@ function Home() {
 
   const fetchUserData = async () => {
     const response = await userApi.fetch();
-    dispatch(setUser(response));
+		dispatch(setUser(response));
+		dispatch(setLoadingUserInfo(false));
   };
 
   const fetchOnlineUsers = () => {

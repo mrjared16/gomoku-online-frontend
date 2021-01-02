@@ -36,7 +36,8 @@ const useStyles = makeStyles({
     display: "flex",
     flexDirection: "column",
     "& .MuiTextField-root": {
-      marginBottom: 20,
+			marginTop: 10,
+			marginBottom: 10,
     },
   },
   formFooter: {
@@ -105,7 +106,8 @@ function LoginForm({
                     onChange={handleChange}
                     onBlur={handleBlur}
                     error={Boolean(errors.username) && touched.username}
-                    helperText={touched.username && errors.username}
+										helperText={touched.username && errors.username}
+										size="small"
                   />
 
                   <TextField
@@ -117,7 +119,8 @@ function LoginForm({
                     onChange={handleChange}
                     onBlur={handleBlur}
                     error={Boolean(errors.password) && touched.password}
-                    helperText={touched.password && errors.password}
+										helperText={touched.password && errors.password}
+										size="small"
                   />
                 </div>
               </CardContent>
@@ -128,7 +131,8 @@ function LoginForm({
                     variant="contained"
                     color="primary"
                     type="submit"
-                    className="text-white"
+										// className="text-white"
+										size="small"
                   >
                     {isSubmitting ? (
                       <CircularProgress style={{ color: "white" }} size={24} />

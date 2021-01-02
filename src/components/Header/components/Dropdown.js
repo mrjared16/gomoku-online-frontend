@@ -8,7 +8,6 @@ import {
 } from "@material-ui/core";
 import React from "react";
 import ArrowDropDownCircleIcon from "@material-ui/icons/ArrowDropDownCircle";
-import AccountBoxIcon from "@material-ui/icons/AccountBox";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 
 const StyledMenu = withStyles({
@@ -42,7 +41,7 @@ const StyledMenuItem = withStyles((theme) => ({
   },
 }))(MenuItem);
 
-function UserDropdown({ onLogout = () => {} }) {
+function Dropdown({ onLogout = () => {} }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = (event) => {
@@ -58,7 +57,8 @@ function UserDropdown({ onLogout = () => {} }) {
       <IconButton
         aria-controls="customized-menu"
         aria-haspopup="true"
-        onClick={handleClick}
+				onClick={handleClick}
+				style={{marginLeft: 10}}
       >
         <ArrowDropDownCircleIcon />
       </IconButton>
@@ -70,12 +70,6 @@ function UserDropdown({ onLogout = () => {} }) {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
-        {/* <StyledMenuItem>
-          <ListItemIcon>
-            <AccountBoxIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText primary="Profile" />
-        </StyledMenuItem> */}
         <StyledMenuItem onClick={onLogout}>
           <ListItemIcon>
             <ExitToAppIcon fontSize="small" />
@@ -87,4 +81,4 @@ function UserDropdown({ onLogout = () => {} }) {
   );
 }
 
-export default UserDropdown;
+export default Dropdown;

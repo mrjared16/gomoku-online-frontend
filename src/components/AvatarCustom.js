@@ -1,4 +1,4 @@
-import { Avatar, Badge, withStyles } from "@material-ui/core";
+import { Avatar, Badge, makeStyles, withStyles } from "@material-ui/core";
 import React from "react";
 
 const StyledBadge = withStyles((theme) => ({
@@ -30,7 +30,25 @@ const StyledBadge = withStyles((theme) => ({
   },
 }))(Badge);
 
-function AvatarCustom({ online = false, photo = "" }) {
+const useStyles = makeStyles((theme) => ({
+  small: {
+    width: theme.spacing(4),
+    height: theme.spacing(4),
+	},
+	large: {
+		width: theme.spacing(5),
+    height: theme.spacing(5),
+	},
+	extraLarge: {
+		width: theme.spacing(7),
+    height: theme.spacing(7),
+	},
+}));
+
+
+function AvatarCustom({ online = false, photo = "", size = "small" }) {
+	const classes = useStyles();
+
   return (
     <>
       {online ? (
@@ -42,10 +60,10 @@ function AvatarCustom({ online = false, photo = "" }) {
           }}
           variant="dot"
         >
-          <Avatar alt="avatar" src={photo} />
+          <Avatar alt="avatar" src={photo} className={classes[size]} />
         </StyledBadge>
       ) : (
-        <Avatar alt="avatar" src={photo} />
+        <Avatar alt="avatar" src={photo} className={classes[size]} />
       )}
     </>
   );

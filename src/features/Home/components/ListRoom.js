@@ -1,21 +1,23 @@
-import React, { useState } from 'react';
-import { Button, LinearProgress, makeStyles } from '@material-ui/core';
+import React from 'react';
+import { Box, Button, makeStyles } from '@material-ui/core';
 import { DataGrid, GridOverlay } from '@material-ui/data-grid';
 import LockIcon from '@material-ui/icons/Lock';
 import Pagination from '@material-ui/lab/Pagination';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     '& .MuiDataGrid-cell:focus, .MuiDataGrid-colCell:focus': {
       outline: 'none',
-      userSelect: 'none',
+			userSelect: 'none',
     },
-    '& .MuiDataGrid-row.Mui-selected': {
-      backgroundColor: '#828282 !important',
-    },
-    '& .MuiPaginationItem-textPrimary.Mui-selected': {
-      color: 'white',
-    },
+		'& .MuiDataGrid-row:hover': {
+			backgroundColor: '#ffda77',
+			opacity: '0.6',
+		},
+		'& .MuiDataGrid-row.Mui-selected': {
+      backgroundColor: '#ffda77 !important',
+		},
   },
   customNoRow: {
     flexDirection: 'column',
@@ -40,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
   },
   table: {
-    height: 'calc(100vh - 196px)',
+    height: 'calc(100vh - 174.4px)',
     margin: '0px 25px',
   },
   buttons: {
@@ -69,9 +71,9 @@ function CustomPagination(props) {
 function CustomLoadingOverlay() {
   return (
     <GridOverlay>
-      <div style={{ position: 'absolute', top: 0, width: '100%' }}>
-        <LinearProgress />
-      </div>
+      <Box display="flex" alignItems="center" justifyContent="center">
+				<CircularProgress color="secondary" size={30} />
+      </Box>
     </GridOverlay>
   );
 }
@@ -126,78 +128,89 @@ function CustomNoRowsOverlay() {
 }
 
 const columns = [
-  {
-    field: 'id',
-    headerName: 'ID',
-    headerAlign: 'center',
-    cellClassName: 'custom-cell__center',
-    renderCell: (param) => <span>{param.value + 1}</span>,
-    flex: 1,
-  },
-  {
-    field: 'host',
-    headerName: 'Host',
-    headerAlign: 'center',
-    cellClassName: 'custom-cell__center',
-    renderCell: (param) => <span>{param.value.name}</span>,
-    sortable: false,
-    flex: 4,
-  },
-  {
-    field: 'XPlayer',
-    headerName: 'X Player',
-    headerAlign: 'center',
-    cellClassName: 'custom-cell__center',
-    renderCell: (param) => <span>{param.value.name}</span>,
-    sortable: false,
-    flex: 4,
-  },
-  {
-    field: 'OPlayer',
-    headerName: 'O Player',
-    headerAlign: 'center',
-    cellClassName: 'custom-cell__center',
-    renderCell: (param) => <span>{param.value.name}</span>,
-    sortable: false,
-    flex: 4,
-  },
-  {
-    field: 'status',
-    headerName: 'Status',
-    headerAlign: 'center',
-    cellClassName: 'custom-cell__center',
-    renderCell: (param) => (
-      <span style={{ color: param.value === 'Playing' ? 'red' : 'green' }}>
-        {param.value}
-      </span>
-    ),
-    flex: 2,
-  },
-  {
-    field: 'requirePass',
-    headerName: 'Password',
-    headerAlign: 'center',
-    cellClassName: 'custom-cell__center',
-    renderCell: (param) => (param.value ? <LockIcon fontSize="small" /> : ''),
-    sortable: false,
-    flex: 1,
-  },
+	{
+		field: 'index',
+		headerName: 'ID',
+		headerAlign: 'center',
+		cellClassName: 'custom-cell__center',
+		renderCell: (param) => <span>{param.value + 1}</span>,
+		width: 70,
+	},
+	{
+		field: 'host',
+		headerName: 'Host',
+		headerAlign: 'center',
+		cellClassName: 'custom-cell__center',
+		renderCell: (param) => <span>{param.value.name}</span>,
+		sortable: false,
+		width: 230,
+	},
+	{
+		field: 'XPlayer',
+		headerName: 'X Player',
+		headerAlign: 'center',
+		cellClassName: 'custom-cell__center',
+		renderCell: (param) => <span>{param.value.name}</span>,
+		sortable: false,
+		width: 230,
+	},
+	{
+		field: 'OPlayer',
+		headerName: 'O Player',
+		headerAlign: 'center',
+		cellClassName: 'custom-cell__center',
+		renderCell: (param) => <span>{param.value.name}</span>,
+		sortable: false,
+		width: 230,
+	},
+	{
+		field: 'status',
+		headerName: 'Status',
+		headerAlign: 'center',
+		cellClassName: 'custom-cell__center',
+		renderCell: (param) => (
+			<span style={{ color: param.value === 'Playing' ? 'red' : 'green' }}>
+				{param.value}
+			</span>
+		),
+		width: 100,
+	},
+	{
+		field: 'requirePass',
+		headerName: 'Password',
+		headerAlign: 'center',
+		cellClassName: 'custom-cell__center',
+		renderCell: (param) => (param.value ? <LockIcon fontSize="small" /> : ''),
+		sortable: false,
+		width: 100,	
+	},
 ];
 
+
 function ListRoom({
+	loading = true,
   list = [],
   onRoomSelected = () => {},
-  onJoin = () => {},
+	onJoin = () => {},
+	roomSelected = null,
 }) {
 	const classes = useStyles();
+
+	const customList = list.map((data, index) => (
+		{
+			...data,
+			index,
+		}
+	));
 	
   return (
     <div className={classes.root}>
       <div className={classes.table}>
         <DataGrid
-          loading={false}
-          rows={list}
+          loading={loading}
+          rows={customList}
           columns={columns}
+					onSelectionChange={val => console.log(val)}
           hideFooterSelectedRowCount={true}
           pagination
           pageSize={20}
@@ -205,23 +218,24 @@ function ListRoom({
             loadingOverlay: CustomLoadingOverlay,
             pagination: CustomPagination,
             noRowsOverlay: CustomNoRowsOverlay,
-          }}
-          onRowSelected={onRoomSelected}
+					}}
+					onRowSelected={onRoomSelected}
         />
       </div>
       <div className={classes.buttons}>
         <Button
-          className="text-white"
           variant="contained"
-          style={{ backgroundColor: '#EB5757' }}
-          onClick={onJoin}
+					color="primary"
+					disabled={!roomSelected}
+					onClick={onJoin}
+					size="small"
         >
           Join
         </Button>
         <Button
-          className="text-white"
           variant="contained"
-          style={{ backgroundColor: '#2D9CDB' }}
+					style={{ backgroundColor: '#EB5757' }}
+					size="small"
         >
           Quick Play
         </Button>

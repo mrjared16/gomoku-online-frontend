@@ -1,4 +1,5 @@
 import { Avatar, makeStyles } from "@material-ui/core";
+import AvatarCustom from "components/AvatarCustom";
 import React from "react";
 
 const useStyles = makeStyles({
@@ -6,12 +7,9 @@ const useStyles = makeStyles({
     display: "flex",
     alignItems: "center",
     "& .fullName": {
-      marginRight: 10,
+      marginLeft: 10,
     },
 	},
-	avatar: {
-		marginLeft: 10,
-	}
 });
 
 function UserInfo({ fullName = "", photo = "" }) {
@@ -19,7 +17,7 @@ function UserInfo({ fullName = "", photo = "" }) {
 
   return (
     <div className={classes.root}>
-      <Avatar alt={fullName} src={photo} className={classes.avatar} />
+			<AvatarCustom alt={fullName} src={photo} />
       <div className="fullName">{fullName}</div>
     </div>
   );

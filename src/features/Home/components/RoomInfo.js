@@ -41,7 +41,7 @@ function RoomInfo({ id = "", index = "", host, XPlayer, OPlayer, onClick }) {
   const classes = useStyles();
 
   return (
-    <Button className={classes.root} onClick={() => onClick(id)}>
+    <Button className={classes.root} onClick={() => onClick(id)} size="small">
       <div className={classes.body}>
         <div className={classes.avatar}>
           <AvatarCustom online={true} photo={XPlayer.photo} />

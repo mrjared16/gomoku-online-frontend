@@ -10,11 +10,12 @@ import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 const useStyles = makeStyles({
   root: {
     flexGrow: 1,
-    maxWidth: 500,
+		maxWidth: 500,
+		boxShadow: 'none',
   },
 });
 
-export default function IconLabelTabs() {
+function OptionTabs({ spectator = [] }) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
@@ -29,7 +30,7 @@ export default function IconLabelTabs() {
 			case 1:
 				return <span>Turn History</span>
 			case 2:
-				return <span>Spectator</span>
+				return spectator && spectator.map(({ username }) => username)
 			default:
 				return <span>Chat</span>
 		}
@@ -55,3 +56,5 @@ export default function IconLabelTabs() {
 		</>
   );
 }
+
+export default OptionTabs;
