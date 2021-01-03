@@ -15,6 +15,7 @@ import ModalSpectator from 'features/Home/components/ModalSpectator';
 import TurnHistory from 'features/Home/components/TurnHistory';
 import Chat from 'features/Home/components/Chat';
 import { removeRoomID } from 'app/roomSlice';
+import { showToast } from 'utils/showToast';
 
 const DEFAULT_SIZE = 20;
 
@@ -163,6 +164,8 @@ function RoomPage() {
 			// TODO: show message for user
 			console.log('this room is no longer exist');
 			history.push('/');
+			dispatch(removeRoomID());
+			showToast('error', 'This room is no longer exist');
 			return;
 		}
 
@@ -181,6 +184,7 @@ function RoomPage() {
 
 		if (gameID) {
 			setGameID(gameID);
+			console.log("room is delete")
 		}
 	};
 

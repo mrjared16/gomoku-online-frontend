@@ -11,6 +11,11 @@ import {
 import AvatarCustom from "components/AvatarCustom";
 
 const useStyles = makeStyles({
+	root: {
+		'& .MuiListItem-secondaryAction': {
+			paddingRight: 16,
+		},
+	},
   name: {
     overflow: "hidden",
     "& h6": {
@@ -25,7 +30,7 @@ function ListUserOnline({ list = [] }) {
 	const classes = useStyles();
 
   return (
-    <div>
+    <div className={classes.root}>
       <List>
         {list.map(
           ({ id, online = false, name = "", photo = "", time = "" }, index) => (
