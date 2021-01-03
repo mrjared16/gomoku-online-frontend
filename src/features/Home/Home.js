@@ -56,8 +56,8 @@ function Home() {
 
   const fetchUserData = async () => {
     const response = await userApi.fetch();
-		dispatch(setUser(response));
-		dispatch(setLoadingUserInfo(false));
+    dispatch(setUser(response));
+    dispatch(setLoadingUserInfo(false));
   };
 
   const fetchOnlineUsers = () => {
@@ -96,7 +96,13 @@ function Home() {
       handleOnlineUsersOnchangeEvent[event](setOnlineUsers, user);
     });
 
+    socketClient.on('reconnectEventMsg', (response) => {
+      console.log('receive reconnectEventMsg: ', response);
+    })
+
     return () => {
+      socketClient.off('userEventMsg', () => {});
+      socketClient.off('reconnectEventMsg', () => {});
       socketClient.close();
     };
   }, [token]);
