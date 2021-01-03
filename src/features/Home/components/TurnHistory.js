@@ -65,7 +65,9 @@ function TurnHistory({ list = [] }) {
 						({ id, position, player }, index) => (
 							<ListItem key={id} button>
 								<ListItemAvatar>
-									{`${index + 1}.`}
+									<span>
+										{`${index + 1}.`}
+									</span>
 								</ListItemAvatar>
 								<ListItemText>
 									{player.toLowerCase() === 'x' ?

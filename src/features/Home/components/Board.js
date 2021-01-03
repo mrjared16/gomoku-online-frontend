@@ -26,11 +26,11 @@ function Board({ sizeBoard = 20, board = [], onSquareClick = () => { }, winLine 
 
 	const renderRows = () => (
 		range(0, sizeBoard, 1).map(indexRow => (
-			<div className={classes.row}>
+			<div key={'row' + indexRow} className={classes.row}>
 				{range(0, sizeBoard, 1).map(indexCol => {
 					const indexBoard = indexRow * sizeBoard + indexCol;
 					const isBelongWinLine = includes(winLine, indexBoard);
-					return <Square key={indexBoard} value={board[indexBoard]} onClick={() => onSquareClick(indexBoard)}  isBelongWinLine={isBelongWinLine} />
+					return <Square key={indexBoard} value={board[indexBoard]} onClick={() => onSquareClick(indexBoard)} isBelongWinLine={isBelongWinLine} />
 				})}
 			</div>
 		))

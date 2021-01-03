@@ -144,11 +144,11 @@ function Header() {
 					onChange={handleChange}
 					aria-label="simple tabs example"
 				>
-					{currentTabs.map(({ label, value }) => {
+					{currentTabs.map(({ label, value }, index) => {
 						if (value === 0) {
-							return <Tab label={<Logo />} {...a11yProps(value)} />
+							return <Tab key={index} label={<Logo />} {...a11yProps(value)} />
 						} else {
-							return <Tab label={label} {...a11yProps(value)} />
+							return <Tab key={index} label={label} {...a11yProps(value)} />
 						}
 					})}
 				</Tabs>
