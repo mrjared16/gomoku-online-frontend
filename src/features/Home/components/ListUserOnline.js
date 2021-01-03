@@ -33,14 +33,15 @@ function ListUserOnline({ list = [] }) {
     <div className={classes.root}>
       <List>
         {list.map(
-          ({ id, online = false, name = "", photo = "", time = "" }, index) => (
+          ({ id, online = false, name = "", photo = "", time = "", username = "" }, index) => (
             <ListItem key={id} button>
               <ListItemAvatar>
 								<AvatarCustom photo={photo} online={online} />
               </ListItemAvatar>
               <ListItemText>
                 <div className={classes.name}>
-                  <Typography variant="subtitle1">{name}</Typography>
+                  {/* <Typography variant="subtitle1">{name}</Typography> */}
+                  <Typography variant="subtitle1">{username}</Typography>
                 </div>
               </ListItemText>
               <ListItemSecondaryAction>

@@ -12,11 +12,11 @@ const useStyles = makeStyles((theme) => ({
 			userSelect: 'none',
     },
 		'& .MuiDataGrid-row:hover': {
-			backgroundColor: '#ffda77',
+			backgroundColor: '#ffb26b',
 			opacity: '0.6',
 		},
 		'& .MuiDataGrid-row.Mui-selected': {
-      backgroundColor: '#ffda77 !important',
+      backgroundColor: '#ffb26b !important',
 		},
   },
   customNoRow: {
@@ -141,7 +141,7 @@ const columns = [
 		headerName: 'Host',
 		headerAlign: 'center',
 		cellClassName: 'custom-cell__center',
-		renderCell: (param) => <span>{param.value.name}</span>,
+		renderCell: (param) => <span>{param.value.username}</span>,
 		sortable: false,
 		width: 230,
 	},
@@ -150,7 +150,7 @@ const columns = [
 		headerName: 'X Player',
 		headerAlign: 'center',
 		cellClassName: 'custom-cell__center',
-		renderCell: (param) => <span>{param.value.name}</span>,
+		renderCell: (param) => <span>{param.value.username}</span>,
 		sortable: false,
 		width: 230,
 	},
@@ -159,7 +159,7 @@ const columns = [
 		headerName: 'O Player',
 		headerAlign: 'center',
 		cellClassName: 'custom-cell__center',
-		renderCell: (param) => <span>{param.value.name}</span>,
+		renderCell: (param) => <span>{param.value.username}</span>,
 		sortable: false,
 		width: 230,
 	},
@@ -234,7 +234,7 @@ function ListRoom({
         </Button>
         <Button
           variant="contained"
-					style={{ backgroundColor: '#EB5757' }}
+					style={{ backgroundColor: '#ffb26b' }}
 					size="small"
         >
           Quick Play

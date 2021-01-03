@@ -4,7 +4,7 @@ import theme from 'custom-theme';
 import { BrowserRouter, Switch } from 'react-router-dom';
 import Login from 'features/Auth/pages/Login';
 import Register from 'features/Auth/pages/Register';
-import Home from 'features/Home/Home';
+import Home from 'features/Home';
 import PublishRoute from 'components/PublishRoute';
 import PrivateRoute from 'components/PrivateRoute';
 import { ToastContainer } from 'react-toastify';

@@ -1,6 +1,7 @@
 import { Button, Grid, makeStyles } from '@material-ui/core';
 import axiosClient from 'api/axiosClient';
 import userApi from 'api/userApi';
+import { setRoomID } from 'app/roomSlice';
 import { setUser, setLoadingUserInfo } from 'app/userSlice';
 import Header from 'components/Header';
 import ListUserStatus from 'features/Home/components/ListUserOnline';
@@ -8,7 +9,7 @@ import Main from 'features/Home/pages/Main';
 import RoomPage from 'features/Home/pages/RoomPage';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, useHistory } from 'react-router-dom';
 import socketIOClient from 'socket.io-client';
 import Search from './components/Search';
 
@@ -29,7 +30,8 @@ function userDTOToProp({ id, username, name }) {
     id: id,
     online: true,
     name,
-    photo: '',
+		photo: '',
+		username,
     // time: null
   };
 }
@@ -48,7 +50,8 @@ const handleOnlineUsersOnchangeEvent = {
 
 function Home() {
   const classes = useStyles();
-  const dispatch = useDispatch();
+	const dispatch = useDispatch();
+	const history = useHistory();
 
   const [onlineUsers, setOnlineUsers] = useState([]);
 
@@ -97,7 +100,10 @@ function Home() {
     });
 
     socketClient.on('reconnectEventMsg', (response) => {
-      console.log('receive reconnectEventMsg: ', response);
+			console.log('receive reconnectEventMsg: ', response);
+			const { roomID } = response;
+			dispatch(setRoomID(roomID));
+			history.push(`rooms/${roomID}`);
     })
 
     return () => {

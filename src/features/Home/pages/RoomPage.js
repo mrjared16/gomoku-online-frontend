@@ -1,7 +1,7 @@
 import { Box, Button, makeStyles } from '@material-ui/core';
 import ExitRoomButton from 'features/Home/components/ExitRoomButton';
 import Board from 'features/Home/components/Board';
-import UserInfoInRoom from 'features/Home/components/UserInfoInRoom';
+import Table from 'features/Home/components/Table';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -58,11 +58,14 @@ const useStyles = makeStyles({
 	userInfoContainer: {
 		display: 'flex',
 		flexDirection: 'column',
-		justifyContent: 'space-around',
+		// justifyContent: 'space-around',s
 		alignItems: 'center',
 		marginLeft: 30,
+		marginRight: 30,
 		'& button': {
 			width: 115,
+			marginTop: 52,
+			marginBottom: 30,
 		}
 	},
 	footerButton: {
@@ -71,6 +74,9 @@ const useStyles = makeStyles({
 		'& .surrender-button': {
 			marginRight: 10,
 		},
+		'& button': {
+			marginTop: 0,
+		}
 	},
 });
 
@@ -88,7 +94,7 @@ function RoomPage() {
 
 	const [gameMoves, setGameMoves] = useState([]);
 	const [moveIndex, setMoveIndex] = useState(0);
-
+	// const [board, setBoard] = useState(initialBoard);
 	//Modal
 	const [openModalStatusGameFinish, setOpenModalStatusGameFinish] = useState(false);
 	const [openModalConfirmNewGame, setOpenModalConfirmNewGame] = useState(false);
@@ -310,7 +316,7 @@ function RoomPage() {
 
 	const canStartGame = () => XPlayer && OPlayer && hostInfo.id === currentUserInfo.id && !isStart;
 
-	const handleClickUserInfo = (side = 0) => {
+	const handleClickTable = (side = 0) => {
 		roomSocket.emit('joinTable', {
 			action: 'join',
 			data: {
@@ -365,30 +371,36 @@ function RoomPage() {
 						</Button>}
 
 
-						<UserInfoInRoom
+						<Table
 							userInfo={XPlayer}
 							symbol="X"
 							playerTurn={isTurn(XPlayer, idPlayerTurn)}
-							onClick={() => handleClickUserInfo(0)}
+							onClick={() => handleClickTable(0)}
 							isWinner={statusFinishGame?.isXWin}
+							isOwner={currentUserInfo?.id === XPlayer?.id}
+							isHost={currentUserInfo?.id === hostInfo?.id}
+							isStart={isStart}
 						/>
-						<UserInfoInRoom
+						<Table
 							userInfo={OPlayer}
 							symbol="O"
 							playerTurn={isTurn(OPlayer, idPlayerTurn)}
-							onClick={() => handleClickUserInfo(1)}
+							onClick={() => handleClickTable(1)}
 							isWinner={statusFinishGame && !statusFinishGame.isXWin}
+							isOwner={currentUserInfo?.id === OPlayer?.id}
+							isHost={currentUserInfo?.id === hostInfo?.id}
+							isStart={isStart}
 						/>
 
 						<div className={classes.footerButton}>
 							<Button
 								className="surrender-button"
 								variant="contained"
-								style={{ backgroundColor: '#2D9CDB' }}
+								style={{ backgroundColor: '#939b62' }}
 								size="small"
 							>
 								Surrender
-									</Button>
+							</Button>
 
 							<Button
 								variant="contained"
@@ -397,13 +409,13 @@ function RoomPage() {
 								size="small"
 							>
 								Tie
-									</Button>
+							</Button>
 						</div>
 					</div>
 				</Box>
 				<Box display="flex">
 					<Chat />
-					<TurnHistory />
+					<TurnHistory list={gameMoves} onChangeMoveIndex={(index) => setMoveIndex(index)} />
 				</Box>
 			</div>
 			<ModalStatusGameFinish
@@ -417,7 +429,7 @@ function RoomPage() {
 				isPlayer={isPlayer()}
 			/>
 			<ModalConfirmNewGame open={openModalConfirmNewGame} toggle={() => setOpenModalConfirmNewGame(!openModalConfirmNewGame)} onSubmit={handleNewGame} />
-			<ModalSpectator open={openModalSpectator} toggle={() => setOpenModalSpectator(!openModalSpectator)} list={spectator} />
+			<ModalSpectator open={openModalSpectator} toggle={() => setOpenModalSpectator(!openModalSpectator)} list={spectator} hostID={hostInfo?.id} />
 		</div>
 	);
 }

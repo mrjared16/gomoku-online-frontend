@@ -15,7 +15,7 @@ import moment from 'moment';
 const useStyles = makeStyles({
 	root: {
 		'& .MuiDialog-paper': {
-			width: 600,
+			width: 400,
 		},
 	},
 	content: {
@@ -101,7 +101,7 @@ function ModalStatusGameFinish({
 					<Box display='flex' justifyContent='space-around'>
 						<div className={classes.playerInfo}>
 							<AvatarCustom online={true} photo={XPlayer?.photo} />
-							<span>{XPlayer?.name}</span>
+							<span>{XPlayer?.username}</span>
 							<div className={classes.elo}>
 								<Icon className="fas fa-trophy" style={{ color: 'yellow', width: 'fit-content' }} />
 								<span style={{ color: 'green' }}>50 (+25)</span>
@@ -109,7 +109,7 @@ function ModalStatusGameFinish({
 						</div>
 						<div className={classes.playerInfo}>
 							<AvatarCustom online={true} photo={OPlayer?.photo} />
-							<span>{OPlayer?.name}</span>
+							<span>{OPlayer?.username}</span>
 							<div className={classes.elo}>
 								<Icon className="fas fa-trophy" style={{ color: 'yellow', width: 'fit-content' }} />
 								<span style={{ color: 'red' }}>25 (-25)</span>
@@ -121,8 +121,7 @@ function ModalStatusGameFinish({
 			<DialogActions>
 				<Button
 					variant="contained"
-					color="primary"
-					// className="text-white"
+					color="secondary"
 					onClick={toggle}
 					size="small"
 				>

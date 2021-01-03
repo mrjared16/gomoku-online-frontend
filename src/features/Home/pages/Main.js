@@ -37,17 +37,19 @@ function roomDTOToProp({
 	gameID,
 }) {
 	const XPlayer =
-		players['X'] && players['X'].name
+		players['X'] && players['X'].name && players['X'].username
 			? {
 				name: players['X'].name,
 				photo: '',
+				username: players['X'].username,
 			}
 			: {};
 	const OPlayer =
-		players['O'] && players['O'].name
+		players['O'] && players['O'].name && players['O'].username
 			? {
 				name: players['O'].name,
 				photo: '',
+				username: players['O'].username,
 			}
 			: null;
 	const roomConverted = {

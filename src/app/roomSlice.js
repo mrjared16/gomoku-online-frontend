@@ -1,7 +1,8 @@
+import { SignalCellularNullTwoTone } from "@material-ui/icons";
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  currentRoomID: localStorage.getItem('currentRoomID'),
+  currentRoomID: SignalCellularNullTwoTone,
 };
 
 const roomSlice = createSlice({
@@ -10,12 +11,9 @@ const roomSlice = createSlice({
   reducers: {
     setRoomID: (state, action) => {
 			state.currentRoomID = action.payload;
-			localStorage.setItem('currentRoomID', action.payload);
     },
     removeRoomID: (state, action) => {
 			state.currentRoomID = null;
-			localStorage.removeItem('currentRoomID');
-			
     },
   },
 });

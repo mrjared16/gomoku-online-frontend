@@ -4,25 +4,24 @@ import {
 	ListItemAvatar,
 	ListItemText,
 } from '@material-ui/core';
-import { range } from 'lodash';
-import React from 'react';
+import React, { useState } from 'react';
 
 const useStyles = makeStyles({
 	root: {
-		height: 'calc(100% - 38px)',
-		border: '4px solid #d4a531',
+		height: 550,
+		border: '4px solid #ff7b54',
 		borderRadius: 5,
 		width: '161px',
 	},
 	containerTitle: {
-		backgroundColor: '#d4a531',
+		backgroundColor: '#ff7b54',
 		padding: 5,
 	},
 	title: {
-		color: 'white',
+		// color: 'white',
 	},
 	body: {
-		height: 'calc(100% - 38px)',
+		height: 'calc(550px - 38px)',
 		overflow: 'auto',
 	},
 	xPlayer: {
@@ -35,14 +34,6 @@ const useStyles = makeStyles({
 	},
 })
 
-const test = range(0, 20, 1).map(index => (
-	{
-		id: index,
-		position: index,
-		player: index % 2 === 0 ? 'X' : 'O',
-	}
-))
-
 const formatPosition = (position) => {
 	let result = { x: 0, y: 0 };
 	result.x = Math.floor(position / 20);
@@ -50,9 +41,14 @@ const formatPosition = (position) => {
 	return result;
 }
 
-function TurnHistory({ list = [] }) {
+function TurnHistory({ list = [], onChangeMoveIndex = () => {} }) {
 	const classes = useStyles();
-	list = test;
+	const [selectedIndex, setSelectedIndex] = useState(null);
+
+	const handleChangeMoveIndex = (index) => {
+		onChangeMoveIndex(index + 1);
+		setSelectedIndex(index);
+	}
 
 	return (
 		<div className={classes.root}>
@@ -62,22 +58,21 @@ function TurnHistory({ list = [] }) {
 			<div className={classes.body}>
 				<List>
 					{list && list.map(
-						({ id, position, player }, index) => (
-							<ListItem key={id} button>
+						({ position, value }, index) => (
+							<ListItem key={index} button selected={selectedIndex === index} onClick={() => handleChangeMoveIndex(index)}>
 								<ListItemAvatar>
 									<span>
 										{`${index + 1}.`}
 									</span>
 								</ListItemAvatar>
 								<ListItemText>
-									{player.toLowerCase() === 'x' ?
+									{value === 0 ?
 										<span className={classes.xPlayer}>
-											{player}
+											X
 										</span> :
 										<span className={classes.oPlayer}>
-											{player}
+											O
 										</span>}
-
 									{`(${formatPosition(position).x}, ${formatPosition(position).y})`}
 								</ListItemText>
 							</ListItem>

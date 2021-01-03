@@ -6,21 +6,21 @@ import React from 'react';
 
 const useStyles = makeStyles({
 	root: {
-		height: 'calc(100% - 38px)',
-		border: '4px solid #d4a531',
+		height: 550,
+		border: '4px solid #ff7b54',
 		borderRadius: 5,
 		width: 300,
 		marginRight: 30,
 	},
 	containerTitle: {
-		backgroundColor: '#d4a531',
+		backgroundColor: '#ff7b54',
 		padding: 5,
 	},
 	title: {
-		color: 'white',
+		// color: 'white',
 	},
 	body: {
-		height: 'calc(100% - 38px)',
+		height: 'calc(550px - 38px)',
 	},
 })
 

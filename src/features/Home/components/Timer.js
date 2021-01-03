@@ -2,16 +2,18 @@ import React, { useEffect, useState } from 'react';
 import AccessAlarmsIcon from '@material-ui/icons/AccessAlarms';
 import moment from 'moment';
 
-function Timer({ value = 0 }) {
+function Timer({ value = 0, start = false }) {
 	const [timer, setTimer] = useState(value * 1000);
 
 	useEffect(() => {
-    const timerInterval = setInterval(() => {
-      setTimer((currentTimer) => currentTimer - 1000);
-    }, 1000);
-
+		let timerInterval;
+		if (start) {
+			timerInterval = setInterval(() => {
+				setTimer((currentTimer) => currentTimer - 1000);
+			}, 1000);
+		}
     return () => clearInterval(timerInterval);
-	}, []);
+	}, [start]);
 
 	return (
 		<>

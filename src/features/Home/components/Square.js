@@ -8,7 +8,7 @@ const useStyles = makeStyles({
     alignItems: "center",
     height: 22,
     width: 22,
-    border: "1px solid #d4a531",
+    border: "1px solid #ff7b54",
 		cursor: "pointer",
     userSelect: "none",
     "& span": {

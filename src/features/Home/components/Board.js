@@ -14,7 +14,7 @@ const useStyles = (sizeBoard = 0) =>
 		board: {
 			width: sizeBoard * (DEFAULT_SQUARE_SIZE + 2),
 			height: sizeBoard * (DEFAULT_SQUARE_SIZE + 2),
-			border: "5px solid #d4a531",
+			border: "5px solid #ff7b54",
 		},
 		row: {
 			display: 'flex',

@@ -1,6 +1,6 @@
-import { Fab, makeStyles, Tooltip } from '@material-ui/core';
+import { Fab, Icon, makeStyles, Tooltip } from '@material-ui/core';
 import React from 'react';
-import AddIcon from '@material-ui/icons/Add';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     '& .MuiFab-root': {
@@ -18,7 +18,8 @@ const useStyles = makeStyles((theme) => ({
 		},
   },
   fab: {
-    margin: theme.spacing(2),
+		margin: theme.spacing(2),
+		backgroundColor: '#ef4f4f',
   },
   absolute: {
     position: 'absolute',
@@ -27,18 +28,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function CreateRoom({ onClick = () => {} }) {
+function KickButton({ onClick = () => {} }) {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
-      <Tooltip title="Create room" aria-label="create" onClick={onClick}>
+      <Tooltip title="Exit room" aria-label="back" onClick={onClick}>
         <Fab color="primary" className={classes.fab}>
-          <AddIcon style={{fontSize: 15	}} />
+					<Icon className="fas fa-times" style={{fontSize: 15}} />
         </Fab>
       </Tooltip>
     </div>
   );
 }
 
-export default CreateRoom;
+export default KickButton;

@@ -10,6 +10,7 @@ import {
 	Select,
 	Switch,
 	Button,
+	TextField,
 } from '@material-ui/core';
 import React, { useState } from 'react';
 
@@ -25,6 +26,9 @@ const useStyles = makeStyles({
 		marginBottom: 15,
 	},
 	sizeBoard: {
+		marginBottom: 20,
+	},
+	timer: {
 		marginBottom: 20,
 	},
 });
@@ -63,7 +67,12 @@ function ModalCreateRoom({
 					/>
 					{isPrivate ? 'Private room' : 'Public room'}
 				</div>
-				<FormControl variant="outlined" fullWidth className={classes.sizeBoard}>
+				<FormControl
+					variant="outlined"
+					fullWidth
+					className={classes.sizeBoard}
+					size="small"
+				>
 					<InputLabel>Select size board</InputLabel>
 					<Select
 						value={sizeBoard}
@@ -71,12 +80,12 @@ function ModalCreateRoom({
 						label="Select size board"
 					>
 						<MenuItem value={20}>20x20</MenuItem>
-						<MenuItem value={30}>30x30</MenuItem>
+						{/* <MenuItem value={30}>30x30</MenuItem>
 						<MenuItem value={40}>40x40</MenuItem>
-						<MenuItem value={50}>50x50</MenuItem>
+						<MenuItem value={50}>50x50</MenuItem> */}
 					</Select>
 				</FormControl>
-				<FormControl variant="outlined" fullWidth>
+				<FormControl variant="outlined" fullWidth size="small" className={classes.timer}>
 					<InputLabel>Select timer</InputLabel>
 					<Select
 						value={timer}
@@ -89,26 +98,39 @@ function ModalCreateRoom({
 						<MenuItem value={150}>2:30</MenuItem>
 					</Select>
 				</FormControl>
+				{isPrivate && (
+					<TextField
+						name="password"
+						label="Password"
+						variant="outlined"
+						type="password"
+						// value={values.password}
+						// onChange={handleChange}
+						// onBlur={handleBlur}
+						// error={Boolean(errors.password) && touched.password}
+						// helperText={touched.password && errors.password}
+						size="small"
+						fullWidth
+					/>
+				)}
 			</DialogContent>
 			<DialogActions>
 				<Button
 					variant="contained"
 					color="primary"
-					// className="text-white"
 					onClick={onSubmit}
 					size="small"
 				>
 					Create
-				</Button>
+        </Button>
 				<Button
 					variant="contained"
 					color="secondary"
-					// className="text-white"
 					onClick={toggle}
 					size="small"
 				>
 					Cancel
-				</Button>
+        </Button>
 			</DialogActions>
 		</Dialog>
 	);

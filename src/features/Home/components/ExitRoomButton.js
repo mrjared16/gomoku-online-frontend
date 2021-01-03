@@ -7,9 +7,9 @@ const useStyles = makeStyles((theme) => ({
       width: 36,
       height: 36,
     },
-    '& .MuiFab-primary': {
-      color: 'white',
-    },
+    // '& .MuiFab-primary': {
+    //   color: 'white',
+    // },
     '& button': {
       margin: 0,
 		},
@@ -18,7 +18,8 @@ const useStyles = makeStyles((theme) => ({
 		},
   },
   fab: {
-    margin: theme.spacing(2),
+		margin: theme.spacing(2),
+		backgroundColor: '#ff7b54',
   },
   absolute: {
     position: 'absolute',
@@ -34,7 +35,7 @@ function ExitRoomButton({ onClick = () => {} }) {
     <div className={classes.root}>
       <Tooltip title="Exit room" aria-label="back" onClick={onClick}>
         <Fab color="primary" className={classes.fab}>
-					<Icon className="fas fa-sign-out-alt" style={{fontSize: 15	}} />
+					<Icon className="fas fa-sign-out-alt" style={{fontSize: 15}} />
         </Fab>
       </Tooltip>
     </div>
