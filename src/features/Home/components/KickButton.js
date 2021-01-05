@@ -33,7 +33,7 @@ function KickButton({ onClick = () => {} }) {
 
   return (
     <div className={classes.root}>
-      <Tooltip title="Exit room" aria-label="back" onClick={onClick}>
+      <Tooltip title="Kick" aria-label="kick" onClick={onClick}>
         <Fab color="primary" className={classes.fab}>
 					<Icon className="fas fa-times" style={{fontSize: 15}} />
         </Fab>
