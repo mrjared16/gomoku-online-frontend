@@ -11,6 +11,7 @@ import AvatarCustom from 'components/AvatarCustom';
 import React from 'react';
 import RankCustom from 'components/RankCustom';
 import { getTitleRank } from 'utils/rank';
+import TypographyCustom from 'components/TypographyCustom';
 
 const useStyles = makeStyles({
 	root: {
@@ -51,11 +52,11 @@ function ModalProfile({ open = false, toggle = () => { }, userInfo = {} }) {
 					className={classes.container}
 				>
 					<AvatarCustom photo={userInfo.photo} size="extraLarge" />
-					<Typography className={classes.name}>{userInfo.name}</Typography>
+					<TypographyCustom className={classes.name} text={userInfo.name} />
 					<Box display="flex" flexDirection="column" width="100%" marginTop={3}>
 						<Box display="flex">
 							<Typography variant="subtitle2">Username:</Typography>
-							<Typography variant="subtitle2">{userInfo.username}</Typography>
+							<TypographyCustom text={userInfo.username}variant="subtitle2" />
 						</Box>
 						<Box display="flex" alignItems="center" marginTop={1}>
 							<Typography variant="subtitle2">Rank:</Typography>
@@ -66,25 +67,19 @@ function ModalProfile({ open = false, toggle = () => { }, userInfo = {} }) {
 						</Box>
 						<Box display="flex" marginTop={1}>
 							<Typography variant="subtitle2">Win Rate:</Typography>
-							<Typography variant="subtitle2">
-								{userInfo.winRate == null ? '' : userInfo.winRate + '%'}
-							</Typography>
+							<TypographyCustom text={userInfo.winRate == null ? '' : userInfo.winRate + '%'}variant="subtitle2" />
 						</Box>
 						<Box display="flex" marginTop={1}>
 							<Typography variant="subtitle2">Number of win games:</Typography>
-							<Typography variant="subtitle2">
-								{userInfo.numberOfWonMatches}
-							</Typography>
+							<TypographyCustom text={userInfo.numberOfWonMatches}variant="subtitle2" />
 						</Box>
 						<Box display="flex" marginTop={1}>
 							<Typography variant="subtitle2">Number of games:</Typography>
-							<Typography variant="subtitle2">
-								{userInfo.numberOfMatches}
-							</Typography>
+							<TypographyCustom text={userInfo.numberOfMatches}variant="subtitle2" />
 						</Box>
 						<Box display="flex" marginTop={1}>
 							<Typography variant="subtitle2">Join date:</Typography>
-							<Typography variant="subtitle2">02/01/2020</Typography>
+							<TypographyCustom text="02/01/2020" variant="subtitle2" />
 						</Box>
 					</Box>
 				</Box>

@@ -1,7 +1,7 @@
 import { Box, makeStyles } from "@material-ui/core";
 import React, { useState } from "react";
 import LoginForm from "features/Auth/components/LoginForm";
-import userApi from "api/userApi";
+import authApi from "api/authApi";
 import { useDispatch } from "react-redux";
 import { setToken } from "app/userSlice";
 import { useHistory } from "react-router-dom";
@@ -44,7 +44,7 @@ function Login() {
 	const handleSubmit = (values) => {
 		setIsSubmitting(true);
 		const { username, password } = values;
-		userApi
+		authApi
 			.login(username, password)
 			.then((res) => {
 				const { accessToken } = res;
@@ -64,7 +64,7 @@ function Login() {
 
 		const token = res.tokenId;
 
-		userApi
+		authApi
 			.loginWithGoogle(token)
 			.then((res) => {
 				const { accessToken } = res;

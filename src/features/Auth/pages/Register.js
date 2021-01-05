@@ -2,7 +2,7 @@ import { Box, makeStyles } from "@material-ui/core";
 import React, { useState } from "react";
 import RegisterForm from "features/Auth/components/RegisterForm";
 import { useDispatch } from "react-redux";
-import userApi from "api/userApi";
+import authApi from "api/authApi";
 import { setToken } from "app/userSlice";
 import { useHistory } from "react-router-dom";
 import { showToast } from "utils/showToast";
@@ -44,7 +44,7 @@ function Register() {
 	const handleSubmit = (values) => {
 		setIsSubmitting(true);
 		const { firstName, lastName, username, email, password } = values;
-		userApi.register(firstName, lastName, username, email, password).then((res) => {
+		authApi.register(firstName, lastName, username, email, password).then((res) => {
 			const { accessToken } = res;
 			dispatch(setToken(accessToken));
 			setIsSubmitting(false);

@@ -1,5 +1,4 @@
 import { makeStyles, Typography } from '@material-ui/core';
-import { classnames } from '@material-ui/data-grid';
 import React from 'react';
 
 const useStyles = makeStyles({

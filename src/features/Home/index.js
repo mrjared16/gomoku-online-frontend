@@ -1,7 +1,7 @@
 import { Button, Grid, makeStyles } from '@material-ui/core';
 import axiosClient from 'api/axiosClient';
 import leaderBoardApi from 'api/leaderBoardApi';
-import userApi from 'api/userApi';
+import authApi from 'api/authApi';
 import { setRoomID } from 'app/roomSlice';
 import { setUser, setLoadingUserInfo } from 'app/userSlice';
 import Header from 'components/Header';
@@ -14,6 +14,7 @@ import { Route, Switch, useHistory } from 'react-router-dom';
 import socketIOClient from 'socket.io-client';
 import { userDTOToProp } from 'utils/mapResponseToProp';
 import LeaderBoard from './components/LeaderBoard';
+import userApi from 'api/userApi';
 
 const useStyles = makeStyles({
   root: {
