@@ -1,11 +1,11 @@
 import { Icon } from '@material-ui/core';
 
-const SILVER = 200;
-const GOLD = 300;
-const PLATINUM = 400;
-const DIAMOND = 500;
-const MASTER = 600;
-const GRAND_MASTER = 700;
+const SILVER = 2000;
+const GOLD = 3000;
+const PLATINUM = 4000;
+const DIAMOND = 5000;
+const MASTER = 6000;
+const GRAND_MASTER = 7000;
 
 const formatRank = (elo) => {
 	let rank;

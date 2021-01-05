@@ -1,5 +1,6 @@
 import { Button, Grid, makeStyles } from '@material-ui/core';
 import axiosClient from 'api/axiosClient';
+import leaderBoardApi from 'api/leaderBoardApi';
 import userApi from 'api/userApi';
 import { setRoomID } from 'app/roomSlice';
 import { setUser, setLoadingUserInfo } from 'app/userSlice';
@@ -11,7 +12,8 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Switch, useHistory } from 'react-router-dom';
 import socketIOClient from 'socket.io-client';
-import Search from './components/Search';
+import { userDTOToProp } from 'utils/mapResponseToProp';
+import LeaderBoard from './components/LeaderBoard';
 
 const useStyles = makeStyles({
   root: {
@@ -24,17 +26,6 @@ const useStyles = makeStyles({
     padding: '20px 10px 10px 0px',
   },
 });
-
-function userDTOToProp({ id, username, name }) {
-  return {
-    id: id,
-    online: true,
-    name,
-		photo: '',
-		username,
-    // time: null
-  };
-}
 
 const handleOnlineUsersOnchangeEvent = {
   connected: (setState, user) => {
@@ -53,12 +44,14 @@ function Home() {
 	const dispatch = useDispatch();
 	const history = useHistory();
 
-  const [onlineUsers, setOnlineUsers] = useState([]);
+	const [onlineUsers, setOnlineUsers] = useState([]);
+	const [leaderBoardData, setLeaderBoardData] = useState([]);
+	const [loadingLeaderBoardData, setLoadingLeaderBoardData] = useState(true);
 
   const { token } = useSelector((state) => state.user);
 
   const fetchUserData = async () => {
-    const response = await userApi.fetch();
+		const response = await userApi.fetch();
     dispatch(setUser(response));
     dispatch(setLoadingUserInfo(false));
   };
@@ -111,15 +104,24 @@ function Home() {
       socketClient.off('reconnectEventMsg', () => {});
       socketClient.close();
     };
-  }, [token]);
+	}, [token]);
+	
+	const getLeaderBoardData = () => {
+		leaderBoardApi.getListLeaderBoard().then((response) => {
+			const { leaderboard: { users } } = response;
+			setLeaderBoardData(users);
+			setLoadingLeaderBoardData(false);
+		})
+	}
 
   return (
     <>
-      <Header />
+      <Header onGetLeaderBoardData={getLeaderBoardData} />
       <div className={classes.root}>
         <Switch>
           <Route exact path="/" component={() => <Main onlineUsers={onlineUsers} />} />
           <Route exact path="/rooms/:id" component={RoomPage} />
+          <Route exact path="/rank" component={() => <LeaderBoard list={leaderBoardData} loading={loadingLeaderBoardData} />} />
         </Switch>
       </div>
     </>

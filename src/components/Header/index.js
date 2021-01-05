@@ -71,13 +71,12 @@ const tabs = [
 	},
 ];
 
-function Header() {
+function Header( {onGetLeaderBoardData = () => {} } ) {
 	const classes = useStyles();
 
 	const history = useHistory();
 	const dispatch = useDispatch();
-	const { token, currentUserInfo } = useSelector((state) => state.user);
-	const { name } = currentUserInfo;
+	const { token } = useSelector((state) => state.user);
 	const [value, setValue] = useState(0);
 	const location = useLocation();
 	const { currentRoomID } = useSelector((state) => state.room);
@@ -107,6 +106,7 @@ function Header() {
 				return;
 			case "/rank":
 				setValue(2);
+				onGetLeaderBoardData();
 				return;
 			case "":
 			default:

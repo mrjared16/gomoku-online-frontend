@@ -6,7 +6,7 @@ const cookies = new Cookies();
 
 const initialState = {
   token: cookies.get("token", { path: "/" }),
-	currentUserInfo: {},
+	currentUserInfo: null,
 	loadingUserInfo: true,
 };
 

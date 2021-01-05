@@ -10,6 +10,7 @@ import ListUserOnline from '../components/ListUserOnline';
 import Search from '../components/Search';
 import { setRoomID } from 'app/roomSlice';
 import Profile from '../components/Profile';
+import { userDTOToProp } from 'utils/mapResponseToProp';
 
 const DEFAULT_ROOM_RESPONSE = {
 	id: '',
@@ -125,6 +126,7 @@ function Main({ onlineUsers = [] }) {
 	const [loading, setLoading] = useState(true);
 	const dispatch = useDispatch();
 	const { currentUserInfo } = useSelector((state) => state.user);
+	const userInfo = userDTOToProp(currentUserInfo);
 
 	useEffect(() => {
 		fetchRooms();
@@ -184,7 +186,7 @@ function Main({ onlineUsers = [] }) {
 		<>
 			<Grid container>
 				<Grid item xs={2} className={classes.profile}>
-					<Profile userInfo={currentUserInfo} />
+					<Profile userInfo={userInfo} />
 				</Grid>
 				<Grid item xs={8}>
 					<HeaderOption onCreateRoom={handleCreateRoom} />
