@@ -2,17 +2,18 @@ import React from 'react';
 import { Button, makeStyles } from '@material-ui/core';
 import LockIcon from '@material-ui/icons/Lock';
 import TableCustom from 'components/TableCustom';
+import TypographyCustom from 'components/TypographyCustom';
 
 const useStyles = makeStyles((theme) => ({
   root: {
   },
   table: {
     height: 'calc(100vh - 174.4px)',
-    margin: '0px 25px',
+    margin: '0px 10px',
   },
   buttons: {
     display: 'flex',
-    margin: '10px 25px',
+    margin: '10px 10px',
     '& button': {
       width: 120,
       marginRight: 10,
@@ -34,7 +35,7 @@ const columns = [
 		headerName: 'Host',
 		headerAlign: 'center',
 		cellClassName: 'custom-cell__center',
-		renderCell: (param) => <span>{param.value.username}</span>,
+		renderCell: (param) => <TypographyCustom text={param.value.username} />,
 		sortable: false,
 		width: 230,
 	},
@@ -43,7 +44,7 @@ const columns = [
 		headerName: 'X Player',
 		headerAlign: 'center',
 		cellClassName: 'custom-cell__center',
-		renderCell: (param) => <span>{param.value.username}</span>,
+		renderCell: (param) => <TypographyCustom text={param.value.username} />,
 		sortable: false,
 		width: 230,
 	},
@@ -52,7 +53,7 @@ const columns = [
 		headerName: 'O Player',
 		headerAlign: 'center',
 		cellClassName: 'custom-cell__center',
-		renderCell: (param) => <span>{param.value.username}</span>,
+		renderCell: (param) => <TypographyCustom text={param.value.username} />,
 		sortable: false,
 		width: 230,
 	},

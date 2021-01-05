@@ -15,6 +15,7 @@ import {
 	Icon,
 } from '@material-ui/core';
 import AvatarCustom from 'components/AvatarCustom';
+import TypographyCustom from 'components/TypographyCustom';
 import React from 'react';
 import { useSelector } from 'react-redux';
 
@@ -54,7 +55,7 @@ function ModalSpectator({
 								</ListItemAvatar>
 								<ListItemText>
 									<div className={classes.name}>
-										<Typography variant="subtitle1">{name}</Typography>
+										<TypographyCustom text={name} />
 										{id === hostID && (
 											<Icon
 												className="fas fa-chess-king"

@@ -32,7 +32,7 @@ function Square({ value = -1, onClick = () => {}, isBelongWinLine = false }) {
   };
 
   return (
-    <div className={classes.root} onClick={onClick} style={{backgroundColor: isBelongWinLine ? '#ffda77': 'white'}}>
+    <div className={classes.root} onClick={onClick} style={{backgroundColor: isBelongWinLine ? '#ffb26b': 'white'}}>
       {renderValue()}
     </div>
   );

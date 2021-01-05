@@ -6,11 +6,8 @@ import { useHistory } from 'react-router-dom';
 import { roomSocket } from 'socket/roomSocket';
 import axiosClient from 'api/axiosClient';
 import { Grid, makeStyles } from '@material-ui/core';
-import ListUserOnline from '../components/ListUserOnline';
-import Search from '../components/Search';
-import { setRoomID } from 'app/roomSlice';
-import Profile from '../components/Profile';
 import { userDTOToProp } from 'utils/mapResponseToProp';
+import HomeInfoLeft from '../components/HomeInfoLeft';
 
 const DEFAULT_ROOM_RESPONSE = {
 	id: '',
@@ -106,14 +103,21 @@ const handleRoomListOnchangeEvent = {
 };
 
 const useStyles = makeStyles({
-	listUserStatus: {
-		display: 'flex',
-		flexDirection: 'column',
-		justifyContent: 'space-between',
-		padding: '20px 10px 10px 0px',
+	root: {
+		height: '100%',
+		'& nav': {
+			display: 'flex',
+			flexDirection: 'column',
+			height: 'calc(100% - 16px)',
+		},
+		'& .MuiCollapse-entered': {
+			flexGrow: 1,
+			overflow: 'auto',
+		}
 	},
-	profile: {
-		padding: '20px 10px 10px 20px',
+	homeInfoLeft: {
+		padding: '4px 0px',
+		height: '100%',
 	}
 })
 
@@ -183,30 +187,21 @@ function Main({ onlineUsers = [] }) {
 	};
 
 	return (
-		<>
-			<Grid container>
-				<Grid item xs={2} className={classes.profile}>
-					<Profile userInfo={userInfo} />
-				</Grid>
-				<Grid item xs={8}>
-					<HeaderOption onCreateRoom={handleCreateRoom} />
-					<ListRoom
-						loading={loading}
-						list={roomList}
-						onRoomSelected={handleRoomSelected}
-						onJoin={handleJoinClick}
-						roomSelected={roomSelected}
-					/>
-				</Grid>
-				<Grid item xs={2} className={classes.listUserStatus}>
-					{/* <Button variant="outlined" onClick={() => fetchOnlineUsers()}>
-							Load
-						</Button> */}
-					<ListUserOnline list={onlineUsers} />
-					<Search />
-				</Grid>
+		<Grid container className={classes.root}>
+			<Grid item xs={2} className={classes.homeInfoLeft}>
+				<HomeInfoLeft userInfo={userInfo} onlineUsers={onlineUsers} />
 			</Grid>
-		</>
+			<Grid item xs={10}>
+				<HeaderOption onCreateRoom={handleCreateRoom} />
+				<ListRoom
+					loading={loading}
+					list={roomList}
+					onRoomSelected={handleRoomSelected}
+					onJoin={handleJoinClick}
+					roomSelected={roomSelected}
+				/>
+			</Grid>
+		</Grid>
 	);
 }
 

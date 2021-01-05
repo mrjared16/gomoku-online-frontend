@@ -5,6 +5,7 @@ import Timer from './Timer';
 import BrushIcon from '@material-ui/icons/Brush';
 import LeaveTableButton from './LeaveTableButton';
 import KickButton from './KickButton';
+import TypographyCustom from 'components/TypographyCustom';
 
 const useStyles = makeStyles({
 	root: {
@@ -79,6 +80,10 @@ const useStyles = makeStyles({
 		top: '50%',
 		transform: 'translate(120%, -60%)',
 	},
+	username: {
+		marginTop: 10,
+		marginBottom: 10,
+	}
 });
 
 function Table({
@@ -101,7 +106,7 @@ function Table({
 	return (
 		<div className={classes.root} onClick={onClick}>
 			{userInfo && <AvatarCustom online={true} photo={photo} size="large" />}
-			<p>{username}</p>
+			<TypographyCustom text={username} className={classes.username} />
 			<div className={classes.time}>
 				{userInfo && <Timer value={60} start={isStart && playerTurn} />}
 				{playerTurn && (

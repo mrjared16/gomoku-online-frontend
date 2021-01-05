@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core';
 import TableCustom from 'components/TableCustom';
 import RankCustom from 'components/RankCustom';
 import { getTitleRank } from 'utils/rank';
+import TypographyCustom from 'components/TypographyCustom';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -12,8 +13,6 @@ const useStyles = makeStyles((theme) => ({
 		padding: '25px 25px',
 	},
 	containerRank: {
-		height: '50%',
-		width: 30,
 		marginRight: 10,
 	}
 }));
@@ -32,7 +31,7 @@ function LeaderBoard({
 				<div className={classes.containerRank}>
 					<RankCustom title={title} />
 				</div>
-				{username}
+				<TypographyCustom text={username} />
 			</>
 		)
 	}
