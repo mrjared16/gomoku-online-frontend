@@ -1,8 +1,7 @@
-import { SignalCellularNullTwoTone } from "@material-ui/icons";
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  currentRoomID: SignalCellularNullTwoTone,
+  currentRoomID: null,
 };
 
 const roomSlice = createSlice({

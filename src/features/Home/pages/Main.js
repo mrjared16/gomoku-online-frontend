@@ -167,7 +167,6 @@ function Main({ onlineUsers = [] }) {
 				if (!response) return;
 				const { roomID } = response;
 				history.push(`/rooms/${roomID}`);
-				dispatch(setRoomID(roomID));
 			}
 		);
 	};
@@ -175,7 +174,6 @@ function Main({ onlineUsers = [] }) {
 	const handleJoinClick = () => {
 		if (!roomSelected) return;
 		history.push(`/rooms/${roomSelected.id}`);
-		dispatch(setRoomID(roomSelected.id));
 	};
 
 	const handleRoomSelected = (row) => {

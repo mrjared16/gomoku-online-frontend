@@ -14,7 +14,7 @@ import SpectatorButton from 'features/Home/components/SpectatorButton';
 import ModalSpectator from 'features/Home/components/ModalSpectator';
 import TurnHistory from 'features/Home/components/TurnHistory';
 import Chat from 'features/Home/components/Chat';
-import { removeRoomID } from 'app/roomSlice';
+import { removeRoomID, setRoomID } from 'app/roomSlice';
 import { showToast } from 'utils/showToast';
 
 const DEFAULT_SIZE = 20;
@@ -137,6 +137,7 @@ function RoomPage() {
 	// handle room event
 	useEffect(() => {
 		console.log('join room', { roomID: roomID });
+		dispatch(setRoomID(roomID));
 		roomSocket.emit(
 			'join',
 			{

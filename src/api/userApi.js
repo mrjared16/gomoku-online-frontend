@@ -17,9 +17,7 @@ const userApi = {
   register: (firstName, lastName, username, email, password) => {
     const url = "/auth/register";
     const body = {
-      // firstName,
-			// lastName,
-			name: firstName + lastName,
+			name: firstName + " " + lastName,
       username,
       email,
       password,
