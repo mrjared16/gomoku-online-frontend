@@ -1,11 +1,9 @@
-import { Button, Grid, makeStyles } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
 import axiosClient from 'api/axiosClient';
 import leaderBoardApi from 'api/leaderBoardApi';
-import authApi from 'api/authApi';
 import { setRoomID } from 'app/roomSlice';
-import { setUser, setLoadingUserInfo } from 'app/userSlice';
+import { setUser, setLoadingProfile } from 'app/userSlice';
 import Header from 'components/Header';
-import ListUserStatus from 'features/Home/components/ListUserOnline';
 import Main from 'features/Home/pages/Main';
 import RoomPage from 'features/Home/pages/RoomPage';
 import React, { useEffect, useState } from 'react';
@@ -13,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Route, Switch, useHistory } from 'react-router-dom';
 import socketIOClient from 'socket.io-client';
 import { userDTOToProp } from 'utils/mapResponseToProp';
-import LeaderBoard from './components/LeaderBoard';
+import LeaderBoard from './pages/LeaderBoard';
 import userApi from 'api/userApi';
 
 const useStyles = makeStyles({
@@ -54,7 +52,7 @@ function Home() {
   const fetchUserData = async () => {
 		const response = await userApi.fetch();
     dispatch(setUser(response));
-    dispatch(setLoadingUserInfo(false));
+    dispatch(setLoadingProfile(false));
   };
 
   const fetchOnlineUsers = () => {

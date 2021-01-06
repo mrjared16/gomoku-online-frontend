@@ -6,7 +6,6 @@ import { useHistory } from 'react-router-dom';
 import { roomSocket } from 'socket/roomSocket';
 import axiosClient from 'api/axiosClient';
 import { Grid, makeStyles } from '@material-ui/core';
-import { userDTOToProp } from 'utils/mapResponseToProp';
 import HomeInfoLeft from '../components/HomeInfoLeft';
 
 const DEFAULT_ROOM_RESPONSE = {
@@ -129,8 +128,6 @@ function Main({ onlineUsers = [] }) {
 	const [roomSelected, setRoomSelected] = useState(null);
 	const [loading, setLoading] = useState(true);
 	const dispatch = useDispatch();
-	const { currentUserInfo } = useSelector((state) => state.user);
-	const userInfo = userDTOToProp(currentUserInfo);
 
 	useEffect(() => {
 		fetchRooms();
@@ -189,7 +186,7 @@ function Main({ onlineUsers = [] }) {
 	return (
 		<Grid container className={classes.root}>
 			<Grid item xs={2} className={classes.homeInfoLeft}>
-				<HomeInfoLeft userInfo={userInfo} onlineUsers={onlineUsers} />
+				<HomeInfoLeft onlineUsers={onlineUsers} />
 			</Grid>
 			<Grid item xs={10}>
 				<HeaderOption onCreateRoom={handleCreateRoom} />

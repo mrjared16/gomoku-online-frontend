@@ -38,6 +38,7 @@ function ModalSpectator({
 	toggle = () => { },
 	list = [],
 	hostID = null,
+	onClick= () => {},
 }) {
 	const classes = useStyles();
 	const { currentUserInfo } = useSelector((state) => state.user);
@@ -49,7 +50,7 @@ function ModalSpectator({
 				<List>
 					{list &&
 						list.map(({ id, online = false, name = '', photo = '' }, index) => (
-							<ListItem key={id} button>
+							<ListItem key={id} button onClick={() => onClick(id)}>
 								<ListItemAvatar>
 									<AvatarCustom photo={photo} online={true} />
 								</ListItemAvatar>

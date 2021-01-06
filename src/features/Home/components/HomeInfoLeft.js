@@ -10,9 +10,11 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 import Profile from './Profile';
 import { Icon } from '@material-ui/core';
 import { useSelector } from 'react-redux';
-import ModalProfile from './ModalProfile';
+import ModalUserInfo from './ModalUserInfo';
 import ListUserOnline from './ListUserOnline';
 import Loading from 'components/Loading';
+import { userDTOToProp } from 'utils/mapResponseToProp';
+import userApi from 'api/userApi';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -35,20 +37,36 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-function HomeInfoLeft({ userInfo = {}, onlineUsers = [] }) {
+function HomeInfoLeft({ onlineUsers = [] }) {
 	const classes = useStyles();
 	const [openUserOnline, setOpenUserOnline] = React.useState(true);
-	const { loadingUserInfo } = useSelector((state) => state.user);
-	const [openModalProfile, setOpenModalProfile] = useState(false);
+	const { loadingProfile } = useSelector((state) => state.user);
+	const [openModalUserInfo, setOpenModalUserInfo] = useState(false);
+	const { currentUserInfo } = useSelector((state) => state.user);
+	const profileData = userDTOToProp(currentUserInfo);
+	const [userInfoState, setUserInfoState] = useState(null);
+	const [loadingUserInfo, setLoadingUserInfo] = useState(true);
 
-	const handleClickUserOnline = () => {
+	const handleClickDropDownUserOnline = () => {
 		setOpenUserOnline(!openUserOnline);
 	};
 
-	const toggleModalProfile = () => {
-		if (loadingUserInfo) return;
-		setOpenModalProfile(!openModalProfile);
+	const handleClickProfile = () => {
+		if (loadingProfile) return;
+		setUserInfoState(profileData);
+		setOpenModalUserInfo(!openModalUserInfo);
+		setLoadingUserInfo(false);
 	};
+
+	const handleClickUser = (id) => {
+		setLoadingUserInfo(true);
+		setOpenModalUserInfo(true);
+		userApi.getUserInfoByID(id).then((response) => {
+			const userInfoData = userDTOToProp(response.user);
+			setUserInfoState(userInfoData);
+			setLoadingUserInfo(false);
+		})
+	}
 
 	return (
 		<>
@@ -57,14 +75,14 @@ function HomeInfoLeft({ userInfo = {}, onlineUsers = [] }) {
 				aria-labelledby="user-online-list-subheader"
 				className={classes.root}
 			>
-				<ListItem button onClick={toggleModalProfile}>
-					{loadingUserInfo ? (
+				<ListItem button onClick={handleClickProfile}>
+					{loadingProfile ? (
 						<Loading />
 					) : (
-							<Profile userInfo={userInfo} />
+							<Profile dataProp={profileData} />
 						)}
 				</ListItem>
-				<ListItem button onClick={handleClickUserOnline} className={classes.userOnlineDropdown}>
+				<ListItem button onClick={handleClickDropDownUserOnline} className={classes.userOnlineDropdown}>
 					<ListItemIcon>
 						<Icon className="fas fa-users" style={{ fontSize: 18 }} />
 					</ListItemIcon>
@@ -73,11 +91,11 @@ function HomeInfoLeft({ userInfo = {}, onlineUsers = [] }) {
 				</ListItem>
 				<Collapse in={openUserOnline} timeout="auto" unmountOnExit>
 					<List component="div" disablePadding>
-						<ListUserOnline list={onlineUsers} />
+						<ListUserOnline list={onlineUsers} onClickUser={handleClickUser} />
 					</List>
 				</Collapse>
 			</List>
-			{!loadingUserInfo && <ModalProfile open={openModalProfile} toggle={toggleModalProfile} userInfo={userInfo} />}
+			<ModalUserInfo open={openModalUserInfo} toggle={() => setOpenModalUserInfo(!openModalUserInfo)} userInfo={userInfoState} loading={loadingUserInfo} />
 		</>
 	);
 }

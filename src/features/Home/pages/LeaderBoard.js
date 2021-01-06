@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core';
 import TableCustom from 'components/TableCustom';
 import RankCustom from 'components/RankCustom';
 import { getTitleRank } from 'utils/rank';
 import TypographyCustom from 'components/TypographyCustom';
+import userApi from 'api/userApi';
+import { userDTOToProp } from 'utils/mapResponseToProp';
+import ModalUserInfo from '../components/ModalUserInfo';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -22,7 +25,10 @@ function LeaderBoard({
 	list = [],
 }) {
 	const classes = useStyles();
-
+	const [userInfoState, setUserInfoState] = useState(null);
+	const [loadingUserInfo, setLoadingUserInfo] = useState(true);
+	const [openModalUserInfo, setOpenModalUserInfo] = useState(false);
+	
 	const renderUsernameColumn = (username, rank) => {
 		const title = getTitleRank(rank);
 	
@@ -74,16 +80,30 @@ function LeaderBoard({
 		}
 	));
 
+	const handleClickUser = ({ row }) => {
+		setLoadingUserInfo(true);
+		setOpenModalUserInfo(true);
+		userApi.getUserInfoByID(row.id).then((response) => {
+			const userInfoData = userDTOToProp(response.user);
+			setUserInfoState(userInfoData);
+			setLoadingUserInfo(false);
+		})
+	};
+
 	return (
-		<div className={classes.root}>
-			<div className={classes.table}>
-				<TableCustom
-					loading={loading}
-					data={customList}
-					columns={columns}
-				/>
+		<>
+			<div className={classes.root}>
+				<div className={classes.table}>
+					<TableCustom
+						loading={loading}
+						data={customList}
+						columns={columns}
+						onRowClick={handleClickUser}
+					/>
+				</div>
 			</div>
-		</div>
+			<ModalUserInfo open={openModalUserInfo} toggle={() => setOpenModalUserInfo(!openModalUserInfo)} userInfo={userInfoState} loading={loadingUserInfo} />
+		</>
 	);
 }
 

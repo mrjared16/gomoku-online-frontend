@@ -23,13 +23,13 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-function ListUserOnline({ list = [] }) {
+function ListUserOnline({ list = [], onClickUser = () => {} }) {
 	const classes = useStyles();
 
 	return (
 		<>
 			{list.map(({ id, online = false, name = "", photo = "", time = "", username = "" }, index) => (
-				<ListItem key={id} button className={classes.userOnline}>
+				<ListItem key={id} button className={classes.userOnline} onClick={() => onClickUser(id)}>
 					<ListItemAvatar>
 						<AvatarCustom photo={photo} online={online} />
 					</ListItemAvatar>

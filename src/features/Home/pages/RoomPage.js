@@ -16,6 +16,9 @@ import TurnHistory from 'features/Home/components/TurnHistory';
 import Chat from 'features/Home/components/Chat';
 import { removeRoomID, setRoomID } from 'app/roomSlice';
 import { showToast } from 'utils/showToast';
+import ModalUserInfo from '../components/ModalUserInfo';
+import userApi from 'api/userApi';
+import { userDTOToProp } from 'utils/mapResponseToProp';
 
 const DEFAULT_SIZE = 20;
 
@@ -99,6 +102,10 @@ function RoomPage() {
 	const [openModalStatusGameFinish, setOpenModalStatusGameFinish] = useState(false);
 	const [openModalConfirmNewGame, setOpenModalConfirmNewGame] = useState(false);
 	const [openModalSpectator, setOpenModalSpectator] = useState(false);
+
+	const [userInfoState, setUserInfoState] = useState(null);
+	const [loadingUserInfo, setLoadingUserInfo] = useState(true);
+	const [openModalUserInfo, setOpenModalUserInfo] = useState(false);
 
 	const { token, currentUserInfo } = useSelector((state) => state.user);
 	const dispatch = useDispatch();
@@ -326,12 +333,30 @@ function RoomPage() {
 				roomID: roomID,
 			}
 		})
+
+		if (side === 0 && XPlayer) {
+			handleClickUser(XPlayer.id);
+		}
+
+		if (side === 1 && OPlayer) {
+			handleClickUser(OPlayer.id);
+		}
 	}
 
 	const getWinLinePosition = (line) => {
 		const winLine = line.split('-').map(item => parseInt(item));
 		return winLine;
 	}
+
+	const handleClickUser = (id) => {
+		setLoadingUserInfo(true);
+		setOpenModalUserInfo(true);
+		userApi.getUserInfoByID(id).then((response) => {
+			const userInfoData = userDTOToProp(response.user);
+			setUserInfoState(userInfoData);
+			setLoadingUserInfo(false);
+		})
+	};
 
 	return (
 		<div className={classes.root}>
@@ -430,7 +455,8 @@ function RoomPage() {
 				isPlayer={isPlayer()}
 			/>
 			<ModalConfirmNewGame open={openModalConfirmNewGame} toggle={() => setOpenModalConfirmNewGame(!openModalConfirmNewGame)} onSubmit={handleNewGame} />
-			<ModalSpectator open={openModalSpectator} toggle={() => setOpenModalSpectator(!openModalSpectator)} list={spectator} hostID={hostInfo?.id} />
+			<ModalSpectator open={openModalSpectator} toggle={() => setOpenModalSpectator(!openModalSpectator)} list={spectator} hostID={hostInfo?.id} onClick={handleClickUser} />
+			<ModalUserInfo open={openModalUserInfo} toggle={() => setOpenModalUserInfo(!openModalUserInfo)} userInfo={userInfoState} loading={loadingUserInfo} />
 		</div>
 	);
 }

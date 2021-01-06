@@ -16,12 +16,12 @@ const useStyles = makeStyles({
 		width: 150,
 		height: 150,
 		border: '3px solid #ffb26b',
-		position: 'relative',
 		cursor: 'pointer',
 		marginBottom: 30,
 		'& .MuiBadge-root': {
 			marginTop: 20,
 		},
+		position: 'relative',
 	},
 	symbol: {
 		position: 'absolute',
@@ -78,11 +78,14 @@ const useStyles = makeStyles({
 		position: 'absolute',
 		right: 0,
 		top: '50%',
-		transform: 'translate(120%, -60%)',
+		transform: 'translate(120%, -70%)',
 	},
 	username: {
 		marginTop: 10,
 		marginBottom: 10,
+	},
+	container: {
+		position: 'relative',
 	}
 });
 
@@ -104,29 +107,31 @@ function Table({
 	};
 
 	return (
-		<div className={classes.root} onClick={onClick}>
-			{userInfo && <AvatarCustom online={true} photo={photo} size="large" />}
-			<TypographyCustom text={username} className={classes.username} />
-			<div className={classes.time}>
-				{userInfo && <Timer value={60} start={isStart && playerTurn} />}
-				{playerTurn && (
-					<BrushIcon style={{ color: 'blue' }} />
+		<div className={classes.container}>
+			<div className={classes.root} onClick={onClick}>
+				{userInfo && <AvatarCustom online={true} photo={photo} size="large" />}
+				<TypographyCustom text={username} className={classes.username} />
+				<div className={classes.time}>
+					{userInfo && <Timer value={60} start={isStart && playerTurn} />}
+					{playerTurn && (
+						<BrushIcon style={{ color: 'blue' }} />
+					)}
+				</div>
+				<span
+					className={classes.symbol}
+					style={{ color: symbol === 'X' ? 'red' : 'green' }}
+				>
+					{symbol}
+				</span>
+				{isWinner && (
+					<span className={classes.winner}>
+						<Icon
+							className={'fas fa-crown ' + classes.winnerSymbol}
+							style={{ color: 'yellow', width: 'fit-content', fontSize: 50 }}
+						/>
+					</span>
 				)}
 			</div>
-			<span
-				className={classes.symbol}
-				style={{ color: symbol === 'X' ? 'red' : 'green' }}
-			>
-				{symbol}
-			</span>
-			{isWinner && (
-				<span className={classes.winner}>
-					<Icon
-						className={'fas fa-crown ' + classes.winnerSymbol}
-						style={{ color: 'yellow', width: 'fit-content', fontSize: 50 }}
-					/>
-				</span>
-			)}
 			{!isStart && userInfo && isOwner && (
 				<div className={classes.optionButton}>
 					<LeaveTableButton />

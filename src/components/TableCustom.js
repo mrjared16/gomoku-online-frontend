@@ -120,6 +120,7 @@ function TableCustom({
 	onRowSelected = () => { },
 	data = [],
 	columns = [],
+	onRowClick = () => { },
 }) {
 	const classes = useStyles();
 
@@ -138,6 +139,7 @@ function TableCustom({
 					noRowsOverlay: CustomNoRowsOverlay,
 				}}
 				onRowSelected={onRowSelected}
+				onRowClick={onRowClick}
 			/>
 		</div>
 	);

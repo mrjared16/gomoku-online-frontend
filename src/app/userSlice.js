@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { set } from "lodash";
 import Cookies from "universal-cookie";
 
 const cookies = new Cookies();
@@ -7,7 +6,7 @@ const cookies = new Cookies();
 const initialState = {
   token: cookies.get("token", { path: "/" }),
 	currentUserInfo: null,
-	loadingUserInfo: true,
+	loadingProfile: true,
 };
 
 const userSlice = createSlice({
@@ -25,8 +24,8 @@ const userSlice = createSlice({
     setUser: (state, action) => {
 			state.currentUserInfo = action.payload.user;
 		},
-		setLoadingUserInfo: (state, action) => {
-			state.loadingUserInfo = action.payload;
+		setLoadingProfile: (state, action) => {
+			state.loadingProfile = action.payload;
     },
   },
 });
@@ -36,6 +35,6 @@ export const {
   setToken,
   removeToken,
 	setUser,
-	setLoadingUserInfo,
+	setLoadingProfile,
 } = actions;
 export default reducer;

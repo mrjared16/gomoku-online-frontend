@@ -11,17 +11,17 @@ const useStyles = makeStyles({
 	},
 })
 
-function Profile({ userInfo = {} }) {
+function Profile({ dataProp = {} }) {
 	const classes = useStyles();
 
 	return (
 		<>
 			<ListItemIcon>
-				<AvatarCustom photo={userInfo.photo} size="large" />
+				<AvatarCustom photo={dataProp?.photo} size="large" />
 			</ListItemIcon>
-			<ListItemText primary={userInfo.username} />
+			<ListItemText primary={dataProp?.username} />
 			<ListItemSecondaryAction className={classes.containerRank}>
-				<RankCustom title={getTitleRank(userInfo.rank)} width={35} height={35} />
+				<RankCustom title={getTitleRank(dataProp?.rank)} width={35} height={35} />
 			</ListItemSecondaryAction>
 		</>
 	);
