@@ -1,8 +1,8 @@
 import React from 'react';
-import { Box, makeStyles } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
 import { DataGrid, GridOverlay } from '@material-ui/data-grid';
 import Pagination from '@material-ui/lab/Pagination';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import Loading from './Loading';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -16,6 +16,9 @@ const useStyles = makeStyles((theme) => ({
 		},
 		'& .MuiDataGrid-row.Mui-selected': {
 			backgroundColor: '#ffb26b !important',
+		},
+		'& .MuiDataGrid-colCellWrapper': {
+			backgroundColor: '#ffd56b'
 		},
 		height: "100%",
 	},
@@ -41,6 +44,9 @@ const useStyles = makeStyles((theme) => ({
 	label: {
 		marginTop: theme.spacing(1),
 	},
+	themeHeader: {
+		backgroundColor: '#ffd56b'
+	}
 }));
 
 function CustomPagination(props) {
@@ -59,9 +65,7 @@ function CustomPagination(props) {
 function CustomLoadingOverlay() {
 	return (
 		<GridOverlay>
-			<Box display="flex" alignItems="center" justifyContent="center">
-				<CircularProgress color="secondary" size={30} />
-			</Box>
+			<Loading />
 		</GridOverlay>
 	);
 }
@@ -121,15 +125,22 @@ function TableCustom({
 	data = [],
 	columns = [],
 	onRowClick = () => { },
+	selectable = true,
 }) {
 	const classes = useStyles();
+
+	const customColumns = columns.map(column => ({
+		...column,
+		headerClassName: classes.themeHeader,
+		disableClickEventBubbling: !selectable,
+	}));
 
 	return (
 		<div className={classes.root}>
 			<DataGrid
 				loading={loading}
 				rows={data}
-				columns={columns}
+				columns={customColumns}
 				hideFooterSelectedRowCount={true}
 				pagination
 				pageSize={20}

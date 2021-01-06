@@ -13,6 +13,7 @@ import socketIOClient from 'socket.io-client';
 import { userDTOToProp } from 'utils/mapResponseToProp';
 import LeaderBoard from './pages/LeaderBoard';
 import userApi from 'api/userApi';
+import History from 'features/Home/pages/History';
 
 const useStyles = makeStyles({
   root: {
@@ -121,6 +122,7 @@ function Home() {
           <Route exact path="/" component={() => <Main onlineUsers={onlineUsers} />} />
           <Route exact path="/rooms/:id" component={RoomPage} />
           <Route exact path="/rank" component={() => <LeaderBoard list={leaderBoardData} loading={loadingLeaderBoardData} />} />
+          <Route exact path="/history" component={() => <History />} />
         </Switch>
       </div>
     </>
