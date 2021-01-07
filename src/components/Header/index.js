@@ -71,7 +71,7 @@ const tabs = [
 	},
 ];
 
-function Header( {onGetLeaderBoardData = () => {} } ) {
+function Header() {
 	const classes = useStyles();
 
 	const history = useHistory();
@@ -106,9 +106,7 @@ function Header( {onGetLeaderBoardData = () => {} } ) {
 				return;
 			case "/rank":
 				setValue(2);
-				onGetLeaderBoardData();
 				return;
-			case "":
 			default:
 				setValue(0);
 		}

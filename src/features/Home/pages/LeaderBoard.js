@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core';
 import TableCustom from 'components/TableCustom';
 import RankCustom from 'components/RankCustom';
@@ -7,6 +7,7 @@ import TypographyCustom from 'components/TypographyCustom';
 import userApi from 'api/userApi';
 import { userDTOToProp } from 'utils/mapResponseToProp';
 import ModalUserInfo from '../components/ModalUserInfo';
+import leaderBoardApi from 'api/leaderBoardApi';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -20,14 +21,13 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-function LeaderBoard({
-	loading = true,
-	list = [],
-}) {
+function LeaderBoard() {
 	const classes = useStyles();
 	const [userInfoState, setUserInfoState] = useState(null);
 	const [loadingUserInfo, setLoadingUserInfo] = useState(true);
 	const [openModalUserInfo, setOpenModalUserInfo] = useState(false);
+	const [leaderBoardData, setLeaderBoardData] = useState([]);
+	const [loadingLeaderBoardData, setLoadingLeaderBoardData] = useState(true);
 	
 	const renderUsernameColumn = (username, rank) => {
 		const title = getTitleRank(rank);
@@ -69,17 +69,6 @@ function LeaderBoard({
 		},
 	];
 
-	const customList = list.map((data, index) => (
-		{
-			...data,
-			userInfo: {
-				username: data.username,
-				rank: data.gameProfile.rank,
-			},
-			index,
-		}
-	));
-
 	const handleClickUser = ({ row }) => {
 		setLoadingUserInfo(true);
 		setOpenModalUserInfo(true);
@@ -90,13 +79,36 @@ function LeaderBoard({
 		})
 	};
 
+	const getLeaderBoardData = () => {
+		setLoadingLeaderBoardData(true);
+		leaderBoardApi.getListLeaderBoard().then((response) => {
+			const { leaderboard: { users } } = response;
+			const customList = users.map((data, index) => (
+				{
+					...data,
+					userInfo: {
+						username: data.username,
+						rank: data.gameProfile.rank,
+					},
+					index,
+				}
+			));
+			setLeaderBoardData(customList);
+			setLoadingLeaderBoardData(false);
+		})
+	};
+
+	useEffect(() => {
+		getLeaderBoardData();
+	}, [])
+
 	return (
 		<>
 			<div className={classes.root}>
 				<div className={classes.table}>
 					<TableCustom
-						loading={loading}
-						data={customList}
+						loading={loadingLeaderBoardData}
+						data={leaderBoardData}
 						columns={columns}
 						onRowClick={handleClickUser}
 					/>

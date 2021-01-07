@@ -8,8 +8,7 @@ import moment from 'moment';
 import { range } from 'lodash';
 
 const useStyles = makeStyles((theme) => ({
-	root: {
-	},
+	root: {},
 	table: {
 		height: 'calc(100vh - 98px)',
 		padding: '25px 25px',
@@ -25,15 +24,12 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-function LeaderBoard({
-	loading = true,
-	list = [],
-}) {
+function History() {
 	const classes = useStyles();
-	
+
 	const renderUsernameColumn = (username, rank) => {
 		const title = getTitleRank(rank);
-	
+
 		return (
 			<>
 				<div className={classes.containerRank}>
@@ -41,28 +37,34 @@ function LeaderBoard({
 				</div>
 				<TypographyCustom text={username} />
 			</>
-		)
-	}
+		);
+	};
 
 	const renderResult = (res) => {
 		if (res === 'Win') {
-			return <span className={classes.win}>{res}</span>
-		};
+			return <span className={classes.win}>{res}</span>;
+		}
 		if (res === 'Lose') {
-			return <span className={classes.lose}>{res}</span>
-		};
-	}
+			return <span className={classes.lose}>{res}</span>;
+		}
+	};
 
 	const renderElo = (newRank, oldRank) => {
 		if (newRank > oldRank) {
-			return <span className={classes.win}>{`${newRank} (+${newRank - oldRank})`}</span>
+			return (
+				<span className={classes.win}>{`${newRank} (+${newRank - oldRank
+					})`}</span>
+			);
 		}
 		if (oldRank > newRank) {
-			return <span className={classes.lose}>{`${oldRank} (-${oldRank - newRank})`}</span>
+			return (
+				<span className={classes.lose}>{`${oldRank} (-${oldRank - newRank
+					})`}</span>
+			);
 		}
-	}
-	
-	list = range(0, 20, 1).map(index => ({
+	};
+
+	const list = range(0, 20, 1).map((index) => ({
 		id: index,
 		XPlayer: {
 			username: 'test1',
@@ -78,7 +80,7 @@ function LeaderBoard({
 			oldRank: index % 2 === 0 ? 1500 : 2000,
 		},
 		date: 123123123,
-	}))
+	}));
 
 	const columns = [
 		{
@@ -94,7 +96,8 @@ function LeaderBoard({
 			headerName: 'X Player',
 			headerAlign: 'center',
 			cellClassName: 'custom-cell__center',
-			renderCell: (param) => renderUsernameColumn(param.value?.username, param.value?.rank),
+			renderCell: (param) =>
+				renderUsernameColumn(param.value?.username, param.value?.rank),
 			sortable: false,
 			width: 300,
 		},
@@ -103,7 +106,8 @@ function LeaderBoard({
 			headerName: 'O Player',
 			headerAlign: 'center',
 			cellClassName: 'custom-cell__center',
-			renderCell: (param) => renderUsernameColumn(param.value?.username, param.value?.rank),
+			renderCell: (param) =>
+				renderUsernameColumn(param.value?.username, param.value?.rank),
 			sortable: false,
 			width: 300,
 		},
@@ -120,7 +124,8 @@ function LeaderBoard({
 			headerName: 'Elo',
 			headerAlign: 'center',
 			cellClassName: 'custom-cell__center',
-			renderCell: (param) => renderElo(param.value?.newRank, param.value?.oldRank),
+			renderCell: (param) =>
+				renderElo(param.value?.newRank, param.value?.oldRank),
 			width: 120,
 		},
 		{
@@ -128,7 +133,9 @@ function LeaderBoard({
 			headerName: 'Date',
 			headerAlign: 'center',
 			cellClassName: 'custom-cell__center',
-			renderCell: (param) => <span>{moment(param.value).format('DD/MM/YYYY')}</span>,
+			renderCell: (param) => (
+				<span>{moment(param.value).format('DD/MM/YYYY')}</span>
+			),
 			width: 150,
 		},
 		{
@@ -136,28 +143,31 @@ function LeaderBoard({
 			headerName: 'Action',
 			headerAlign: 'center',
 			cellClassName: 'custom-cell__center',
-			renderCell: (param) => <Button>Watch</Button>,
+			renderCell: (param) => (
+				<Button
+					variant="contained"
+					className="caro-button"
+					size="small"
+					style={{backgroundColor: '#ffb26b'}}
+				>
+					Watch
+				</Button>
+			),
 			width: 150,
 		},
 	];
 
-	const customList = list.map((data, index) => (
-		{
-			...data,
-			// userInfo: {
-			// 	username: data.username,
-			// 	rank: data.gameProfile.rank,
-			// },
-			index,
-		}
-	));
+	const customList = list.map((data, index) => ({
+		...data,
+		index,
+	}));
 
 	return (
 		<>
 			<div className={classes.root}>
 				<div className={classes.table}>
 					<TableCustom
-						loading={loading}
+						// loading={loading}
 						data={customList}
 						columns={columns}
 						selectable={false}
@@ -168,4 +178,4 @@ function LeaderBoard({
 	);
 }
 
-export default React.memo(LeaderBoard);
+export default React.memo(History);

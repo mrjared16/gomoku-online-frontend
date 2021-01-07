@@ -45,8 +45,6 @@ function Home() {
 	const history = useHistory();
 
 	const [onlineUsers, setOnlineUsers] = useState([]);
-	const [leaderBoardData, setLeaderBoardData] = useState([]);
-	const [loadingLeaderBoardData, setLoadingLeaderBoardData] = useState(true);
 
   const { token } = useSelector((state) => state.user);
 
@@ -105,24 +103,16 @@ function Home() {
       socketClient.close();
     };
 	}, [token]);
-	
-	const getLeaderBoardData = () => {
-		leaderBoardApi.getListLeaderBoard().then((response) => {
-			const { leaderboard: { users } } = response;
-			setLeaderBoardData(users);
-			setLoadingLeaderBoardData(false);
-		})
-	}
 
   return (
     <>
-      <Header onGetLeaderBoardData={getLeaderBoardData} />
+      <Header />
       <div className={classes.root}>
         <Switch>
           <Route exact path="/" component={() => <Main onlineUsers={onlineUsers} />} />
           <Route exact path="/rooms/:id" component={RoomPage} />
-          <Route exact path="/rank" component={() => <LeaderBoard list={leaderBoardData} loading={loadingLeaderBoardData} />} />
-          <Route exact path="/history" component={() => <History />} />
+          <Route exact path="/rank" component={LeaderBoard} />
+          <Route exact path="/history" component={History} />
         </Switch>
       </div>
     </>
