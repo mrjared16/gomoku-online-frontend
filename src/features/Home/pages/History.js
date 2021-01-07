@@ -6,6 +6,9 @@ import { getTitleRank } from 'utils/rank';
 import TypographyCustom from 'components/TypographyCustom';
 import moment from 'moment';
 import { range } from 'lodash';
+import { useDispatch } from 'react-redux';
+import { setRoomID } from 'app/roomSlice';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
 	root: {},
@@ -26,6 +29,8 @@ const useStyles = makeStyles((theme) => ({
 
 function History() {
 	const classes = useStyles();
+	const dispatch = useDispatch();
+	const history = useHistory();
 
 	const renderUsernameColumn = (username, rank) => {
 		const title = getTitleRank(rank);
@@ -139,7 +144,7 @@ function History() {
 			width: 150,
 		},
 		{
-			field: 'action',
+			field: 'id',
 			headerName: 'Action',
 			headerAlign: 'center',
 			cellClassName: 'custom-cell__center',
@@ -149,6 +154,7 @@ function History() {
 					className="caro-button"
 					size="small"
 					style={{backgroundColor: '#ffb26b'}}
+					onClick={() => handleWatch(param.value)}
 				>
 					Watch
 				</Button>
@@ -161,6 +167,11 @@ function History() {
 		...data,
 		index,
 	}));
+
+	const handleWatch = (id) => {
+		dispatch(setRoomID(id));
+		history.push(`/rooms/${id}`);
+	}
 
 	return (
 		<>
