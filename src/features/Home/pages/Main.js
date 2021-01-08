@@ -128,6 +128,7 @@ function Main({ onlineUsers = [] }) {
 	const [roomSelected, setRoomSelected] = useState(null);
 	const [loading, setLoading] = useState(true);
 	const dispatch = useDispatch();
+	const [isMatching, setIsMatching] = useState(false);
 
 	useEffect(() => {
 		fetchRooms();
@@ -183,6 +184,10 @@ function Main({ onlineUsers = [] }) {
 		setRoomSelected(row.data);
 	};
 
+	const handleQuickPlayClick = () => {
+		setIsMatching(!isMatching);
+	}
+
 	return (
 		<Grid container className={classes.root}>
 			<Grid item xs={2} className={classes.homeInfoLeft}>
@@ -196,6 +201,8 @@ function Main({ onlineUsers = [] }) {
 					onRoomSelected={handleRoomSelected}
 					onJoin={handleJoinClick}
 					roomSelected={roomSelected}
+					isMatching={isMatching}
+					onQuickPlay={handleQuickPlayClick}
 				/>
 			</Grid>
 		</Grid>

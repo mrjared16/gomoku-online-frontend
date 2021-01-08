@@ -18,7 +18,7 @@ const useStyles = makeStyles({
 		border: '3px solid #ffb26b',
 		cursor: 'pointer',
 		marginBottom: 30,
-		'& .MuiBadge-root': {
+		'& .MuiAvatar-root': {
 			marginTop: 20,
 		},
 		position: 'relative',
@@ -98,6 +98,7 @@ function Table({
 	isHost = false,
 	isOwner = false,
 	isStart = false,
+	online = true,
 }) {
 	const classes = useStyles();
 	const { name, photo, username } = userInfo || {
@@ -109,7 +110,7 @@ function Table({
 	return (
 		<div className={classes.container}>
 			<div className={classes.root} onClick={onClick}>
-				{userInfo && <AvatarCustom online={true} photo={photo} size="large" />}
+				{userInfo && <AvatarCustom online={online} photo={photo} size="large" />}
 				<TypographyCustom text={username} className={classes.username} />
 				<div className={classes.time}>
 					{userInfo && <Timer value={60} start={isStart && playerTurn} />}

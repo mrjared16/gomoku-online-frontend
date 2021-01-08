@@ -54,7 +54,7 @@ const useStyles = makeStyles({
 	},
 	container: {
 		display: 'flex',
-		justifyContent: 'space-between',
+		// justifyContent: 'space-between',
 		height: 'calc(100vh - 88px)',
 		overflow: 'auto',
 	},
@@ -439,7 +439,7 @@ function RoomPage() {
 						</div>
 					</div>
 				</Box>
-				<Box display="flex">
+				<Box display="flex" marginLeft={5}>
 					<Chat />
 					<TurnHistory list={gameMoves} onChangeMoveIndex={(index) => setMoveIndex(index)} />
 				</Box>

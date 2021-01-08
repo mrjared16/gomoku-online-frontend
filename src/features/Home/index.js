@@ -14,6 +14,7 @@ import { userDTOToProp } from 'utils/mapResponseToProp';
 import LeaderBoard from './pages/LeaderBoard';
 import userApi from 'api/userApi';
 import History from 'features/Home/pages/History';
+import WatchingHistory from './pages/WatchingHistory';
 
 const useStyles = makeStyles({
   root: {
@@ -113,6 +114,7 @@ function Home() {
           <Route exact path="/rooms/:id" component={RoomPage} />
           <Route exact path="/rank" component={LeaderBoard} />
           <Route exact path="/history" component={History} />
+          <Route exact path="/watching-history/:id" component={WatchingHistory} />
         </Switch>
       </div>
     </>

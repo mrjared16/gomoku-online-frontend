@@ -41,7 +41,7 @@ function ModalCreateRoom({
 	const classes = useStyles();
 	const [isPrivate, setIsPrivate] = useState(false);
 	const [sizeBoard, setSizeBoard] = useState(20);
-	const [timer, setTimer] = useState(90);
+	const [timer, setTimer] = useState(60);
 
 	const handleChangePrivateSwitch = () => {
 		setIsPrivate(!isPrivate);
@@ -93,9 +93,9 @@ function ModalCreateRoom({
 						label="Select timer"
 					>
 						<MenuItem value={60}>1:00</MenuItem>
-						<MenuItem value={90}>1:30</MenuItem>
+						{/* <MenuItem value={90}>1:30</MenuItem>
 						<MenuItem value={120}>2:00</MenuItem>
-						<MenuItem value={150}>2:30</MenuItem>
+						<MenuItem value={150}>2:30</MenuItem> */}
 					</Select>
 				</FormControl>
 				{isPrivate && (

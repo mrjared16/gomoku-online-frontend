@@ -33,7 +33,7 @@ function ExitRoomButton({ onClick = () => {} }) {
 
   return (
     <div className={classes.root}>
-      <Tooltip title="Exit room" aria-label="back" onClick={onClick}>
+      <Tooltip title="Exit" aria-label="back" onClick={onClick}>
         <Fab color="primary" className={classes.fab}>
 					<Icon className="fas fa-sign-out-alt" style={{fontSize: 15}} />
         </Fab>

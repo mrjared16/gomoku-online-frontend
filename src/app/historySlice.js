@@ -4,6 +4,10 @@ const initialState = {
 	isWatchingHistory: false,
 	moveHistory: [],
 	historyID: null,
+	winnerID: null,
+	winLine: [],
+	xPlayer: null,
+	oPlayer: null,
 };
 
 const historySlice = createSlice({
@@ -18,7 +22,20 @@ const historySlice = createSlice({
 		},
 		setIdHistory: (state, action) => {
 			state.historyID = action.payload;
-    },
+		},
+		setWinnerID: (state, action) => {
+			state.winnerID = action.payload;
+		},
+		setWinLine: (state, action) => {
+			state.winLine = action.payload;
+		},
+		setXPlayer: (state, action) => {
+			state.xPlayer = action.payload;
+		},
+		setOPlayer: (state, action) => {
+			state.oPlayer = action.payload;
+		},
+		resetHistory: (state, action) => initialState,
   },
 });
 
@@ -27,5 +44,10 @@ export const {
   setIsWatchingHistory,
 	setMoveHistory,
 	setIdHistory,
+	resetHistory,
+	setWinnerID,
+	setWinLine,
+	setXPlayer,
+	setOPlayer,
 } = actions;
 export default reducer;

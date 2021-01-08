@@ -81,7 +81,7 @@ function ListUserOnline({ list = [], onClickUser = () => { } }) {
 								<Typography variant="subtitle1">{username}</Typography>
 							</div>
 						</ListItemText>
-						{currentUserInfo?.id !== id && (
+						{currentUserInfo && currentUserInfo.id !== id && (
 							<ListItemSecondaryAction>
 								<Button
 									className={

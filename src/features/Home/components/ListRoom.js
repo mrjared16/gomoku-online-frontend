@@ -87,6 +87,8 @@ function ListRoom({
   onRoomSelected = () => {},
 	onJoin = () => {},
 	roomSelected = null,
+	isMatching = false,
+	onQuickPlay = () => {},
 }) {
 	const classes = useStyles();
 
@@ -121,8 +123,9 @@ function ListRoom({
           variant="contained"
 					style={{ backgroundColor: '#ffb26b' }}
 					size="small"
+					onClick={onQuickPlay}
         >
-          Quick Play
+          {isMatching ? 'Matching...' : 'Quick Play'}
         </Button>
       </div>
     </div>

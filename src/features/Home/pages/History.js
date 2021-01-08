@@ -8,7 +8,7 @@ import moment from 'moment';
 import { range } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { setIdHistory, setMoveHistory, setIsWatchingHistory } from 'app/historySlice';
+import { setIdHistory, setMoveHistory, setIsWatchingHistory, setWinnerID, setWinLine, setXPlayer, setOPlayer } from 'app/historySlice';
 
 const useStyles = makeStyles((theme) => ({
 	root: {},
@@ -97,6 +97,10 @@ function History() {
 				value: index % 2 === 0 ? 0 : 1,
 			})),
 			// turn
+		},
+		statusFinishGame: {
+			gameResult: 0,
+			line: '1-2-3-4-5',
 		}
 	}));
 
@@ -186,21 +190,19 @@ function History() {
 
 	const customList = list.map((data, index) => ({
 		...data,
-		index,
 		gameState: {
-			move: data.gameState.move,
+			...data.gameState,
 			id: data.id,
 		},
+		index,
 	}));
 
 	const handleWatch = (gameState) => {
 		if (!gameState) return;
-		const { id, move } = gameState;
 		dispatch(setIsWatchingHistory(true));
-		dispatch(setIdHistory(id));
-		dispatch(setMoveHistory(move))
-		history.push(`/watching-history/${id}`);
-	}
+		dispatch(setIdHistory(gameState?.id));
+		history.push(`/watching-history/${gameState?.id}`);
+	};
 
 	return (
 		<>

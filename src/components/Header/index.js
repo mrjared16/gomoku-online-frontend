@@ -140,8 +140,14 @@ function Header() {
 
 	useEffect(() => {
 		if (currentRoomID) {
+			const newCurrentTabs = currentTabs.map(tab => {
+				if (tab.label === 'History') {
+					tab.disabled = true;
+				}
+				return tab;
+			});
 			setCurrentTabs([
-				...currentTabs,
+				...newCurrentTabs,
 				{
 					label: "Room",
 					url: `/rooms/${currentRoomID}`,
@@ -150,19 +156,25 @@ function Header() {
 				},
 			])
 		} else {
-			const newCurrentTabs = currentTabs.filter(tab => tab.label !== 'Room');
+			let newCurrentTabs = currentTabs.map(tab => {
+				if (tab.label === 'History') {
+					tab.disabled = false;
+				}
+				return tab;
+			});
+			newCurrentTabs = newCurrentTabs.filter(tab => tab.label !== 'Room');
 			setCurrentTabs(newCurrentTabs);
 		}
 	}, [currentRoomID])
 
 	useEffect(() => {
 		if (isWatchingHistory) {
-			const newCurrentTab = currentTabs.map(tab => {
+			const newCurrentTabs = currentTabs.map(tab => {
 				tab.disabled = true;
 				return tab;
 			});
 			setCurrentTabs([
-				...newCurrentTab,
+				...newCurrentTabs,
 				{
 					label: "Watching History",
 					url: `/watching-history/${historyID}`,
@@ -171,7 +183,11 @@ function Header() {
 				},
 			])
 		} else {
-			const newCurrentTabs = currentTabs.filter(tab => tab.label !== 'Watching History');
+			let newCurrentTabs = currentTabs.filter(tab => tab.label !== 'Watching History');
+			newCurrentTabs = newCurrentTabs.map(tab => {
+				tab.disabled = false;
+				return tab;
+			});
 			setCurrentTabs(newCurrentTabs);
 		}
 	}, [isWatchingHistory])

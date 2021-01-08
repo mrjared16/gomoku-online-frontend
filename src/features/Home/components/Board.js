@@ -21,7 +21,7 @@ const useStyles = (sizeBoard = 0) =>
 		}
 	});
 
-function Board({ sizeBoard = 20, board = [], onSquareClick = () => { }, winLine = [] }) {
+function Board({ sizeBoard = 20, board = [], onSquareClick = () => { }, winLine = [], isShowWinLine = true }) {
 	const classes = useStyles(sizeBoard)();
 
 	const renderRows = () => (
@@ -30,7 +30,7 @@ function Board({ sizeBoard = 20, board = [], onSquareClick = () => { }, winLine 
 				{range(0, sizeBoard, 1).map(indexCol => {
 					const indexBoard = indexRow * sizeBoard + indexCol;
 					const isBelongWinLine = includes(winLine, indexBoard);
-					return <Square key={indexBoard} value={board[indexBoard]} onClick={() => onSquareClick(indexBoard)} isBelongWinLine={isBelongWinLine} />
+					return <Square key={indexBoard} value={board[indexBoard]} onClick={() => onSquareClick(indexBoard)} isBelongWinLine={isShowWinLine && isBelongWinLine} />
 				})}
 			</div>
 		))
