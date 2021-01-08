@@ -6,11 +6,11 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import Logo from "components/Header/components/Logo";
-import UserInfo from "components/Header/components/UserInfo";
 import Dropdown from "components/Header/components/Dropdown";
 import { removeToken } from "app/userSlice";
 import { showToast } from "utils/showToast";
 import { setRoomID } from 'app/roomSlice';
+import { setIdHistory, setIsWatchingHistory } from "app/historySlice";
 
 function a11yProps(index) {
 	return {
@@ -58,16 +58,19 @@ const tabs = [
 		label: "Home",
 		url: "/",
 		value: 0,
+		disabled: false,
 	},
 	{
 		label: "History",
 		url: "/history",
 		value: 1,
+		disabled: false,
 	},
 	{
 		label: "Rank",
 		url: "/rank",
 		value: 2,
+		disabled: false,
 	},
 ];
 
@@ -80,11 +83,12 @@ function Header() {
 	const [value, setValue] = useState(0);
 	const location = useLocation();
 	const { currentRoomID } = useSelector((state) => state.room);
+	const { isWatchingHistory, historyID } = useSelector(state => state.history);
 	const [currentTabs, setCurrentTabs] = useState(tabs);
 
 	const handleChange = (event, newValue) => {
 		setValue(newValue);
-		const newUrl = currentTabs[newValue].url;
+		const newUrl = currentTabs[newValue]?.url || '';
 		history.push(newUrl);
 	};
 
@@ -92,6 +96,15 @@ function Header() {
 		dispatch(removeToken());
 		history.push("/login");
 		showToast("success", "Logout successful")
+	};
+
+	const getTabValue = (label) => {
+		const tab = currentTabs.filter(tab => tab.label === label);
+		if (tab.length === 0) {
+			return currentTabs.length;
+		} else {
+			return tab[0].value;
+		}
 	};
 
 	useEffect(() => {
@@ -114,25 +127,54 @@ function Header() {
 		if (path.match(/rooms/)) {
 			const id = path.split('/').pop();
 			dispatch(setRoomID(id));
-			setValue(3);
+			setValue(getTabValue('Room'));
+		}
+
+		if (path.match(/watching-history/)) {
+			const id = path.split('/').pop();
+			dispatch(setIdHistory(id));
+			dispatch(setIsWatchingHistory(true));
+			setValue(getTabValue('Watching History'));
 		}
 	}, [location]);
 
 	useEffect(() => {
 		if (currentRoomID) {
 			setCurrentTabs([
-				...tabs,
+				...currentTabs,
 				{
-					label: "Game",
+					label: "Room",
 					url: `/rooms/${currentRoomID}`,
-					value: 3,
+					value: getTabValue('Room'),
+					disabled: false,
 				},
 			])
 		} else {
-			const newCurrentTabs = currentTabs.filter(tab => tab.label !== 'Game');
+			const newCurrentTabs = currentTabs.filter(tab => tab.label !== 'Room');
 			setCurrentTabs(newCurrentTabs);
 		}
 	}, [currentRoomID])
+
+	useEffect(() => {
+		if (isWatchingHistory) {
+			const newCurrentTab = currentTabs.map(tab => {
+				tab.disabled = true;
+				return tab;
+			});
+			setCurrentTabs([
+				...newCurrentTab,
+				{
+					label: "Watching History",
+					url: `/watching-history/${historyID}`,
+					value: getTabValue('Watching History'),
+					disabled: false,
+				},
+			])
+		} else {
+			const newCurrentTabs = currentTabs.filter(tab => tab.label !== 'Watching History');
+			setCurrentTabs(newCurrentTabs);
+		}
+	}, [isWatchingHistory])
 
 	return (
 		<div className={classes.root}>
@@ -142,11 +184,11 @@ function Header() {
 					onChange={handleChange}
 					aria-label="simple tabs example"
 				>
-					{currentTabs.map(({ label, value }, index) => {
+					{currentTabs.map(({ label, value, disabled }, index) => {
 						if (value === 0) {
-							return <Tab key={index} label={<Logo />} {...a11yProps(value)} />
+							return <Tab key={index} label={<Logo />} {...a11yProps(value)} disabled={disabled} />
 						} else {
-							return <Tab key={index} label={label} {...a11yProps(value)} />
+							return <Tab key={index} label={label} {...a11yProps(value)} disabled={disabled} />
 						}
 					})}
 				</Tabs>

@@ -126,6 +126,7 @@ function TableCustom({
 	columns = [],
 	onRowClick = () => { },
 	selectable = true,
+	pageSize = 10,
 }) {
 	const classes = useStyles();
 
@@ -143,7 +144,7 @@ function TableCustom({
 				columns={customColumns}
 				hideFooterSelectedRowCount={true}
 				pagination
-				pageSize={20}
+				pageSize={pageSize}
 				components={{
 					loadingOverlay: CustomLoadingOverlay,
 					pagination: CustomPagination,

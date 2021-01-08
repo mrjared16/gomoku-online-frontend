@@ -322,7 +322,7 @@ function RoomPage() {
 		});
 	};
 
-	const canStartGame = () => XPlayer && OPlayer && hostInfo.id === currentUserInfo.id && !isStart;
+	const canStartGame = () => XPlayer && OPlayer && hostInfo.id === currentUserInfo?.id && !isStart;
 
 	const handleClickTable = (side = 0) => {
 		roomSocket.emit('joinTable', {

@@ -6,9 +6,9 @@ import { getTitleRank } from 'utils/rank';
 import TypographyCustom from 'components/TypographyCustom';
 import moment from 'moment';
 import { range } from 'lodash';
-import { useDispatch } from 'react-redux';
-import { setRoomID } from 'app/roomSlice';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import { setIdHistory, setMoveHistory, setIsWatchingHistory } from 'app/historySlice';
 
 const useStyles = makeStyles((theme) => ({
 	root: {},
@@ -31,6 +31,7 @@ function History() {
 	const classes = useStyles();
 	const dispatch = useDispatch();
 	const history = useHistory();
+	const { currentUserInfo } = useSelector(state => state.user);
 
 	const renderUsernameColumn = (username, rank) => {
 		const title = getTitleRank(rank);
@@ -46,11 +47,13 @@ function History() {
 	};
 
 	const renderResult = (res) => {
-		if (res === 'Win') {
-			return <span className={classes.win}>{res}</span>;
+		//win (res = 0)
+		//lose (res = 1)
+		if (res === 0) {
+			return <span className={classes.win}>Win</span>;
 		}
-		if (res === 'Lose') {
-			return <span className={classes.lose}>{res}</span>;
+		if (res === 1) {
+			return <span className={classes.lose}>Lose</span>;
 		}
 	};
 
@@ -79,12 +82,22 @@ function History() {
 			username: 'test2',
 			rank: index % 2 === 0 ? 1500 : 2000,
 		},
-		result: index % 2 === 0 ? 'Win' : 'Lose',
-		gameProfile: {
+		winnerID: index % 2 === 0 ? currentUserInfo?.id : index,
+		rankRecord: {
 			newRank: index % 2 === 0 ? 2000 : 1500,
 			oldRank: index % 2 === 0 ? 1500 : 2000,
 		},
-		date: 123123123,
+		startAt: '2021-01-08T17:56:38.800Z',
+		duration: 3720,
+		gameState: {
+			move: range(0, 20, 1).map(index => ({
+				id: index,
+				position: index,
+				time: '2021-01-08T17:56:38.800Z',
+				value: index % 2 === 0 ? 0 : 1,
+			})),
+			// turn
+		}
 	}));
 
 	const columns = [
@@ -117,15 +130,15 @@ function History() {
 			width: 300,
 		},
 		{
-			field: 'result',
+			field: 'winnerID',
 			headerName: 'Result',
 			headerAlign: 'center',
 			cellClassName: 'custom-cell__center',
-			renderCell: (param) => renderResult(param.value),
+			renderCell: (param) => <span>{renderResult(param.value === currentUserInfo?.id ? 0 : 1)}</span>,
 			width: 120,
 		},
 		{
-			field: 'gameProfile',
+			field: 'rankRecord',
 			headerName: 'Elo',
 			headerAlign: 'center',
 			cellClassName: 'custom-cell__center',
@@ -134,7 +147,15 @@ function History() {
 			width: 120,
 		},
 		{
-			field: 'date',
+			field: 'duration',
+			headerName: 'Duration',
+			headerAlign: 'center',
+			cellClassName: 'custom-cell__center',
+			renderCell: (param) => <span>{param?.value && moment(param.value).format('HH:mm:ss')}</span>,
+			width: 150,
+		},
+		{
+			field: 'startAt',
 			headerName: 'Date',
 			headerAlign: 'center',
 			cellClassName: 'custom-cell__center',
@@ -144,7 +165,7 @@ function History() {
 			width: 150,
 		},
 		{
-			field: 'id',
+			field: 'gameState',
 			headerName: 'Action',
 			headerAlign: 'center',
 			cellClassName: 'custom-cell__center',
@@ -166,11 +187,19 @@ function History() {
 	const customList = list.map((data, index) => ({
 		...data,
 		index,
+		gameState: {
+			move: data.gameState.move,
+			id: data.id,
+		},
 	}));
 
-	const handleWatch = (id) => {
-		dispatch(setRoomID(id));
-		history.push(`/rooms/${id}`);
+	const handleWatch = (gameState) => {
+		if (!gameState) return;
+		const { id, move } = gameState;
+		dispatch(setIsWatchingHistory(true));
+		dispatch(setIdHistory(id));
+		dispatch(setMoveHistory(move))
+		history.push(`/watching-history/${id}`);
 	}
 
 	return (
