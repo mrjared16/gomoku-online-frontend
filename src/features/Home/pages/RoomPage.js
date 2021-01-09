@@ -371,6 +371,27 @@ function RoomPage() {
 			}
 		])
 		resetForm();
+	};
+
+	const handleLeaveTable = () => {
+		roomSocket.emit('joinTable', {
+			action: 'leave',
+			data: { 
+				token: token,
+				roomID: roomID,
+			},
+		});
+	};
+
+	const handleKickUser = (playerId) => {
+		roomSocket.emit('joinTable', {
+			action: 'kick',
+      data: {
+				token: token,
+        roomID: roomID,
+        playerId: playerId,
+			},
+		})
 	}
 
 	return (
@@ -416,21 +437,25 @@ function RoomPage() {
 							userInfo={XPlayer}
 							symbol="X"
 							playerTurn={isTurn(XPlayer, idPlayerTurn)}
-							onClick={() => handleClickTable(0)}
+							onProfileClick={() => handleClickTable(0)}
 							isWinner={statusFinishGame?.isXWin}
 							isOwner={currentUserInfo?.id === XPlayer?.id}
 							isHost={currentUserInfo?.id === hostInfo?.id}
 							isStart={isStart}
+							onLeave={handleLeaveTable}
+							onKick={handleKickUser}
 						/>
 						<Table
 							userInfo={OPlayer}
 							symbol="O"
 							playerTurn={isTurn(OPlayer, idPlayerTurn)}
-							onClick={() => handleClickTable(1)}
+							onProfileClick={() => handleClickTable(1)}
 							isWinner={statusFinishGame && !statusFinishGame.isXWin}
 							isOwner={currentUserInfo?.id === OPlayer?.id}
 							isHost={currentUserInfo?.id === hostInfo?.id}
 							isStart={isStart}
+							onLeave={handleLeaveTable}
+							onKick={handleKickUser}
 						/>
 
 						<div className={classes.footerButton}>

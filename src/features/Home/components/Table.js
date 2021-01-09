@@ -94,14 +94,16 @@ function Table({
 	symbol = 'X',
 	playerTurn = false,
 	isWinner = false,
-	onClick = () => { },
+	onProfileClick = () => { },
 	isHost = false,
 	isOwner = false,
 	isStart = false,
 	online = true,
+	onLeave = () => {},
+	onKick = () => {},
 }) {
 	const classes = useStyles();
-	const { name, photo, username } = userInfo || {
+	const { name, photo, username, id: playerId } = userInfo || {
 		name: '',
 		photo: '',
 		username: '',
@@ -109,7 +111,7 @@ function Table({
 
 	return (
 		<div className={classes.container}>
-			<div className={classes.root} onClick={onClick}>
+			<div className={classes.root} onClick={onProfileClick}>
 				{userInfo && <AvatarCustom online={online} photo={photo} size="large" />}
 				<TypographyCustom text={username} className={classes.username} />
 				<div className={classes.time}>
@@ -135,12 +137,12 @@ function Table({
 			</div>
 			{!isStart && userInfo && isOwner && (
 				<div className={classes.optionButton}>
-					<LeaveTableButton />
+					<LeaveTableButton onClick={onLeave} />
 				</div>
 			)}
 			{!isStart && userInfo && isHost && !isOwner && (
 				<div className={classes.optionButton}>
-					<KickButton />
+					<KickButton onClick={() => onKick(playerId)} />
 				</div>
 			)}
 		</div>
