@@ -19,6 +19,8 @@ import { showToast } from 'utils/showToast';
 import ModalUserInfo from '../components/ModalUserInfo';
 import userApi from 'api/userApi';
 import { userDTOToProp } from 'utils/mapResponseToProp';
+import { chatSocket } from 'socket/chatSocket';
+import gameApi from 'api/gameApi';
 
 const DEFAULT_SIZE = 20;
 
@@ -46,6 +48,13 @@ const handleGameEvent = {
 	onFinish: (handleEndGame, data) => {
 		handleEndGame(data);
 	}
+};
+
+const handleChatEvent = {
+	onSendMessage: (sendMessage, data) => {
+		const { username, content, createdAt } = data;
+		sendMessage(username, content, createdAt);
+	},
 };
 
 const useStyles = makeStyles({
@@ -108,6 +117,7 @@ function RoomPage() {
 	const [openModalUserInfo, setOpenModalUserInfo] = useState(false);
 
 	const [listMessage, setListMessage] = useState([]);
+	const [chatChanel, setChatChanel] = useState(null);
 
 	const { token, currentUserInfo } = useSelector((state) => state.user);
 	const dispatch = useDispatch();
@@ -185,7 +195,7 @@ function RoomPage() {
 			return;
 		}
 
-		const { players, roomOption, gameID, users } = response;
+		const { players, roomOption, gameID, users, chatChanel } = response;
 
 		setHostInfo(host);
 
@@ -200,6 +210,10 @@ function RoomPage() {
 
 		if (gameID) {
 			setGameID(gameID);
+		}
+
+		if (chatChanel) {
+			setChatChanel(chatChanel);
 		}
 	};
 
@@ -235,9 +249,10 @@ function RoomPage() {
 	};
 
 	const fetchGameState = async (roomID) => {
-		const response = await axiosClient.get(
-			`${process.env.REACT_APP_API_URL}/game/room/${roomID}`
-		);
+		// const response = await axiosClient.get(
+		// 	`${process.env.REACT_APP_API_URL}/game/room/${roomID}`
+		// );
+		const response = await gameApi.getGame(roomID);
 		console.log({ response });
 		
 		const { game, gameState } = response;
@@ -361,19 +376,6 @@ function RoomPage() {
 		})
 	};
 
-	const handleSendMessage = (values, { resetForm }) => {
-		const { text } = values;
-		setListMessage([
-			...listMessage,
-			{
-				username: 'test',
-				text: text,
-				createdAt: new Date(),
-			}
-		])
-		resetForm();
-	};
-
 	const handleLeaveTable = () => {
 		roomSocket.emit('joinTable', {
 			action: 'leave',
@@ -393,7 +395,57 @@ function RoomPage() {
         playerId: playerId,
 			},
 		})
-	}
+	};
+
+	const handleSendMessage = (values, { resetForm }) => {
+		const { content } = values;
+		if (!currentUserInfo) return;
+		const { username } = currentUserInfo;
+		const createdAt = new Date();
+		sendMessage(username, content, createdAt)
+		resetForm();
+	};
+
+	const sendMessage = (username, content, createdAt) => {
+		setListMessage([
+			...listMessage,
+			{
+				username: username,
+				content: content,
+				createdAt: createdAt,
+			}
+		])
+	};
+
+	const fetchChatState = () => {};
+
+	//handle chat event
+	useEffect(() => {
+		if (chatChanel === null) {
+			return;
+		}
+
+		// fetch chat state of current room
+		fetchChatState(chatChanel);
+
+		console.log('listening on chat event!');
+		chatSocket.emit('join', {
+			roomID,
+			chatChanel,
+		});
+		chatSocket.on('chatEventMsg', (response) => {
+			const { data, event } = response;
+			console.log('receive chatEventMsg emit: ', { response });
+			const getSetter = {
+				onSendMessage: sendMessage,
+			};
+
+			handleChatEvent[event](getSetter[event], data);
+		});
+		return () => {
+			chatSocket.off('chatEventMsg', () => { });
+		};
+	}, [chatChanel]);
 
 	return (
 		<div className={classes.root}>
