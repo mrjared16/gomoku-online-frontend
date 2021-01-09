@@ -2,7 +2,7 @@ import { ListItemIcon, ListItemSecondaryAction, ListItemText, makeStyles } from 
 import AvatarCustom from 'components/AvatarCustom';
 import RankCustom from 'components/RankCustom';
 import React from 'react';
-import { getTitleRank } from 'utils/rank';
+import { getRankSymbol } from 'utils/rank';
 
 const useStyles = makeStyles({
 	containerRank: {
@@ -21,7 +21,7 @@ function Profile({ dataProp = {} }) {
 			</ListItemIcon>
 			<ListItemText primary={dataProp?.username} />
 			<ListItemSecondaryAction className={classes.containerRank}>
-				<RankCustom title={getTitleRank(dataProp?.rank)} width={35} height={35} />
+				<RankCustom symbol={getRankSymbol(dataProp?.rank)} width={35} height={35} />
 			</ListItemSecondaryAction>
 		</>
 	);

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core';
 import TableCustom from 'components/TableCustom';
 import RankCustom from 'components/RankCustom';
-import { getTitleRank } from 'utils/rank';
+import { getRankSymbol } from 'utils/rank';
 import TypographyCustom from 'components/TypographyCustom';
 import userApi from 'api/userApi';
 import { userDTOToProp } from 'utils/mapResponseToProp';
@@ -30,12 +30,10 @@ function LeaderBoard() {
 	const [loadingLeaderBoardData, setLoadingLeaderBoardData] = useState(true);
 
 	const renderUsernameColumn = (username, rank) => {
-		const title = getTitleRank(rank);
-
 		return (
 			<>
 				<div className={classes.containerRank}>
-					<RankCustom title={title} />
+					<RankCustom symbol={getRankSymbol(rank)} />
 				</div>
 				<TypographyCustom text={username} />
 			</>

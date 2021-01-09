@@ -11,7 +11,7 @@ import {
 import AvatarCustom from 'components/AvatarCustom';
 import React, { useState } from 'react';
 import RankCustom from 'components/RankCustom';
-import { getTitleRank } from 'utils/rank';
+import { getRankSymbol } from 'utils/rank';
 import TypographyCustom from 'components/TypographyCustom';
 import Loading from 'components/Loading';
 import moment from 'moment';
@@ -161,7 +161,7 @@ function ModalUserInfo({
                         <Box display="flex" alignItems="center" marginTop={1}>
                           <Typography variant="subtitle2">Rank:</Typography>
                           <div className={classes.containerRank}>
-                            <RankCustom title={getTitleRank(userInfo?.rank)} />
+                            <RankCustom symbol={getRankSymbol(userInfo?.rank)} />
                           </div>
                           <span>{userInfo?.rank}</span>
                         </Box>
