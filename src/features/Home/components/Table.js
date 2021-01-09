@@ -120,7 +120,7 @@ function Table({
 				</div>
 				<span
 					className={classes.symbol}
-					style={{ color: symbol === 'X' ? 'red' : 'green' }}
+					style={{ color: symbol === 'X' ? '#0a043c' : '#5aa469' }}
 				>
 					{symbol}
 				</span>

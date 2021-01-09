@@ -25,11 +25,11 @@ const useStyles = makeStyles({
 		overflow: 'auto',
 	},
 	xPlayer: {
-		color: 'red',
+		color: '#0a043c',
 		marginRight: 3,
 	},
 	oPlayer: {
-		color: 'green',
+		color: '#5aa469',
 		marginRight: 3,
 	},
 })

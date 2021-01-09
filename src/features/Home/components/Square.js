@@ -23,9 +23,9 @@ function Square({ value = -1, onClick = () => {}, isBelongWinLine = false }) {
   const renderValue = () => {
     switch (value) {
       case 0:
-        return <span style={{ color: "red" }}>X</span>;
+        return <span style={{ color: "#0a043c" }}>X</span>;
       case 1:
-        return <span style={{ color: "green" }}>O</span>;
+        return <span style={{ color: "#5aa469" }}>O</span>;
       default:
         return "";
     }

@@ -26,10 +26,12 @@ const useStyles = makeStyles((theme) => ({
 		color: 'red',
 	},
 	sideXColumn: {
-		backgroundColor: '#ef4f4f',
+		backgroundColor: '#0a043c',
+		color: 'white',
 	},
 	sideOColumn: {
-		backgroundColor: '#83a95c',
+		backgroundColor: '#5aa469',
+		color: 'white',
 	},
 }));
 
