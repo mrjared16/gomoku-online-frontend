@@ -74,14 +74,7 @@ function History() {
 
 	const list = range(0, 20, 1).map((index) => ({
 		id: index,
-		XPlayer: {
-			username: 'test1',
-			rank: index % 2 === 0 ? 2000 : 1500,
-		},
-		OPlayer: {
-			username: 'test2',
-			rank: index % 2 === 0 ? 1500 : 2000,
-		},
+		side: index % 2 === 0 ? 0 : 1,
 		winnerID: index % 2 === 0 ? currentUserInfo?.id : index,
 		rankRecord: {
 			newRank: index % 2 === 0 ? 2000 : 1500,
@@ -114,24 +107,13 @@ function History() {
 			width: 70,
 		},
 		{
-			field: 'XPlayer',
-			headerName: 'X Player',
+			field: 'side',
+			headerName: 'Side',
 			headerAlign: 'center',
 			cellClassName: 'custom-cell__center',
-			renderCell: (param) =>
-				renderUsernameColumn(param.value?.username, param.value?.rank),
+			renderCell: (param) => <span>{param.value === 0 ? 'X' : 'O'}</span>,
 			sortable: false,
-			width: 300,
-		},
-		{
-			field: 'OPlayer',
-			headerName: 'O Player',
-			headerAlign: 'center',
-			cellClassName: 'custom-cell__center',
-			renderCell: (param) =>
-				renderUsernameColumn(param.value?.username, param.value?.rank),
-			sortable: false,
-			width: 300,
+			width: 120,
 		},
 		{
 			field: 'winnerID',
