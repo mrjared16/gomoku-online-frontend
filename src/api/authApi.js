@@ -14,10 +14,10 @@ const authApi = {
 
 		return axiosClient.post(url, body);
   },
-  register: (firstName, lastName, username, email, password) => {
+  register: (name, username, email, password) => {
     const url = "/auth/register";
     const body = {
-			name: firstName + " " + lastName,
+			name,
       username,
       email,
       password,
