@@ -13,6 +13,7 @@ import RankCustom from 'components/RankCustom';
 import { getTitleRank } from 'utils/rank';
 import TypographyCustom from 'components/TypographyCustom';
 import Loading from 'components/Loading';
+import moment from 'moment';
 
 const useStyles = makeStyles({
 	root: {
@@ -113,7 +114,7 @@ function ModalUserInfo({
 									</Box>
 									<Box display="flex" marginTop={1}>
 										<Typography variant="subtitle2">Join date:</Typography>
-										<TypographyCustom text="02/01/2020" variant="subtitle2" />
+										<TypographyCustom text={moment(userInfo?.joinDate).format('DD/MM/YYYY')} variant="subtitle2" />
 									</Box>
 								</Box>
 							</>
