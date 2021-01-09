@@ -107,6 +107,8 @@ function RoomPage() {
 	const [loadingUserInfo, setLoadingUserInfo] = useState(true);
 	const [openModalUserInfo, setOpenModalUserInfo] = useState(false);
 
+	const [listMessage, setListMessage] = useState([]);
+
 	const { token, currentUserInfo } = useSelector((state) => state.user);
 	const dispatch = useDispatch();
 	const classes = useStyles();
@@ -358,6 +360,18 @@ function RoomPage() {
 		})
 	};
 
+	const handleSendMessage = (values, { resetForm }) => {
+		const { text } = values;
+		setListMessage([
+			...listMessage,
+			{
+				username: 'test',
+				text: text,
+			}
+		])
+		resetForm();
+	}
+
 	return (
 		<div className={classes.root}>
 			<div className={classes.container}>
@@ -440,7 +454,7 @@ function RoomPage() {
 					</div>
 				</Box>
 				<Box display="flex" marginLeft={5}>
-					<Chat />
+					<Chat list={listMessage} onSubmit={handleSendMessage} />
 					<TurnHistory list={gameMoves} onChangeMoveIndex={(index) => setMoveIndex(index)} />
 				</Box>
 			</div>

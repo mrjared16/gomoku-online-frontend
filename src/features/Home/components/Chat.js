@@ -1,8 +1,9 @@
 import {
-	Box, makeStyles, Typography
+	Box, FormControl, Icon, IconButton, InputAdornment, makeStyles, OutlinedInput, Typography
 } from '@material-ui/core';
-import { range } from 'lodash';
+import { Form, Formik } from 'formik';
 import React from 'react';
+import * as Yup from 'yup';
 
 const useStyles = makeStyles({
 	root: {
@@ -11,6 +12,8 @@ const useStyles = makeStyles({
 		borderRadius: 5,
 		width: 300,
 		marginRight: 30,
+		display: 'flex',
+		flexDirection: 'column',
 	},
 	containerTitle: {
 		backgroundColor: '#ff7b54',
@@ -20,21 +23,42 @@ const useStyles = makeStyles({
 		// color: 'white',
 	},
 	body: {
-		height: 'calc(550px - 38px)',
+		flex: 1,
+		padding: 10,
+		overflow: 'auto',
 	},
+	footer: {
+		height: 50,
+		padding: '10px 10px 0px 10px',
+	},
+	username: {
+		fontWeight: 'bold',
+	},
+	text: {
+		marginLeft: 5,
+	}
 })
 
-const test = range(0, 20, 1).map(index => (
-	{
-		id: index,
-		position: index,
-		player: index % 2 === 0 ? 'X' : 'O',
-	}
-))
+const initialValues = {
+	text: '',
+};
 
-function Chat({ list = [] }) {
+const validationMessageSchema = Yup.object().shape({
+	text: Yup.string().trim().required(),
+});
+
+function Chat({ list = [], onSubmit = () => {} }) {
 	const classes = useStyles();
-	list = test;
+
+	const renderMessage = (message) => {
+		const { username, text } = message;
+		return (
+			<Box display='flex' alignItems='center' marginBottom={1}>
+				<span className={classes.username}>{`${username}:`}</span>
+				<span className={classes.text}>{text}</span>
+			</Box>
+		)
+	}
 
 	return (
 		<div className={classes.root}>
@@ -42,6 +66,34 @@ function Chat({ list = [] }) {
 				<Typography variant="subtitle1" className={classes.title}>Chat</Typography>
 			</Box>
 			<div className={classes.body}>
+				{list.map(message => renderMessage(message))}
+			</div>
+			<div className={classes.footer}>
+				<Formik initialValues={initialValues} validationSchema={validationMessageSchema} onSubmit={onSubmit}>
+					{({ values, handleSubmit, handleChange, handleBlur }) => (
+						<Form>
+							<FormControl variant="outlined" size="small">
+								<OutlinedInput
+									value={values.text}
+									onChange={handleChange}
+									name="text"
+									placeholder="Aaa..."
+									autoComplete="off"
+									endAdornment={
+										<InputAdornment position="end">
+											<IconButton
+												onClick={handleSubmit}
+												edge="end"
+											>
+												<Icon className="fas fa-paper-plane" style={{color: '#939b62'}} />
+                			</IconButton>
+										</InputAdornment>
+									}
+								/>
+							</FormControl>
+						</Form>
+					)}
+				</Formik>
 			</div>
 		</div>
 	);
