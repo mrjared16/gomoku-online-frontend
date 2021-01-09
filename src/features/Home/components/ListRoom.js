@@ -63,7 +63,7 @@ const columns = [
 		headerAlign: 'center',
 		cellClassName: 'custom-cell__center',
 		renderCell: (param) => (
-			<span style={{ color: param.value ? 'red' : 'green' }}>
+			<span style={{ color: param.value ? 'red' : 'orange' }}>
 				{param.value ? 'Playing' : 'Waiting'}
 			</span>
 		),
