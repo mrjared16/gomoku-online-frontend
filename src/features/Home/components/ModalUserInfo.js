@@ -14,6 +14,8 @@ import { getTitleRank } from 'utils/rank';
 import TypographyCustom from 'components/TypographyCustom';
 import Loading from 'components/Loading';
 import moment from 'moment';
+import * as Yup from 'yup';
+import { Form, Formik } from 'formik';
 
 const useStyles = makeStyles({
 	root: {
@@ -41,6 +43,15 @@ const useStyles = makeStyles({
 	},
 });
 
+const initialValues = {
+	name: '',
+	photo: '',
+};
+
+const validationProfileSchema = Yup.object().shape({
+	name: Yup.string().trim().required('Required'),
+})
+
 function ModalUserInfo({
 	open = false,
 	toggle = () => { },
@@ -48,6 +59,10 @@ function ModalUserInfo({
 	loading = true,
 }) {
 	const classes = useStyles();
+
+	const handleUpdateProfile = (values) => {
+	  console.log("🚀 ~ file: ModalUserInfo.js ~ line 64 ~ handleUpdateProfile ~ values", values)
+	}
 
 	return (
 		<Dialog open={open} onClose={toggle} className={classes.root}>
@@ -62,6 +77,13 @@ function ModalUserInfo({
 						<Loading />
 					) : (
 							<>
+								<Formik initialValues={initialValues} validationSchema={validationProfileSchema} onSubmit={handleUpdateProfile}>
+								 {({ values, handleSubmit, handleChange, handleBlur, errors, touched }) => (
+									 <Form>
+										 
+									 </Form>
+								 )}
+								</Formik>
 								<AvatarCustom photo={userInfo?.photo} size="extraLarge" />
 								<TypographyCustom
 									className={classes.name}

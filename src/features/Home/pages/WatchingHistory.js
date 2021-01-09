@@ -57,6 +57,7 @@ function WatchingHistory() {
 
 	const [gameMoves, setGameMoves] = useState([]);
 	const [moveIndex, setMoveIndex] = useState(0);
+	const [listMessage, setListMessage] = useState([]);
 
 	const dispatch = useDispatch();
 	const classes = useStyles();
@@ -93,7 +94,7 @@ function WatchingHistory() {
 		gameHistoryApi.getGameHistory(gameHistoryId).then((response) => {
 			if (!response) return;
 			const { game } = response;
-			const { players, moveRecord, boardSize, result } = game;
+			const { players, moveRecord, boardSize, result, chatRecord } = game;
 			const { X, O } = players;
 
 			setXPlayer(X);
@@ -101,6 +102,7 @@ function WatchingHistory() {
 			setGameMoves(moveRecord);
 			setMoveIndex(moveRecord.length - 1);
 			setSizeBoard(boardSize);
+			setListMessage(chatRecord);
 
 			const isDraw = result === 2;
 			const isXWin = result === 0;
@@ -146,7 +148,7 @@ function WatchingHistory() {
 					</div>
 				</Box>
 				<Box display="flex" marginLeft={5}>
-					<Chat />
+					<Chat list={listMessage} />
 					<TurnHistory list={gameMoves} onChangeMoveIndex={(index) => setMoveIndex(index)} />
 				</Box>
 			</div>
