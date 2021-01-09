@@ -246,6 +246,7 @@ function RoomPage() {
 		setGameMoves([]);
 		setStatusFinishGame(null);
 		setOpenModalConfirmNewGame(false);
+		setOpenModalStatusGameFinish(false);
 	};
 
 	const fetchGameState = async (roomID) => {
@@ -274,6 +275,8 @@ function RoomPage() {
 		if (gameID === null) {
 			return;
 		}
+
+		initialGameState();
 
 		// fetch game state of current room
 		fetchGameState(roomID);
