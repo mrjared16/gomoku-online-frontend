@@ -3,6 +3,7 @@ import {
 } from '@material-ui/core';
 import { Form, Formik } from 'formik';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import * as Yup from 'yup';
 
 const useStyles = makeStyles({
@@ -49,6 +50,7 @@ const validationMessageSchema = Yup.object().shape({
 
 function Chat({ list = [], onSubmit = () => {} }) {
 	const classes = useStyles();
+	const { isWatchingHistory } = useSelector(state => state.history);
 
 	const renderMessage = (message) => {
 		const { username, text } = message;
@@ -79,11 +81,13 @@ function Chat({ list = [], onSubmit = () => {} }) {
 									name="text"
 									placeholder="Aaa..."
 									autoComplete="off"
+									disabled={isWatchingHistory}
 									endAdornment={
 										<InputAdornment position="end">
 											<IconButton
 												onClick={handleSubmit}
 												edge="end"
+												disabled={isWatchingHistory}
 											>
 												<Icon className="fas fa-paper-plane" style={{color: '#939b62'}} />
                 			</IconButton>
