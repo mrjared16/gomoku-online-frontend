@@ -8,7 +8,7 @@ import moment from 'moment';
 import { range } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { setIdHistory, setMoveHistory, setIsWatchingHistory, setWinnerID, setWinLine, setXPlayer, setOPlayer } from 'app/historySlice';
+import { setIdHistory, setIsWatchingHistory} from 'app/historySlice';
 
 const useStyles = makeStyles((theme) => ({
 	root: {},
@@ -25,6 +25,12 @@ const useStyles = makeStyles((theme) => ({
 	lose: {
 		color: 'red',
 	},
+	sideXColumn: {
+		backgroundColor: '#ef4f4f',
+	},
+	sideOColumn: {
+		backgroundColor: '#83a95c',
+	},
 }));
 
 function History() {
@@ -32,19 +38,6 @@ function History() {
 	const dispatch = useDispatch();
 	const history = useHistory();
 	const { currentUserInfo } = useSelector(state => state.user);
-
-	const renderUsernameColumn = (username, rank) => {
-		const title = getTitleRank(rank);
-
-		return (
-			<>
-				<div className={classes.containerRank}>
-					<RankCustom title={title} />
-				</div>
-				<TypographyCustom text={username} />
-			</>
-		);
-	};
 
 	const renderResult = (res) => {
 		//win (res = 0)
@@ -81,7 +74,7 @@ function History() {
 			oldRank: index % 2 === 0 ? 1500 : 2000,
 		},
 		startAt: '2021-01-08T17:56:38.800Z',
-		duration: 3720,
+		duration: '2021-01-08T17:56:38.800Z',
 		gameState: {
 			move: range(0, 20, 1).map(index => ({
 				id: index,
@@ -94,7 +87,7 @@ function History() {
 		statusFinishGame: {
 			gameResult: 0,
 			line: '1-2-3-4-5',
-		}
+		},
 	}));
 
 	const columns = [
@@ -110,7 +103,7 @@ function History() {
 			field: 'side',
 			headerName: 'Side',
 			headerAlign: 'center',
-			cellClassName: 'custom-cell__center',
+			cellClassName: (param) => param.value === 0 ? `custom-cell__center ${classes.sideXColumn}` : `custom-cell__center ${classes.sideOColumn}`,
 			renderCell: (param) => <span>{param.value === 0 ? 'X' : 'O'}</span>,
 			sortable: false,
 			width: 120,
@@ -120,7 +113,7 @@ function History() {
 			headerName: 'Result',
 			headerAlign: 'center',
 			cellClassName: 'custom-cell__center',
-			renderCell: (param) => <span>{renderResult(param.value === currentUserInfo?.id ? 0 : 1)}</span>,
+			renderCell: (param) => <span>{param.value && renderResult(param.value === currentUserInfo?.id ? 0 : 1)}</span>,
 			width: 120,
 		},
 		{
@@ -129,7 +122,7 @@ function History() {
 			headerAlign: 'center',
 			cellClassName: 'custom-cell__center',
 			renderCell: (param) =>
-				renderElo(param.value?.newRank, param.value?.oldRank),
+				param.value && renderElo(param.value?.newRank, param.value?.oldRank),
 			width: 120,
 		},
 		{
