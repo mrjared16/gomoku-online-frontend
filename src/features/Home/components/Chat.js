@@ -74,7 +74,8 @@ function Chat({ list = [], onSubmit = () => { } }) {
 	const { isWatchingHistory } = useSelector((state) => state.history);
 
 	const renderMessage = (message) => {
-		const { username, content, createdAt } = message;
+		const { user, content, createdAt } = message;
+		const { username } = user;
 		return (
 			<Box display="flex" marginBottom={1}>
 				<span className={classes.username}>{username}</span>

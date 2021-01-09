@@ -51,9 +51,9 @@ const handleGameEvent = {
 };
 
 const handleChatEvent = {
-	onSendMessage: (sendMessage, data) => {
-		const { username, content, createdAt } = data;
-		sendMessage(username, content, createdAt);
+	onReceivedMessage: (addMessage, data) => {
+		const { user, content, createdAt } = data;
+		addMessage(user, content, createdAt);
 	},
 };
 
@@ -117,7 +117,7 @@ function RoomPage() {
 	const [openModalUserInfo, setOpenModalUserInfo] = useState(false);
 
 	const [listMessage, setListMessage] = useState([]);
-	const [chatChanel, setChatChanel] = useState(null);
+	const [chatChannelID, setChatChannelID] = useState(null);
 
 	const { token, currentUserInfo } = useSelector((state) => state.user);
 	const dispatch = useDispatch();
@@ -195,7 +195,7 @@ function RoomPage() {
 			return;
 		}
 
-		const { players, roomOption, gameID, users, chatChanel } = response;
+		const { players, roomOption, gameID, users, chatChannelID } = response;
 
 		setHostInfo(host);
 
@@ -212,8 +212,8 @@ function RoomPage() {
 			setGameID(gameID);
 		}
 
-		if (chatChanel) {
-			setChatChanel(chatChanel);
+		if (chatChannelID) {
+			setChatChannelID(chatChannelID);
 		}
 	};
 
@@ -242,7 +242,7 @@ function RoomPage() {
 			return 1;
 	}
 
-	const handleNewGame = () => {
+	const initialGameState = () => {
 		setGameMoves([]);
 		setStatusFinishGame(null);
 		setOpenModalConfirmNewGame(false);
@@ -302,7 +302,6 @@ function RoomPage() {
 				setOpenModalStatusGameFinish(true);
 				// TODO: handle end game
 				setGameID(null);
-				// setGameMoves([]);
 				setIdPlayerTurn(null);
 			};
 			const getSetter = {
@@ -400,44 +399,49 @@ function RoomPage() {
 	const handleSendMessage = (values, { resetForm }) => {
 		const { content } = values;
 		if (!currentUserInfo) return;
-		const { username } = currentUserInfo;
 		const createdAt = new Date();
-		sendMessage(username, content, createdAt)
+		addMessage(currentUserInfo, content, createdAt)
 		resetForm();
+
+		chatSocket.emit('sent', {
+			roomID: roomID,
+			chatChannelID: chatChannelID,
+			data: {
+				token: token,
+				content: content,
+			},
+		});
 	};
 
-	const sendMessage = (username, content, createdAt) => {
-		setListMessage([
-			...listMessage,
-			{
-				username: username,
-				content: content,
-				createdAt: createdAt,
-			}
-		])
+	const addMessage = (user, content, createdAt) => {
+		setListMessage((prevState) => prevState.concat([{
+			user: {...user},
+			content: content,
+			createdAt: createdAt,
+		}]));
 	};
 
 	const fetchChatState = () => {};
 
 	//handle chat event
 	useEffect(() => {
-		if (chatChanel === null) {
+		if (chatChannelID === null) {
 			return;
 		}
 
 		// fetch chat state of current room
-		fetchChatState(chatChanel);
+		fetchChatState(chatChannelID);
 
 		console.log('listening on chat event!');
 		chatSocket.emit('join', {
 			roomID,
-			chatChanel,
+			chatChannelID: chatChannelID,
 		});
 		chatSocket.on('chatEventMsg', (response) => {
 			const { data, event } = response;
 			console.log('receive chatEventMsg emit: ', { response });
 			const getSetter = {
-				onSendMessage: sendMessage,
+				onReceivedMessage: addMessage,
 			};
 
 			handleChatEvent[event](getSetter[event], data);
@@ -445,7 +449,7 @@ function RoomPage() {
 		return () => {
 			chatSocket.off('chatEventMsg', () => { });
 		};
-	}, [chatChanel]);
+	}, [chatChannelID]);
 
 	return (
 		<div className={classes.root}>
@@ -547,7 +551,7 @@ function RoomPage() {
 				isXWin={statusFinishGame?.isXWin}
 				isPlayer={isPlayer()}
 			/>
-			<ModalConfirmNewGame open={openModalConfirmNewGame} toggle={() => setOpenModalConfirmNewGame(!openModalConfirmNewGame)} onSubmit={handleNewGame} />
+			<ModalConfirmNewGame open={openModalConfirmNewGame} toggle={() => setOpenModalConfirmNewGame(!openModalConfirmNewGame)} onSubmit={initialGameState} />
 			<ModalSpectator open={openModalSpectator} toggle={() => setOpenModalSpectator(!openModalSpectator)} list={spectator} hostID={hostInfo?.id} onClick={handleClickUser} />
 			<ModalUserInfo open={openModalUserInfo} toggle={() => setOpenModalUserInfo(!openModalUserInfo)} userInfo={userInfoState} loading={loadingUserInfo} />
 		</div>
