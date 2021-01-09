@@ -9,6 +9,7 @@ import PublishRoute from 'components/PublishRoute';
 import PrivateRoute from 'components/PrivateRoute';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ForgotPassword from 'features/Auth/pages/ForgotPassword';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Switch>
           <PublishRoute exact path="/login" component={Login} />
           <PublishRoute exact path="/register" component={Register} />
+          <PublishRoute exact path="/forgot-password" component={ForgotPassword} />
           <PrivateRoute path="/" component={Home} />
         </Switch>
       </BrowserRouter>

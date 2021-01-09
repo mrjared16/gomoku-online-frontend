@@ -7,6 +7,7 @@ import { setToken } from "app/userSlice";
 import { useHistory } from "react-router-dom";
 import { showToast } from "utils/showToast";
 import logo from 'assets/images/logo-navigation.png';
+import ForgotPasswordForm from "../components/ForgotPasswordForm";
 
 const useStyles = makeStyles({
 	root: {
@@ -36,7 +37,7 @@ const useStyles = makeStyles({
 	},
 });
 
-function Register() {
+function ForgotPassword() {
 	const classes = useStyles();
 
 	const [isSubmitting, setIsSubmitting] = useState(false);
@@ -44,24 +45,14 @@ function Register() {
 
 	const dispatch = useDispatch();
 
-	const handleSubmit = (values) => {
-		setIsSubmitting(true);
-		const { firstName, lastName, username, email, password } = values;
-		authApi.register(firstName, lastName, username, email, password).then((res) => {
-			const { accessToken } = res;
-			dispatch(setToken(accessToken));
-			setIsSubmitting(false);
-			history.push("/");
-			showToast("success", "Register successful")
-		}).catch(err => {
-			setIsSubmitting(false);
-			showToast("error", err.message)
-		})
-	};
-
 	const handleClickLogo = () => {
 		history.push("/");
 	}
+
+	const handleSubmit = (values) => {
+		setIsSubmitting(true);
+		showToast('success', 'Please check your email');
+	};
 
 	return (
 		<>
@@ -74,7 +65,7 @@ function Register() {
 			<div className={classes.root}>
 				<div className={classes.formContainer}>
 					<div className={classes.form}>
-						<RegisterForm isSubmitting={isSubmitting} onSubmit={handleSubmit} />
+						<ForgotPasswordForm onSubmit={handleSubmit} isSubmitting={isSubmitting} />
 					</div>
 				</div>
 			</div>
@@ -82,4 +73,4 @@ function Register() {
 	);
 }
 
-export default Register;
+export default ForgotPassword;

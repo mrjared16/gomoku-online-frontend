@@ -30,7 +30,10 @@ const useStyles = makeStyles({
 		height: 50,
 		width: '100%',
 		backgroundColor: '#ff7b54',
-	}
+	},
+	logo: {
+		cursor: 'pointer',
+	},
 });
 
 function Login() {
@@ -79,10 +82,14 @@ function Login() {
 			});
 	};
 
+	const handleClickLogo = () => {
+		history.push("/");
+	}
+
 	return (
 		<>
 			<div className={classes.banner}>
-				<Box display="flex" justifyContent="center" alignItems="center" height={50}>
+				<Box display="flex" justifyContent="center" alignItems="center" height={50} onClick={handleClickLogo} className={classes.logo}>
 					<img src={logo} alt="logo" style={{ height: 30, width: 30 }} />
 					<span style={{ marginLeft: 10, color: 'white' }}>Caro Online</span>
 				</Box>

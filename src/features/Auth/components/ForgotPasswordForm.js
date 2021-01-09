@@ -11,12 +11,9 @@ import {
 } from "@material-ui/core";
 import { Form, Formik } from "formik";
 import React from "react";
-import GoogleLogin from "react-google-login";
-import FacebookLogin from "react-facebook-login";
 import { Link } from "react-router-dom";
 import * as Yup from "yup";
 import logo from "assets/images/logo.png";
-import FacebookIcon from '@material-ui/icons/Facebook';
 
 const useStyles = makeStyles({
   root: {
@@ -66,18 +63,15 @@ const useStyles = makeStyles({
 });
 
 const initialValues = {
-  username: "",
-  password: "",
+  email: "",
 };
 
 const validationSchema = Yup.object().shape({
-  username: Yup.string().trim().required("Required"),
-  password: Yup.string().required("Required"),
+  email: Yup.string().email("Email is not valid").required("Required"),
 });
 
-function LoginForm({
+function ForgotPasswordForm({
   onSubmit = () => {},
-  onLoginWithGoogle = () => {},
   isSubmitting = false,
 }) {
   const classes = useStyles();
@@ -99,27 +93,14 @@ function LoginForm({
               <CardContent>
                 <div className={classes.formContent}>
                   <TextField
-                    name="username"
-                    label="Username"
+                    name="email"
+                    label="Email"
                     variant="outlined"
-                    value={values.username}
+                    value={values.email}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    error={Boolean(errors.username) && touched.username}
-										helperText={touched.username && errors.username}
-										size="small"
-                  />
-
-                  <TextField
-                    name="password"
-                    label="Password"
-                    variant="outlined"
-                    type="password"
-                    value={values.password}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    error={Boolean(errors.password) && touched.password}
-										helperText={touched.password && errors.password}
+                    error={Boolean(errors.email) && touched.email}
+										helperText={touched.email && errors.email}
 										size="small"
                   />
                 </div>
@@ -137,31 +118,12 @@ function LoginForm({
                     {isSubmitting ? (
                       <CircularProgress style={{ color: "white" }} size={24} />
                     ) : (
-                      "Login"
+                      "Send token"
                     )}
                   </Button>
-                  <GoogleLogin
-                    clientId="545392822117-njg9uu012uoo6c6nd9m7hjc7fpv3ejun.apps.googleusercontent.com"
-                    buttonText="LOGIN WITH GOOGLE"
-                    onSuccess={onLoginWithGoogle}
-                    onFailure={() => {}}
-                    cookiePolicy={"single_host_origin"}
-                  />
-                  <FacebookLogin
-                    appId="270414947649207"
-                    fields="name,email,picture"
-										callback={(res) => console.log(res)}
-										icon={<FacebookIcon />}
-                  />
                   <Typography variant="subtitle1" className="text-grey">
-                    Don't have an account?{" "}
-                    <Link className="custom-link" to="/register">
-                      Register
-                    </Link>
-                  </Typography>
-									<Typography variant="subtitle1" className="text-grey">
-                    <Link className="custom-link" to="/forgot-password">
-											Forgot password?{" "}
+                    <Link className="custom-link" to="/login">
+                      Back to login
                     </Link>
                   </Typography>
                 </div>
@@ -174,4 +136,4 @@ function LoginForm({
   );
 }
 
-export default LoginForm;
+export default ForgotPasswordForm;
