@@ -5,13 +5,14 @@ import {
 	ListItemText,
 } from '@material-ui/core';
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles({
 	root: {
 		height: 550,
 		border: '4px solid #ff7b54',
 		borderRadius: 5,
-		width: '161px',
+		width: 180,
 	},
 	containerTitle: {
 		backgroundColor: '#ff7b54',
@@ -44,6 +45,7 @@ const formatPosition = (position) => {
 function TurnHistory({ list = [], onChangeMoveIndex = () => {} }) {
 	const classes = useStyles();
 	const [selectedIndex, setSelectedIndex] = useState(null);
+	const { isWatchingHistory } = useSelector(state => state.history);
 
 	const handleChangeMoveIndex = (index) => {
 		onChangeMoveIndex(index + 1);
@@ -59,7 +61,7 @@ function TurnHistory({ list = [], onChangeMoveIndex = () => {} }) {
 				<List>
 					{list && list.map(
 						({ position, value }, index) => (
-							<ListItem key={index} button selected={selectedIndex === index} onClick={() => handleChangeMoveIndex(index)}>
+							<ListItem key={index} button selected={selectedIndex === index} onClick={() => handleChangeMoveIndex(index)} disabled={!isWatchingHistory}>
 								<ListItemAvatar>
 									<span>
 										{`${index + 1}.`}

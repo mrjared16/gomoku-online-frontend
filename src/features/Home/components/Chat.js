@@ -54,11 +54,15 @@ const useStyles = makeStyles({
 		marginLeft: 5,
 		fontSize: '0.875rem',
 		wordBreak: 'break-all',
+		maxWidth: 210,
 	},
 	time: {
 		marginLeft: 5,
 		fontSize: '0.875rem',
 	},
+	highlight: {
+		color: '#ffb26b',
+	}
 });
 
 const initialValues = {
@@ -72,13 +76,24 @@ const validationMessageSchema = Yup.object().shape({
 function Chat({ list = [], onSubmit = () => { } }) {
 	const classes = useStyles();
 	const { isWatchingHistory } = useSelector((state) => state.history);
+	const { currentUserInfo } = useSelector(state => state.user);
+
+	const isHighLight = (sender) => {
+		let result = false;
+		if (!currentUserInfo) return result;
+		const { id } = currentUserInfo;
+		if (sender?.id === id) {
+			result = true;
+		}
+		return result;
+	}
 
 	const renderMessage = (message) => {
 		const { user, content, createdAt } = message;
 		const { username } = user;
 		return (
 			<Box display="flex" marginBottom={1}>
-				<span className={classes.username}>{username}</span>
+				<span className={`${classes.username} ${isHighLight(user) && classes.highlight}`}>{username}</span>
 				<span className={classes.time}>{`[${moment(createdAt).format(
 					'HH:mm:ss'
 				)}]:`}</span>
