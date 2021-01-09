@@ -32,7 +32,6 @@ function HeaderOption({ onCreateRoom = () => {}, onJoinRoomWithID = () => {} }) 
 	const handleJoinRoomWithIDClick = (values) => {
 		const { inputRoomID } = values;
 		onJoinRoomWithID(inputRoomID);
-		toggleModalJoin();
 	} 
 
   return (

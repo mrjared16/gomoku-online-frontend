@@ -64,6 +64,7 @@ function ModalJoinRoomWithID({
 									helperText={touched.inputRoomID && errors.inputRoomID}
 									size="small"
 									fullWidth
+									autoComplete="off"
 								/>
 							</Form>
 						</DialogContent>
