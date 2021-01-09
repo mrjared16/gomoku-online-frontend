@@ -19,7 +19,7 @@ const useStyles = makeStyles({
 		height: 550,
 		border: '4px solid #ff7b54',
 		borderRadius: 5,
-		width: 300,
+		width: 350,
 		marginRight: 30,
 		display: 'flex',
 		flexDirection: 'column',
@@ -45,8 +45,12 @@ const useStyles = makeStyles({
 	username: {
 		fontWeight: 'bold',
 		fontSize: '0.875rem',
+		maxWidth: 100,
+		overflow: 'hidden',
+		whiteSpace: "nowrap",
+		textOverflow: "ellipsis",
 	},
-	text: {
+	content: {
 		marginLeft: 5,
 		fontSize: '0.875rem',
 		wordBreak: 'break-all',
@@ -58,11 +62,11 @@ const useStyles = makeStyles({
 });
 
 const initialValues = {
-	text: '',
+	content: '',
 };
 
 const validationMessageSchema = Yup.object().shape({
-	text: Yup.string().trim().required(),
+	content: Yup.string().trim().required(),
 });
 
 function Chat({ list = [], onSubmit = () => { } }) {
@@ -70,14 +74,14 @@ function Chat({ list = [], onSubmit = () => { } }) {
 	const { isWatchingHistory } = useSelector((state) => state.history);
 
 	const renderMessage = (message) => {
-		const { username, text, createdAt } = message;
+		const { username, content, createdAt } = message;
 		return (
 			<Box display="flex" marginBottom={1}>
-				<span className={classes.username}>{`${username}`}</span>
+				<span className={classes.username}>{username}</span>
 				<span className={classes.time}>{`[${moment(createdAt).format(
 					'HH:mm:ss'
 				)}]:`}</span>
-				<span className={classes.text}>{`${text}`}</span>
+				<span className={classes.content}>{content}</span>
 			</Box>
 		);
 	};
@@ -107,9 +111,9 @@ function Chat({ list = [], onSubmit = () => { } }) {
 							<Form>
 								<FormControl variant="outlined" size="small" fullWidth>
 									<OutlinedInput
-										value={values.text}
+										value={values.content}
 										onChange={handleChange}
-										name="text"
+										name="content"
 										placeholder="Aaa..."
 										autoComplete="off"
 										multiline
