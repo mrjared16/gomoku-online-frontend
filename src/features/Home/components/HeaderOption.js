@@ -15,8 +15,7 @@ const useStyles = makeStyles({
   },
 });
 
-function HeaderOption({ onCreateRoom = () => {}, onJoinRoomWithID = () => {}, list = [] }) {
-  console.log("🚀 ~ file: HeaderOption.js ~ line 19 ~ HeaderOption ~ list", list)
+function HeaderOption({ onCreateRoom = () => {}, onJoinRoomWithID = () => {} }) {
   const classes = useStyles();
 
   const [openModalCreate, setOpenModalCreate] = useState(false);
@@ -32,12 +31,7 @@ function HeaderOption({ onCreateRoom = () => {}, onJoinRoomWithID = () => {}, li
 	
 	const handleJoinRoomWithIDClick = (values) => {
 		const { inputRoomID } = values;
-		const convertIntInputRoomID = parseInt(inputRoomID);
-		if (!list[convertIntInputRoomID - 1]) {
-			showToast('error', 'Room is not exist');
-			return;
-		}
-		onJoinRoomWithID(list[convertIntInputRoomID - 1].id);
+		onJoinRoomWithID(inputRoomID);
 		toggleModalJoin();
 	} 
 

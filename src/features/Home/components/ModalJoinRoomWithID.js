@@ -57,7 +57,6 @@ function ModalJoinRoomWithID({
 									name="inputRoomID"
 									label="Room ID"
 									variant="outlined"
-									type="number"
 									value={values.inputRoomID}
 									onChange={handleChange}
 									onBlur={handleBlur}

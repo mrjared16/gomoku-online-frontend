@@ -7,6 +7,8 @@ import { roomSocket } from 'socket/roomSocket';
 import axiosClient from 'api/axiosClient';
 import { Grid, makeStyles } from '@material-ui/core';
 import HomeInfoLeft from '../components/HomeInfoLeft';
+import { find } from 'lodash';
+import { showToast } from 'utils/showToast';
 
 const DEFAULT_ROOM_RESPONSE = {
 	id: '',
@@ -190,6 +192,10 @@ function Main({ onlineUsers = [] }) {
 
 	const handleJoinWithIDClick = (id) => {
 		if (!id) return;
+		if (!find(roomList, { id })) {
+			showToast('error', 'Room is not exist');
+			return;
+		}
 		history.push(`/rooms/${id}`);
 	};
 
@@ -199,7 +205,7 @@ function Main({ onlineUsers = [] }) {
 				<HomeInfoLeft onlineUsers={onlineUsers} />
 			</Grid>
 			<Grid item xs={10}>
-				<HeaderOption onCreateRoom={handleCreateRoom} list={roomList} onJoinRoomWithID={handleJoinWithIDClick} />
+				<HeaderOption onCreateRoom={handleCreateRoom} onJoinRoomWithID={handleJoinWithIDClick} />
 				<ListRoom
 					loading={loading}
 					list={roomList}
