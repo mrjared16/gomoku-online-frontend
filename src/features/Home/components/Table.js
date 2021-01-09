@@ -6,6 +6,8 @@ import BrushIcon from '@material-ui/icons/Brush';
 import LeaveTableButton from './LeaveTableButton';
 import KickButton from './KickButton';
 import TypographyCustom from 'components/TypographyCustom';
+import RankCustom from 'components/RankCustom';
+import { getRankSymbol } from 'utils/rank';
 
 const useStyles = makeStyles({
 	root: {
@@ -83,6 +85,7 @@ const useStyles = makeStyles({
 	username: {
 		marginTop: 10,
 		marginBottom: 10,
+		marginRight: 5,
 	},
 	container: {
 		position: 'relative',
@@ -104,7 +107,7 @@ function Table({
 	isShowWinSymbol = true,
 }) {
 	const classes = useStyles();
-	const { name, photo, username, id: playerId } = userInfo || {
+	const { name, photo, username, id: playerId, rank = 1000 } = userInfo || {
 		name: '',
 		photo: '',
 		username: '',
@@ -114,7 +117,10 @@ function Table({
 		<div className={classes.container}>
 			<div className={classes.root} onClick={onProfileClick}>
 				{userInfo && <AvatarCustom online={online} photo={photo} size="large" />}
-				<TypographyCustom text={username} className={classes.username} />
+				<Box display='flex' alignItems='center'>
+					<TypographyCustom text={username} className={classes.username} />
+					{userInfo && <RankCustom symbol={getRankSymbol(rank)} />}
+				</Box>
 				<div className={classes.time}>
 					{userInfo && <Timer value={60} start={isStart && playerTurn} />}
 					{playerTurn && (

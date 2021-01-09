@@ -13,11 +13,14 @@ import {
 	ListItemSecondaryAction,
 	IconButton,
 	Icon,
+	Box,
 } from '@material-ui/core';
 import AvatarCustom from 'components/AvatarCustom';
+import RankCustom from 'components/RankCustom';
 import TypographyCustom from 'components/TypographyCustom';
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { getRankSymbol } from 'utils/rank';
 
 const useStyles = makeStyles({
 	root: {
@@ -26,11 +29,11 @@ const useStyles = makeStyles({
 		},
 	},
 	name: {
-		display: 'flex',
-		'& span': {
-			marginLeft: 10,
-		},
+		marginRight: 5,
 	},
+	rank: {
+		marginRight: 10,
+	}
 });
 
 function ModalSpectator({
@@ -38,7 +41,7 @@ function ModalSpectator({
 	toggle = () => { },
 	list = [],
 	hostID = null,
-	onClick= () => {},
+	onClick = () => { },
 }) {
 	const classes = useStyles();
 	const { currentUserInfo } = useSelector((state) => state.user);
@@ -49,21 +52,24 @@ function ModalSpectator({
 			<DialogContent>
 				<List>
 					{list &&
-						list.map(({ id, online = false, name = '', photo = '' }, index) => (
+						list.map(({ id, online = false, name = '', photo = '', rank }, index) => (
 							<ListItem key={id} button onClick={() => onClick(id)}>
 								<ListItemAvatar>
 									<AvatarCustom photo={photo} online={true} />
 								</ListItemAvatar>
 								<ListItemText>
-									<div className={classes.name}>
-										<TypographyCustom text={name} />
+									<Box display='flex' alignItems='center'>
+										<div className={classes.name}>
+											<TypographyCustom text={name} />
+										</div>
+										<RankCustom symbol={getRankSymbol(rank)} className={classes.rank} />
 										{id === hostID && (
 											<Icon
 												className="fas fa-chess-king"
 												style={{ color: 'yellow', fontSize: 20 }}
 											/>
 										)}
-									</div>
+									</Box>
 								</ListItemText>
 								{currentUserInfo.id === hostID && id !== hostID && (
 									<ListItemSecondaryAction>

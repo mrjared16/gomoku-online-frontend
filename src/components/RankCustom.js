@@ -13,12 +13,12 @@ const useStyles = (width, height, color) => makeStyles({
 	}
 })
 
-function RankCustom({ symbol, width = 25, height = 25 }) {
+function RankCustom({ symbol, width = 25, height = 25, className }) {
 	const { color = '#e27802', title = 'B' } = symbol;
 	const classes = useStyles(width, height, color)();
 
 	return (
-		<div className={classes.root}>
+		<div className={classes.root + " " + className}>
 			{title}
 		</div>
 	);

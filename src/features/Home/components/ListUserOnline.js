@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
+	Box,
 	Button,
 	ListItem,
 	ListItemAvatar,
@@ -10,9 +11,12 @@ import {
 } from '@material-ui/core';
 import AvatarCustom from 'components/AvatarCustom';
 import { useSelector } from 'react-redux';
+import RankCustom from 'components/RankCustom';
+import { getRankSymbol } from 'utils/rank';
 
 const useStyles = makeStyles((theme) => ({
 	name: {
+		marginRight: 5,
 		overflow: 'hidden',
 		'& h6': {
 			whiteSpace: 'nowrap',
@@ -64,6 +68,7 @@ function ListUserOnline({ list = [], onClickUser = () => { } }) {
 						photo = '',
 						time = '',
 						username = '',
+						rank = 1000,
 					},
 					index
 				) => (
@@ -77,9 +82,12 @@ function ListUserOnline({ list = [], onClickUser = () => { } }) {
 							<AvatarCustom photo={photo} online={online} />
 						</ListItemAvatar>
 						<ListItemText>
-							<div className={classes.name}>
-								<Typography variant="subtitle1">{username}</Typography>
-							</div>
+							<Box display='flex' alignItems='center'>
+								<div className={classes.name}>
+									<Typography variant="subtitle1">{username}</Typography>
+								</div>
+								<RankCustom symbol={getRankSymbol(rank)} />
+							</Box>
 						</ListItemText>
 						{currentUserInfo && currentUserInfo.id !== id && (
 							<ListItemSecondaryAction>
