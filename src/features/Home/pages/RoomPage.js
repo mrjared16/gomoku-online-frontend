@@ -233,13 +233,19 @@ function RoomPage() {
 	};
 
 	const isPlayer = () => {
-		if (!currentUserInfo || !XPlayer || !OPlayer) {
-			return -1;
+		// if (!currentUserInfo || !XPlayer || !OPlayer) {
+		// 	return -1;
+		// }
+		let res = -1;
+		if (!currentUserInfo) {
+			res = -1;
 		}
-		if (currentUserInfo.id === XPlayer.id)
-			return 0;
-		if (currentUserInfo.id === OPlayer.id)
-			return 1;
+		if (XPlayer && (currentUserInfo.id === XPlayer.id))
+			res = 0;
+		if (OPlayer && (currentUserInfo.id === OPlayer.id))
+			res = 1;
+
+		return res;
 	}
 
 	const initialGameState = () => {
