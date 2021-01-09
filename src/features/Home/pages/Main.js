@@ -186,7 +186,12 @@ function Main({ onlineUsers = [] }) {
 
 	const handleQuickPlayClick = () => {
 		setIsMatching(!isMatching);
-	}
+	};
+
+	const handleJoinWithIDClick = (id) => {
+		if (!id) return;
+		history.push(`/rooms/${id}`);
+	};
 
 	return (
 		<Grid container className={classes.root}>
@@ -194,7 +199,7 @@ function Main({ onlineUsers = [] }) {
 				<HomeInfoLeft onlineUsers={onlineUsers} />
 			</Grid>
 			<Grid item xs={10}>
-				<HeaderOption onCreateRoom={handleCreateRoom} />
+				<HeaderOption onCreateRoom={handleCreateRoom} list={roomList} onJoinRoomWithID={handleJoinWithIDClick} />
 				<ListRoom
 					loading={loading}
 					list={roomList}

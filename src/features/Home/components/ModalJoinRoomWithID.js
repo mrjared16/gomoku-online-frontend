@@ -25,7 +25,7 @@ const initialValues = {
 
 const validationSchemaInputRoomID = Yup.object().shape({
 	inputRoomID: Yup.string().trim().required('Required'),
-})
+});
 
 function ModalJoinRoomWithID({
 	open = false,
@@ -36,45 +36,59 @@ function ModalJoinRoomWithID({
 
 	return (
 		<Dialog open={open} onClose={toggle} className={classes.root}>
-			<DialogTitle>JOIN ROOM WITH ID</DialogTitle>
-			<DialogContent>
-				<Formik initialValues={initialValues} validationSchema={validationSchemaInputRoomID} onSubmit={onSubmit}>
-					{({ values, handleSubmit, handleChange, handleBlur, errors, touched }) => (
-						<Form>
-							<TextField
-								name="inputRoomID"
-								label="Room ID"
-								variant="outlined"
-								value={values.inputRoomID}
-								onChange={handleChange}
-								onBlur={handleBlur}
-								error={Boolean(errors.inputRoomID) && touched.inputRoomID}
-								helperText={touched.inputRoomID && errors.inputRoomID}
+			<Formik
+				initialValues={initialValues}
+				validationSchema={validationSchemaInputRoomID}
+				onSubmit={onSubmit}
+			>
+				{({
+					values,
+					handleSubmit,
+					handleChange,
+					handleBlur,
+					errors,
+					touched,
+				}) => (
+					<>
+						<DialogTitle>JOIN ROOM WITH ID</DialogTitle>
+						<DialogContent>
+							<Form>
+								<TextField
+									name="inputRoomID"
+									label="Room ID"
+									variant="outlined"
+									type="number"
+									value={values.inputRoomID}
+									onChange={handleChange}
+									onBlur={handleBlur}
+									error={Boolean(errors.inputRoomID) && touched.inputRoomID}
+									helperText={touched.inputRoomID && errors.inputRoomID}
+									size="small"
+									fullWidth
+								/>
+							</Form>
+						</DialogContent>
+						<DialogActions>
+							<Button
+								variant="contained"
+								color="primary"
+								onClick={handleSubmit}
 								size="small"
-								fullWidth
-							/>
-						</Form>
-					)}
-				</Formik>
-			</DialogContent>
-			<DialogActions>
-				<Button
-					variant="contained"
-					color="primary"
-					onClick={onSubmit}
-					size="small"
-				>
-					Join
-        </Button>
-				<Button
-					variant="contained"
-					color="secondary"
-					onClick={toggle}
-					size="small"
-				>
-					Cancel
-        </Button>
-			</DialogActions>
+							>
+								Join
+              </Button>
+							<Button
+								variant="contained"
+								color="secondary"
+								onClick={toggle}
+								size="small"
+							>
+								Cancel
+              </Button>
+						</DialogActions>
+					</>
+				)}
+			</Formik>
 		</Dialog>
 	);
 }

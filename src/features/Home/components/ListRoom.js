@@ -90,7 +90,6 @@ function ListRoom({
 	isMatching = false,
 	onQuickPlay = () => {},
 }) {
-  console.log("🚀 ~ file: ListRoom.js ~ line 93 ~ list", list)
 	const classes = useStyles();
 
 	const customList = list.map((data, index) => (

@@ -4,6 +4,7 @@ import CreateRoom from 'features/Home/components/CreateRoom';
 import SearchRoom from './SearchRoom';
 import ModalCreateRoom from './ModalCreateRoom';
 import ModalJoinRoomWithID from './ModalJoinRoomWithID';
+import { showToast } from 'utils/showToast';
 
 const useStyles = makeStyles({
   root: {
@@ -14,7 +15,8 @@ const useStyles = makeStyles({
   },
 });
 
-function HeaderOption({ onCreateRoom = () => {}, onJoinRoomWithID = () => {} }) {
+function HeaderOption({ onCreateRoom = () => {}, onJoinRoomWithID = () => {}, list = [] }) {
+  console.log("🚀 ~ file: HeaderOption.js ~ line 19 ~ HeaderOption ~ list", list)
   const classes = useStyles();
 
   const [openModalCreate, setOpenModalCreate] = useState(false);
@@ -26,14 +28,25 @@ function HeaderOption({ onCreateRoom = () => {}, onJoinRoomWithID = () => {} }) 
 	
 	const toggleModalJoin = () => {
     setOpenModalJoin(!openModalJoin);
-  };
+	};
+	
+	const handleJoinRoomWithIDClick = (values) => {
+		const { inputRoomID } = values;
+		const convertIntInputRoomID = parseInt(inputRoomID);
+		if (!list[convertIntInputRoomID - 1]) {
+			showToast('error', 'Room is not exist');
+			return;
+		}
+		onJoinRoomWithID(list[convertIntInputRoomID - 1].id);
+		toggleModalJoin();
+	} 
 
   return (
     <div className={classes.root}>
       <CreateRoom onClick={toggleModalCreate} />
       <SearchRoom onClick={toggleModalJoin} />
       <ModalCreateRoom open={openModalCreate} toggle={toggleModalCreate} onSubmit={onCreateRoom} />
-			<ModalJoinRoomWithID open={openModalJoin} toggle={toggleModalJoin} onSubmit={onJoinRoomWithID} />
+			<ModalJoinRoomWithID open={openModalJoin} toggle={toggleModalJoin} onSubmit={handleJoinRoomWithIDClick} />
     </div>
   );
 }
