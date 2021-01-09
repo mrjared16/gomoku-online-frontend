@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, makeStyles } from '@material-ui/core';
 import TableCustom from 'components/TableCustom';
 import moment from 'moment';
-import { range } from 'lodash';
-import { useDispatch, useSelector } from 'react-redux';
+import { orderBy } from 'lodash';
+import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { setIdHistory, setIsWatchingHistory} from 'app/historySlice';
+import gameHistoryApi from 'api/gameHistoryApi';
 
 const useStyles = makeStyles((theme) => ({
 	root: {},
@@ -36,15 +37,35 @@ function History() {
 	const classes = useStyles();
 	const dispatch = useDispatch();
 	const history = useHistory();
-	const { currentUserInfo } = useSelector(state => state.user);
+	const [listGameHistory, setListGameHistory] = useState([]);
+	const [loadingGameHistory, setLoadingGameHistory] = useState(true);
+
+	useEffect(() => {
+		gameHistoryApi.getListGameHistory().then((response) => {
+			if (!response) return;
+			const { games } = response;
+			const sortList = orderBy(games, ['startAt'], ['desc']);
+			const list = sortList.map((data, index) => ({
+				...data,
+				actionColumn: {
+					gameId: data.id,
+				},
+				gameResultColumn: {
+					playerSide: data.playerSide,
+					gameResult: data.gameResult,
+				},
+				index,
+			}));
+			setListGameHistory(list);
+			setLoadingGameHistory(false);
+		})
+	}, [])
 
 	const renderResult = (res) => {
-		//win (res = 0)
-		//lose (res = 1)
-		if (res === 0) {
+		if (res === 'WIN') {
 			return <span className={classes.win}>Win</span>;
 		}
-		if (res === 1) {
+		if (res === 'LOSE') {
 			return <span className={classes.lose}>Lose</span>;
 		}
 	};
@@ -63,18 +84,6 @@ function History() {
 			);
 		}
 	};
-
-	const list = range(0, 20, 1).map((index) => ({
-		id: index,
-		playerSide: index % 2 === 0 ? 0 : 1,
-		gameResult: index % 2 === 0 ? 0 : 1,
-		rankRecord: {
-			newRank: index % 2 === 0 ? 2000 : 1500,
-			oldRank: index % 2 === 0 ? 1500 : 2000,
-		},
-		startAt: '2021-01-08T17:56:38.800Z',
-		duration: 600,
-	}));
 
 	const columns = [
 		{
@@ -95,11 +104,11 @@ function History() {
 			width: 120,
 		},
 		{
-			field: 'gameResult',
+			field: 'gameResultColumn',
 			headerName: 'Result',
 			headerAlign: 'center',
 			cellClassName: 'custom-cell__center',
-			renderCell: (param) => <span>{param.value !== null && renderResult(param.value)}</span>,
+			renderCell: (param) => <span>{param.value?.gameResult === param.value?.playerSide ? renderResult('WIN') : renderResult('LOSE')}</span>,
 			width: 120,
 		},
 		{
@@ -130,7 +139,7 @@ function History() {
 			width: 150,
 		},
 		{
-			field: 'gameState',
+			field: 'actionColumn',
 			headerName: 'Action',
 			headerAlign: 'center',
 			cellClassName: 'custom-cell__center',
@@ -140,7 +149,7 @@ function History() {
 					className="caro-button"
 					size="small"
 					style={{backgroundColor: '#ffb26b'}}
-					onClick={() => handleWatch(param.value)}
+					onClick={() => handleWatch(param.value?.gameId)}
 				>
 					Watch
 				</Button>
@@ -149,20 +158,11 @@ function History() {
 		},
 	];
 
-	const customList = list.map((data, index) => ({
-		...data,
-		gameState: {
-			...data.gameState,
-			id: data.id,
-		},
-		index,
-	}));
-
-	const handleWatch = (gameState) => {
-		if (!gameState) return;
+	const handleWatch = (id) => {
+		if (!id) return;
 		dispatch(setIsWatchingHistory(true));
-		dispatch(setIdHistory(gameState?.id));
-		history.push(`/watching-history/${gameState?.id}`);
+		dispatch(setIdHistory(id));
+		history.push(`/watching-history/${id}`);
 	};
 
 	return (
@@ -170,8 +170,8 @@ function History() {
 			<div className={classes.root}>
 				<div className={classes.table}>
 					<TableCustom
-						// loading={loading}
-						data={customList}
+						loading={loadingGameHistory}
+						data={listGameHistory}
 						columns={columns}
 						selectable={false}
 					/>

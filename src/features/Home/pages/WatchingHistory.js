@@ -3,13 +3,12 @@ import ExitRoomButton from 'features/Home/components/ExitRoomButton';
 import Board from 'features/Home/components/Board';
 import Table from 'features/Home/components/Table';
 import React, { useEffect, useMemo, useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useHistory, useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import TurnHistory from 'features/Home/components/TurnHistory';
 import Chat from 'features/Home/components/Chat';
 import { resetHistory } from 'app/historySlice';
-import { range } from 'lodash';
-import { userDTOToProp } from 'utils/mapResponseToProp';
+import gameHistoryApi from 'api/gameHistoryApi';
 
 const DEFAULT_SIZE = 20;
 
@@ -59,11 +58,12 @@ function WatchingHistory() {
 	const [gameMoves, setGameMoves] = useState([]);
 	const [moveIndex, setMoveIndex] = useState(0);
 
-	const { currentUserInfo } = useSelector((state) => state.user);
 	const dispatch = useDispatch();
 	const classes = useStyles();
 
 	const history = useHistory();
+
+	const { id: gameHistoryId } = useParams();
 
 	const board = useMemo(() => {
 		const size = sizeBoard * sizeBoard;
@@ -90,53 +90,27 @@ function WatchingHistory() {
 	};
 
 	useEffect(() => {
-		//call api
-		const dataResponse = {
-			id: 1,
-			startAt: '2021-01-08T17:56:38.800Z',
-			duration: 3720,
-			// statusFinishGame: {
-			// 	gameResult: 0,
-			// 	line: '1-2-3-4-5',
-			// },
-			result: 0,
-			line: '1-2-3-4-5',
-			boardSize: 20,
-			chatRecord: [],
-			players: {
-				X: {
-					username: 'test1',
-					photo: '',
-				},
-				O: {
-					username: 'test2',
-					photo: '',
-				},
-			},
-			moveRecord: range(0, 20, 1).map(index => ({
-				id: index,
-				position: index,
-				time: '2021-01-08T17:56:38.800Z',
-				value: index % 2 === 0 ? 0 : 1,
-			})),
-		}
+		gameHistoryApi.getGameHistory(gameHistoryId).then((response) => {
+			if (!response) return;
+			const { game } = response;
+			const { players, moveRecord, boardSize, result } = game;
+			const { X, O } = players;
 
-		setXPlayer(dataResponse.players.X);
-		setOPlayer(dataResponse.players.O);
-		setGameMoves(dataResponse.moveRecord);
-		setMoveIndex(dataResponse.moveRecord.length - 1);
-		setSizeBoard(dataResponse.boardSize);
+			setXPlayer(X);
+			setOPlayer(O);
+			setGameMoves(moveRecord);
+			setMoveIndex(moveRecord.length - 1);
+			setSizeBoard(boardSize);
 
-		const { gameResult, line } = dataResponse;
-		const isDraw = gameResult === 2;
-		const isXWin = gameResult === 0;
+			const isDraw = result === 2;
+			const isXWin = result === 0;
 
-		setStatusFinishGame({
-			isDraw,
-			isXWin,
-			winLine: line ? getWinLinePosition(line) : [],
+			setStatusFinishGame({
+				isDraw,
+				isXWin,
+				winLine: getWinLinePosition('1-2-3-4-5'),
+			})
 		})
-
 	}, [])
 
 	return (
