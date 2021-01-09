@@ -1,9 +1,6 @@
 import React from 'react';
 import { Button, makeStyles } from '@material-ui/core';
 import TableCustom from 'components/TableCustom';
-import RankCustom from 'components/RankCustom';
-import { getTitleRank } from 'utils/rank';
-import TypographyCustom from 'components/TypographyCustom';
 import moment from 'moment';
 import { range } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
@@ -26,11 +23,11 @@ const useStyles = makeStyles((theme) => ({
 		color: 'red',
 	},
 	sideXColumn: {
-		backgroundColor: '#0a043c',
+		backgroundColor: '#ef4f4f',
 		color: 'white',
 	},
 	sideOColumn: {
-		backgroundColor: '#5aa469',
+		backgroundColor: '#83a95c',
 		color: 'white',
 	},
 }));
@@ -69,27 +66,14 @@ function History() {
 
 	const list = range(0, 20, 1).map((index) => ({
 		id: index,
-		side: index % 2 === 0 ? 0 : 1,
-		winnerID: index % 2 === 0 ? currentUserInfo?.id : index,
+		playerSide: index % 2 === 0 ? 0 : 1,
+		gameResult: index % 2 === 0 ? 0 : 1,
 		rankRecord: {
 			newRank: index % 2 === 0 ? 2000 : 1500,
 			oldRank: index % 2 === 0 ? 1500 : 2000,
 		},
 		startAt: '2021-01-08T17:56:38.800Z',
-		duration: '2021-01-08T17:56:38.800Z',
-		gameState: {
-			move: range(0, 20, 1).map(index => ({
-				id: index,
-				position: index,
-				time: '2021-01-08T17:56:38.800Z',
-				value: index % 2 === 0 ? 0 : 1,
-			})),
-			// turn
-		},
-		statusFinishGame: {
-			gameResult: 0,
-			line: '1-2-3-4-5',
-		},
+		duration: 600,
 	}));
 
 	const columns = [
@@ -102,7 +86,7 @@ function History() {
 			width: 70,
 		},
 		{
-			field: 'side',
+			field: 'playerSide',
 			headerName: 'Side',
 			headerAlign: 'center',
 			cellClassName: (param) => param.value === 0 ? `custom-cell__center ${classes.sideXColumn}` : `custom-cell__center ${classes.sideOColumn}`,
@@ -111,11 +95,11 @@ function History() {
 			width: 120,
 		},
 		{
-			field: 'winnerID',
+			field: 'gameResult',
 			headerName: 'Result',
 			headerAlign: 'center',
 			cellClassName: 'custom-cell__center',
-			renderCell: (param) => <span>{param.value && renderResult(param.value === currentUserInfo?.id ? 0 : 1)}</span>,
+			renderCell: (param) => <span>{param.value !== null && renderResult(param.value)}</span>,
 			width: 120,
 		},
 		{
@@ -132,7 +116,7 @@ function History() {
 			headerName: 'Duration',
 			headerAlign: 'center',
 			cellClassName: 'custom-cell__center',
-			renderCell: (param) => <span>{param?.value && moment(param.value).format('HH:mm:ss')}</span>,
+			renderCell: (param) => <span>{param?.value && moment.unix(param.value).utc().format('HH:mm:ss')}</span>,
 			width: 150,
 		},
 		{
