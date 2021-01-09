@@ -86,7 +86,7 @@ function HomeInfoLeft({ onlineUsers = [] }) {
 					<ListItemIcon>
 						<Icon className="fas fa-users" style={{ fontSize: 18 }} />
 					</ListItemIcon>
-					<ListItemText primary="Users Online" />
+					<ListItemText primary={`Users Online (${onlineUsers.length})`} />
 					{openUserOnline ? <ExpandLess /> : <ExpandMore />}
 				</ListItem>
 				<Collapse in={openUserOnline} timeout="auto" unmountOnExit>
