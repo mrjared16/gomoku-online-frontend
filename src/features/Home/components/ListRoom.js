@@ -58,13 +58,13 @@ const columns = [
 		width: 230,
 	},
 	{
-		field: 'status',
+		field: 'gameID',
 		headerName: 'Status',
 		headerAlign: 'center',
 		cellClassName: 'custom-cell__center',
 		renderCell: (param) => (
-			<span style={{ color: param.value === 'Playing' ? 'red' : 'green' }}>
-				{param.value}
+			<span style={{ color: param.value ? 'red' : 'green' }}>
+				{param.value ? 'Playing' : 'Waiting'}
 			</span>
 		),
 		width: 100,
@@ -90,6 +90,7 @@ function ListRoom({
 	isMatching = false,
 	onQuickPlay = () => {},
 }) {
+  console.log("🚀 ~ file: ListRoom.js ~ line 93 ~ list", list)
 	const classes = useStyles();
 
 	const customList = list.map((data, index) => (
