@@ -101,6 +101,7 @@ function Table({
 	online = true,
 	onLeave = () => {},
 	onKick = () => {},
+	isShowWinSymbol = true,
 }) {
 	const classes = useStyles();
 	const { name, photo, username, id: playerId } = userInfo || {
@@ -126,7 +127,7 @@ function Table({
 				>
 					{symbol}
 				</span>
-				{isWinner && (
+				{isShowWinSymbol && isWinner && (
 					<span className={classes.winner}>
 						<Icon
 							className={'fas fa-crown ' + classes.winnerSymbol}

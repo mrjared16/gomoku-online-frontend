@@ -51,7 +51,7 @@ function WatchingHistory() {
 	const [XPlayer, setXPlayer] = useState(null);
 	const [OPlayer, setOPlayer] = useState(null);
 	const [statusFinishGame, setStatusFinishGame] = useState(null);
-	const [isShowWinLine, setIsShowWinLine] = useState(true);
+	const [isShowWin, setIsShowWin] = useState(true);
 
 	const [sizeBoard, setSizeBoard] = useState(DEFAULT_SIZE);
 
@@ -71,7 +71,7 @@ function WatchingHistory() {
 		gameMoves.slice(0, moveIndex).forEach(({ position, value }) => {
 			newBoard[position] = value;
 		});
-		setIsShowWinLine(moveIndex === gameMoves.length);
+		setIsShowWin(moveIndex === gameMoves.length);
 		return newBoard;
 	}, [gameMoves, sizeBoard, moveIndex])
 
@@ -125,7 +125,7 @@ function WatchingHistory() {
 							sizeBoard={sizeBoard}
 							board={board}
 							winLine={statusFinishGame?.winLine}
-							isShowWinLine={isShowWinLine}
+							isShowWinLine={isShowWin}
 						/>
 					</Box>
 					<div className={classes.userInfoContainer}>
@@ -134,12 +134,14 @@ function WatchingHistory() {
 							symbol="X"
 							isWinner={statusFinishGame?.isXWin}
 							online={false}
+							isShowWinSymbol={isShowWin}
 						/>
 						<Table
 							userInfo={OPlayer}
 							symbol="O"
 							isWinner={statusFinishGame && !statusFinishGame.isXWin}
 							online={false}
+							isShowWinSymbol={isShowWin}
 						/>
 					</div>
 				</Box>
