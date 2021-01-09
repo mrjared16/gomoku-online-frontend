@@ -144,7 +144,7 @@ function Main({ onlineUsers = [] }) {
 		});
 
 		return () => {
-			roomSocket.off('waitingRoomEventMsg', () => { });
+			roomSocket.off('waitingRoomEventMsg');
 		};
 	}, [token]);
 

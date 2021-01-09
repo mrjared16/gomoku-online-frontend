@@ -179,7 +179,7 @@ function RoomPage() {
 		});
 
 		return () => {
-			roomSocket.off('roomEventMsg', () => { });
+			roomSocket.off('roomEventMsg');
 		};
 	}, [token]);
 
@@ -286,36 +286,37 @@ function RoomPage() {
 		gameSocket.on('gameEventMsg', (response) => {
 			const { data, event } = response;
 			console.log('receive gameEventMsg emit: ', { response })
-			const handleEndGame = (state, data) => {
-				console.log({ data });
-				// const { winnerID, line, rankRecord, duration } = data;
-				const gameResult = 0;
-				const isDraw = gameResult === 2;
-				const isXWin = gameResult === 0;
-
-				const line = '1-3-4-5-6';
-				setStatusFinishGame({
-					isDraw,
-					isXWin,
-					winLine: line ? getWinLinePosition(line) : [],
-				})
-				setOpenModalStatusGameFinish(true);
-				// TODO: handle end game
-				setGameID(null);
-				setIdPlayerTurn(null);
-			};
 			const getSetter = {
 				onHit: hit,
 				changeTurn: setIdPlayerTurn,
 				onFinish: handleEndGame
 			};
-
 			handleGameEvent[event](getSetter[event], data);
 		});
 		return () => {
-			gameSocket.off('gameEventMsg', () => { });
+			console.log('clean up');
+			gameSocket.off('gameEventMsg');
 		};
 	}, [gameID]);
+
+	const handleEndGame = (data) => {
+		console.log({ data });
+		// const { winnerID, line, rankRecord, duration } = data;
+		const gameResult = 0;
+		const isDraw = gameResult === 2;
+		const isXWin = gameResult === 0;
+
+		const line = '1-3-4-5-6';
+		setStatusFinishGame({
+			isDraw,
+			isXWin,
+			winLine: line ? getWinLinePosition(line) : [],
+		})
+		setOpenModalStatusGameFinish(true);
+		// TODO: handle end game
+		setGameID(null);
+		setIdPlayerTurn(null);
+	};
 
 	const isTurn = (player, currentTurnPlayerId) =>
 		isStart && player && player.id === currentTurnPlayerId;
@@ -447,7 +448,7 @@ function RoomPage() {
 			handleChatEvent[event](getSetter[event], data);
 		});
 		return () => {
-			chatSocket.off('chatEventMsg', () => { });
+			chatSocket.off('chatEventMsg');
 		};
 	}, [chatChannelID]);
 
