@@ -13,7 +13,6 @@ import React from 'react';
 import RankCustom from 'components/RankCustom';
 import { getTitleRank } from 'utils/rank';
 import TypographyCustom from 'components/TypographyCustom';
-import Loading from 'components/Loading';
 
 const useStyles = makeStyles({
 	root: {
@@ -45,13 +44,14 @@ function ModalAcceptJoinRoom({
 	open = false,
 	toggle = () => { },
 	userInfo,
-	onAccept = () => { }
+	onAccept = () => { },
+	title = 'INVITE JOIN ROOM',
 }) {
 	const classes = useStyles();
 
 	return (
 		<Dialog open={open} onClose={toggle} className={classes.root}>
-			<DialogTitle>INVITE JOIN ROOM</DialogTitle>
+			<DialogTitle>{title}</DialogTitle>
 			<DialogContent>
 				<Box
 					display="flex"

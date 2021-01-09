@@ -15,6 +15,7 @@ import LeaderBoard from './pages/LeaderBoard';
 import userApi from 'api/userApi';
 import History from 'features/Home/pages/History';
 import WatchingHistory from './pages/WatchingHistory';
+import ModalAcceptJoinRoom from './components/ModalAcceptJoinRoom';
 
 const useStyles = makeStyles({
   root: {
@@ -116,6 +117,7 @@ function Home() {
           <Route exact path="/history" component={History} />
           <Route exact path="/watching-history/:id" component={WatchingHistory} />
         </Switch>
+				<ModalAcceptJoinRoom />
       </div>
     </>
   );
