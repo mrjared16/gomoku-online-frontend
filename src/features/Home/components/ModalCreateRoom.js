@@ -55,6 +55,11 @@ function ModalCreateRoom({
 		setTimer(event.target.value);
 	};
 
+	const handleSubmit = () => {
+		onSubmit();
+		toggle();
+	};
+
 	return (
 		<Dialog open={open} onClose={toggle} className={classes.root}>
 			<DialogTitle>CREATE ROOM</DialogTitle>
@@ -118,7 +123,7 @@ function ModalCreateRoom({
 				<Button
 					variant="contained"
 					color="primary"
-					onClick={onSubmit}
+					onClick={handleSubmit}
 					size="small"
 				>
 					Create
