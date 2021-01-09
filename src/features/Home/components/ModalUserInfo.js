@@ -60,7 +60,10 @@ const useStyles = makeStyles({
     '& .MuiInputBase-root': {
       fontSize: '0.875rem',
     },
-  },
+	},
+	username: {
+		wordBreak: 'break-all',
+	}
 });
 
 const validationProfileSchema = Yup.object().shape({
@@ -153,10 +156,7 @@ function ModalUserInfo({
                       >
                         <Box display="flex">
                           <Typography variant="subtitle2">Username:</Typography>
-                          <TypographyCustom
-                            text={userInfo?.username}
-                            variant="subtitle2"
-                          />
+													<Typography className={classes.username} variant="subtitle2">{userInfo?.username}</Typography>
                         </Box>
                         <Box display="flex" alignItems="center" marginTop={1}>
                           <Typography variant="subtitle2">Rank:</Typography>

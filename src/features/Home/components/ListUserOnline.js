@@ -17,6 +17,7 @@ import { getRankSymbol } from 'utils/rank';
 const useStyles = makeStyles((theme) => ({
 	name: {
 		marginRight: 5,
+		maxWidth: 90,
 		overflow: 'hidden',
 		'& h6': {
 			whiteSpace: 'nowrap',
