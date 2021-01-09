@@ -200,7 +200,6 @@ function RoomPage() {
 
 		if (gameID) {
 			setGameID(gameID);
-			console.log("room is delete")
 		}
 	};
 
@@ -240,10 +239,12 @@ function RoomPage() {
 			`${process.env.REACT_APP_API_URL}/game/room/${roomID}`
 		);
 		console.log({ response });
-		if (!response.id) {
+		
+		const { game, gameState } = response;
+		if (!game || game.id == null) {
 			return;
 		}
-		const { id, gameState, startAt } = response;
+		const { id, startAt } = game;
 		const { move, turn } = gameState;
 		const { playerID, remainingTime } = turn;
 		if (!isStart) {

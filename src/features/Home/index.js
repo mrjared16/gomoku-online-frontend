@@ -96,7 +96,7 @@ function Home() {
 			console.log('receive reconnectEventMsg: ', response);
 			const { roomID } = response;
 			dispatch(setRoomID(roomID));
-			history.push(`rooms/${roomID}`);
+			history.push(`/rooms/${roomID}`);
     })
 
     return () => {

@@ -96,7 +96,7 @@ function ModalStatusGameFinish({
 				<div className={classes.content}>
 					<Box display='flex' flexDirection='column' alignItems='center'>
 						<Typography variant="h4" className={getTitleClass[title]}>{title}</Typography>
-						<Typography variant="subtitle">{moment(duration * 1000).format('mm:ss')}</Typography>
+						<Typography variant="subtitle1">{moment(duration * 1000).format('mm:ss')}</Typography>
 					</Box>
 					<Box display='flex' justifyContent='space-around'>
 						<div className={classes.playerInfo}>
