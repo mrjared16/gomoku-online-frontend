@@ -25,12 +25,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function SearchRoom({ onSubmit = () => {} }) {
+function SearchRoom({ onClick = () => {} }) {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
-      <Tooltip title="Search room" aria-label="search">
+      <Tooltip title="Search room" aria-label="search" onClick={onClick}>
         <Fab color="secondary" className={classes.fab}>
           <SearchIcon style={{fontSize: 15	}} />
         </Fab>
