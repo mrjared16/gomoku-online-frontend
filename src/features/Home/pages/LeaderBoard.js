@@ -28,10 +28,10 @@ function LeaderBoard() {
 	const [openModalUserInfo, setOpenModalUserInfo] = useState(false);
 	const [leaderBoardData, setLeaderBoardData] = useState([]);
 	const [loadingLeaderBoardData, setLoadingLeaderBoardData] = useState(true);
-	
+
 	const renderUsernameColumn = (username, rank) => {
 		const title = getTitleRank(rank);
-	
+
 		return (
 			<>
 				<div className={classes.containerRank}>
@@ -41,14 +41,14 @@ function LeaderBoard() {
 			</>
 		)
 	}
-	
+
 	const columns = [
 		{
 			field: 'index',
 			headerName: 'Rank',
 			headerAlign: 'center',
 			cellClassName: 'custom-cell__center',
-			renderCell: (param) => <span>{param.value + 1}</span>,
+			renderCell: (param) => <span>{param.value}</span>,
 			width: 100,
 		},
 		{
@@ -83,16 +83,17 @@ function LeaderBoard() {
 		setLoadingLeaderBoardData(true);
 		leaderBoardApi.getListLeaderBoard().then((response) => {
 			const { leaderboard: { users } } = response;
-			const customList = users.map((data, index) => (
-				{
-					...data,
+			const customList = users.map((data, index) => {
+				const { user, rankIndex } = data;
+				return {
+					...user,
 					userInfo: {
-						username: data.username,
-						rank: data.gameProfile.rank,
+						username: user.username,
+						rank: user.gameProfile.rank,
 					},
-					index,
+					index: rankIndex,
 				}
-			));
+			});
 			setLeaderBoardData(customList);
 			setLoadingLeaderBoardData(false);
 		})
