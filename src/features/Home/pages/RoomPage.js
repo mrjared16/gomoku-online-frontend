@@ -367,6 +367,7 @@ function RoomPage() {
 			{
 				username: 'test',
 				text: text,
+				createdAt: new Date(),
 			}
 		])
 		resetForm();

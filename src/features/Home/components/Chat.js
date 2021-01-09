@@ -2,9 +2,10 @@ import {
 	Box, FormControl, Icon, IconButton, InputAdornment, makeStyles, OutlinedInput, Typography
 } from '@material-ui/core';
 import { Form, Formik } from 'formik';
-import React, { useRef } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import * as Yup from 'yup';
+import moment from 'moment';
 
 const useStyles = makeStyles({
 	root: {
@@ -42,7 +43,11 @@ const useStyles = makeStyles({
 		marginLeft: 5,
 		fontSize: '0.875rem',
 		wordBreak: 'break-all',
-	}
+	},
+	time: {
+		marginLeft: 5,
+		fontSize: '0.875rem',
+	},
 })
 
 const initialValues = {
@@ -56,14 +61,14 @@ const validationMessageSchema = Yup.object().shape({
 function Chat({ list = [], onSubmit = () => {} }) {
 	const classes = useStyles();
 	const { isWatchingHistory } = useSelector(state => state.history);
-	const inputRef = useRef(null);
 
 	const renderMessage = (message) => {
-		const { username, text } = message;
+		const { username, text, createdAt } = message;
 		return (
 			<Box display='flex' marginBottom={1}>
-				<span className={classes.username}>{`${username}:`}</span>
-				<span className={classes.text}>{text}</span>
+				<span className={classes.username}>{`${username}`}</span>
+				<span className={classes.time}>{`[${moment(createdAt).format('HH:mm:ss')}]:`}</span>
+				<span className={classes.text}>{`${text}`}</span>
 			</Box>
 		)
 	}
