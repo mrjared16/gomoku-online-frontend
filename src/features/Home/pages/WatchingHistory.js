@@ -9,6 +9,7 @@ import TurnHistory from 'features/Home/components/TurnHistory';
 import Chat from 'features/Home/components/Chat';
 import { resetHistory } from 'app/historySlice';
 import { range } from 'lodash';
+import { userDTOToProp } from 'utils/mapResponseToProp';
 
 const DEFAULT_SIZE = 20;
 
@@ -86,48 +87,47 @@ function WatchingHistory() {
 	const getWinLinePosition = (line) => {
 		const winLine = line.split('-').map(item => parseInt(item));
 		return winLine;
-	}
+	};
 
 	useEffect(() => {
 		//call api
 		const dataResponse = {
 			id: 1,
-			XPlayer: {
-				username: 'test1',
-				rank: 2000,
-			},
-			OPlayer: {
-				username: 'test2',
-				rank: 1500,
-			},
-			winnerID: currentUserInfo?.id,
-			rankRecord: {
-				newRank: 2000,
-				oldRank: 1500,
-			},
 			startAt: '2021-01-08T17:56:38.800Z',
 			duration: 3720,
-			gameState: {
-				move: range(0, 20, 1).map(index => ({
-					id: index,
-					position: index,
-					time: '2021-01-08T17:56:38.800Z',
-					value: index % 2 === 0 ? 0 : 1,
-				})),
-				// turn
+			// statusFinishGame: {
+			// 	gameResult: 0,
+			// 	line: '1-2-3-4-5',
+			// },
+			result: 0,
+			line: '1-2-3-4-5',
+			boardSize: 20,
+			chatRecord: [],
+			players: {
+				X: {
+					username: 'test1',
+					photo: '',
+				},
+				O: {
+					username: 'test2',
+					photo: '',
+				},
 			},
-			statusFinishGame: {
-				gameResult: 0,
-				line: '1-2-3-4-5',
-			}
+			moveRecord: range(0, 20, 1).map(index => ({
+				id: index,
+				position: index,
+				time: '2021-01-08T17:56:38.800Z',
+				value: index % 2 === 0 ? 0 : 1,
+			})),
 		}
 
-		setXPlayer(dataResponse.XPlayer);
-		setOPlayer(dataResponse.OPlayer);
-		setGameMoves(dataResponse.gameState.move);
-		setMoveIndex(dataResponse.gameState.move.length - 1);
+		setXPlayer(dataResponse.players.X);
+		setOPlayer(dataResponse.players.O);
+		setGameMoves(dataResponse.moveRecord);
+		setMoveIndex(dataResponse.moveRecord.length - 1);
+		setSizeBoard(dataResponse.boardSize);
 
-		const { gameResult, line } = dataResponse.statusFinishGame;
+		const { gameResult, line } = dataResponse;
 		const isDraw = gameResult === 2;
 		const isXWin = gameResult === 0;
 
