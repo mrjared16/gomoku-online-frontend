@@ -140,14 +140,8 @@ function Header() {
 
 	useEffect(() => {
 		if (currentRoomID) {
-			const newCurrentTabs = currentTabs.map(tab => {
-				if (tab.label === 'History') {
-					tab.disabled = true;
-				}
-				return tab;
-			});
 			setCurrentTabs([
-				...newCurrentTabs,
+				...currentTabs,
 				{
 					label: "Room",
 					url: `/rooms/${currentRoomID}`,
@@ -156,13 +150,7 @@ function Header() {
 				},
 			])
 		} else {
-			let newCurrentTabs = currentTabs.map(tab => {
-				if (tab.label === 'History') {
-					tab.disabled = false;
-				}
-				return tab;
-			});
-			newCurrentTabs = newCurrentTabs.filter(tab => tab.label !== 'Room');
+			const newCurrentTabs = currentTabs.filter(tab => tab.label !== 'Room');
 			setCurrentTabs(newCurrentTabs);
 		}
 	}, [currentRoomID])
