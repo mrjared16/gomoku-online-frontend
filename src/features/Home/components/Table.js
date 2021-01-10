@@ -86,9 +86,13 @@ const useStyles = makeStyles({
 		marginTop: 10,
 		marginBottom: 10,
 		marginRight: 5,
+		maxWidth: 'calc(100% - 30px)',
 	},
 	container: {
 		position: 'relative',
+	},
+	usernameContainer: {
+		maxWidth: '100%',
 	}
 });
 
@@ -117,7 +121,7 @@ function Table({
 		<div className={classes.container}>
 			<div className={classes.root} onClick={onProfileClick}>
 				{userInfo && <AvatarCustom online={online} photo={photo} size="large" />}
-				<Box display='flex' alignItems='center'>
+				<Box display='flex' alignItems='center' className={classes.usernameContainer}>
 					<TypographyCustom text={username} className={classes.username} />
 					{userInfo && <RankCustom symbol={getRankSymbol(rank)} />}
 				</Box>
