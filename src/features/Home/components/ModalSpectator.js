@@ -30,9 +30,13 @@ const useStyles = makeStyles({
 	},
 	name: {
 		marginRight: 5,
+		maxWidth: 'calc(100% - 30px)',
 	},
-	rank: {
-		marginRight: 10,
+	containerAction: {
+		right: 5,
+	},
+	nameContainer: {
+		maxWidth: '100%',
 	}
 });
 
@@ -58,29 +62,32 @@ function ModalSpectator({
 									<AvatarCustom photo={photo} online={true} />
 								</ListItemAvatar>
 								<ListItemText>
-									<Box display='flex' alignItems='center'>
+									<Box display='flex' alignItems='center' className={classes.nameContainer}>
 										<div className={classes.name}>
 											<TypographyCustom text={name} />
 										</div>
 										<RankCustom symbol={getRankSymbol(rank)} className={classes.rank} />
-										{id === hostID && (
+
+									</Box>
+								</ListItemText>
+								<ListItemSecondaryAction className={classes.containerAction}>
+									{id === hostID && (
+										<IconButton>
 											<Icon
 												className="fas fa-chess-king"
 												style={{ color: 'yellow', fontSize: 20 }}
 											/>
-										)}
-									</Box>
-								</ListItemText>
-								{currentUserInfo.id === hostID && id !== hostID && (
-									<ListItemSecondaryAction>
+										</IconButton>
+									)}
+									{currentUserInfo.id === hostID && id !== hostID && (
 										<IconButton>
 											<Icon
 												className="fas fa-times"
 												style={{ color: 'red', fontSize: 20 }}
 											/>
 										</IconButton>
-									</ListItemSecondaryAction>
-								)}
+									)}
+								</ListItemSecondaryAction>
 							</ListItem>
 						))}
 				</List>

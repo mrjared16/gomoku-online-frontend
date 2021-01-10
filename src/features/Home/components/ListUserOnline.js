@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import {
 	Box,
-	Button,
+	Icon,
+	IconButton,
 	ListItem,
 	ListItemAvatar,
 	ListItemSecondaryAction,
@@ -17,8 +18,8 @@ import { getRankSymbol } from 'utils/rank';
 const useStyles = makeStyles((theme) => ({
 	name: {
 		marginRight: 5,
-		maxWidth: 90,
 		overflow: 'hidden',
+		maxWidth: 'calc(100% - 30px)',
 		'& h6': {
 			whiteSpace: 'nowrap',
 			overflow: 'hidden',
@@ -34,6 +35,13 @@ const useStyles = makeStyles((theme) => ({
 	invited: {
 		color: 'red',
 	},
+	inviteContainer: {
+		right: 5,
+		'& .MuiIcon-root': {
+			width: 'fit-content',
+			fontSize: 15,
+		},
+	}
 }));
 
 function ListUserOnline({ list = [], onClickUser = () => { } }) {
@@ -91,20 +99,16 @@ function ListUserOnline({ list = [], onClickUser = () => { } }) {
 							</Box>
 						</ListItemText>
 						{currentUserInfo && currentUserInfo.id !== id && (
-							<ListItemSecondaryAction>
-								<Button
-									className={
-										listInvited[index]?.invited
-											? classes.invited
-											: classes.invite
-									}
-									size="small"
-									onClick={() =>
-										handleInvited(index, listInvited[index]?.invited)
-									}
-								>
-									{listInvited[index]?.invited ? 'invited' : 'invite'}
-								</Button>
+							<ListItemSecondaryAction className={classes.inviteContainer}>
+								<IconButton className={
+									listInvited[index]?.invited
+										? classes.invited
+										: classes.invite
+								} onClick={() =>
+									handleInvited(index, listInvited[index]?.invited)
+								}>
+									<Icon className={listInvited[index]?.invited ? 'fas fa-user-check' : 'fas fa-user-plus'} />
+								</IconButton>
 							</ListItemSecondaryAction>
 						)}
 					</ListItem>

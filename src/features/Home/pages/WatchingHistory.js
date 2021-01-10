@@ -25,7 +25,8 @@ const useStyles = makeStyles({
 	userInfoContainer: {
 		display: 'flex',
 		flexDirection: 'column',
-		justifyContent: 'center',
+		// justifyContent: 'center',	
+		marginTop: 120,
 		alignItems: 'center',
 		marginLeft: 30,
 		marginRight: 30,

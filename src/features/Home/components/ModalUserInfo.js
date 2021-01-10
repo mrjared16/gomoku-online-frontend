@@ -36,10 +36,10 @@ const useStyles = makeStyles({
     },
   },
   name: {
-		marginTop: 10,
-		'& h6': {
-			margin: 0,
-		}
+    marginTop: 10,
+    '& h6': {
+      margin: 0,
+    },
   },
   containerRank: {
     display: 'flex',
@@ -60,10 +60,10 @@ const useStyles = makeStyles({
     '& .MuiInputBase-root': {
       fontSize: '0.875rem',
     },
-	},
-	username: {
-		wordBreak: 'break-all',
-	}
+  },
+  username: {
+    wordBreak: 'break-all',
+  },
 });
 
 const validationProfileSchema = Yup.object().shape({
@@ -77,9 +77,9 @@ function ModalUserInfo({
   loading = true,
 }) {
   const classes = useStyles();
-	const [editing, setEditing] = useState(false);
-	const { currentUserInfo } = useSelector(state => state.user);
-	const isProfile = currentUserInfo && currentUserInfo.id === userInfo?.id;
+  const [editing, setEditing] = useState(false);
+  const { currentUserInfo } = useSelector((state) => state.user);
+  const isProfile = currentUserInfo && currentUserInfo.id === userInfo?.id;
 
   const handleUpdateProfile = (values) => {
     console.log(
@@ -91,161 +91,157 @@ function ModalUserInfo({
 
   return (
     <Dialog open={open} onClose={toggle} className={classes.root}>
-      <Formik
-        initialValues={{
-          name: userInfo?.name || '',
-        }}
-        validationSchema={validationProfileSchema}
-        onSubmit={handleUpdateProfile}
-      >
-        {({
-          values,
-          handleSubmit,
-          handleChange,
-          handleBlur,
-          errors,
-          touched,
-        }) => (
-          <Form>
-            <>
-              <DialogContent>
-                <Box
-                  display="flex"
-                  flexDirection="column"
-                  alignItems="center"
-                  className={classes.container}
-                >
-                  {loading ? (
-                    <Loading />
-                  ) : (
-                    <>
-                      <Box
-                        display="flex"
-                        flexDirection="column"
-                        alignItems="center"
-                      >
-                        <AvatarCustom
-                          photo={userInfo?.photo}
-                          size="extraLarge"
+      {loading ? (
+        <Loading />
+      ) : (
+        <Formik
+          initialValues={{
+            name: userInfo?.name || '',
+          }}
+          validationSchema={validationProfileSchema}
+          onSubmit={handleUpdateProfile}
+        >
+          {({
+            values,
+            handleSubmit,
+            handleChange,
+            handleBlur,
+            errors,
+            touched,
+          }) => (
+            <Form>
+              <>
+                <DialogContent>
+                  <Box
+                    display="flex"
+                    flexDirection="column"
+                    alignItems="center"
+                    className={classes.container}
+                  >
+                    <Box
+                      display="flex"
+                      flexDirection="column"
+                      alignItems="center"
+                    >
+                      <AvatarCustom photo={userInfo?.photo} size="extraLarge" />
+                      {isProfile && !editing && (
+                        <TypographyCustom
+                          className={classes.name}
+                          text={values.name || ''}
                         />
-                        {isProfile && !editing && (
-                          <TypographyCustom
-                            className={classes.name}
-                            text={values.name || ''}
-                          />
-                        )}
-                        {isProfile && editing && (
-                          <TextField
-                            className={classes.inputName}
-                            name="name"
-                            value={values.name}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            error={Boolean(errors.name) && touched.name}
-                            helperText={touched.name && errors.name}
-                            size="small"
-                          />
-                        )}
-                      </Box>
+                      )}
+                      {isProfile && editing && (
+                        <TextField
+                          className={classes.inputName}
+                          name="name"
+                          value={values.name}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          error={Boolean(errors.name) && touched.name}
+                          helperText={touched.name && errors.name}
+                          size="small"
+                        />
+                      )}
+                    </Box>
 
-                      <Box
-                        display="flex"
-                        flexDirection="column"
-                        width="100%"
-                        marginTop={3}
-                      >
-                        <Box display="flex">
-                          <Typography variant="subtitle2">Username:</Typography>
-													<Typography className={classes.username} variant="subtitle2">{userInfo?.username}</Typography>
-                        </Box>
-                        <Box display="flex" alignItems="center" marginTop={1}>
-                          <Typography variant="subtitle2">Rank:</Typography>
-                          <div className={classes.containerRank}>
-                            <RankCustom symbol={getRankSymbol(userInfo?.rank)} />
-                          </div>
-                          <span>{userInfo?.rank}</span>
-                        </Box>
-                        <Box display="flex" marginTop={1}>
-                          <Typography variant="subtitle2">Win Rate:</Typography>
-                          <TypographyCustom
-                            text={
-                              userInfo?.winRate == null
-                                ? ''
-                                : userInfo?.winRate + '%'
-                            }
-                            variant="subtitle2"
-                          />
-                        </Box>
-                        <Box display="flex" marginTop={1}>
-                          <Typography variant="subtitle2">
-                            Number of win games:
-                          </Typography>
-                          <TypographyCustom
-                            text={userInfo?.numberOfWonMatches}
-                            variant="subtitle2"
-                          />
-                        </Box>
-                        <Box display="flex" marginTop={1}>
-                          <Typography variant="subtitle2">
-                            Number of games:
-                          </Typography>
-                          <TypographyCustom
-                            text={userInfo?.numberOfMatches}
-                            variant="subtitle2"
-                          />
-                        </Box>
-                        <Box display="flex" marginTop={1}>
-                          <Typography variant="subtitle2">
-                            Join date:
-                          </Typography>
-                          <TypographyCustom
-                            text={moment(userInfo?.joinDate).format(
-                              'DD/MM/YYYY'
-                            )}
-                            variant="subtitle2"
-                          />
-                        </Box>
+                    <Box
+                      display="flex"
+                      flexDirection="column"
+                      width="100%"
+                      marginTop={3}
+                    >
+                      <Box display="flex">
+                        <Typography variant="subtitle2">Username:</Typography>
+                        <Typography
+                          className={classes.username}
+                          variant="subtitle2"
+                        >
+                          {userInfo?.username}
+                        </Typography>
                       </Box>
-                    </>
+                      <Box display="flex" alignItems="center" marginTop={1}>
+                        <Typography variant="subtitle2">Rank:</Typography>
+                        <div className={classes.containerRank}>
+                          <RankCustom symbol={getRankSymbol(userInfo?.rank)} />
+                        </div>
+                        <span>{userInfo?.rank}</span>
+                      </Box>
+                      <Box display="flex" marginTop={1}>
+                        <Typography variant="subtitle2">Win Rate:</Typography>
+                        <TypographyCustom
+                          text={
+                            userInfo?.winRate == null
+                              ? ''
+                              : userInfo?.winRate + '%'
+                          }
+                          variant="subtitle2"
+                        />
+                      </Box>
+                      <Box display="flex" marginTop={1}>
+                        <Typography variant="subtitle2">
+                          Number of win games:
+                        </Typography>
+                        <TypographyCustom
+                          text={userInfo?.numberOfWonMatches}
+                          variant="subtitle2"
+                        />
+                      </Box>
+                      <Box display="flex" marginTop={1}>
+                        <Typography variant="subtitle2">
+                          Number of games:
+                        </Typography>
+                        <TypographyCustom
+                          text={userInfo?.numberOfMatches}
+                          variant="subtitle2"
+                        />
+                      </Box>
+                      <Box display="flex" marginTop={1}>
+                        <Typography variant="subtitle2">Join date:</Typography>
+                        <TypographyCustom
+                          text={moment(userInfo?.joinDate).format('DD/MM/YYYY')}
+                          variant="subtitle2"
+                        />
+                      </Box>
+                    </Box>
+                  </Box>
+                </DialogContent>
+                <DialogActions>
+                  {isProfile && !editing && (
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => setEditing(true)}
+                      size="small"
+                    >
+                      Edit
+                    </Button>
                   )}
-                </Box>
-              </DialogContent>
-              <DialogActions>
-                {isProfile && !editing && (
+
+                  {isProfile && editing && (
+                    <Button
+                      variant="contained"
+                      style={{ backgroundColor: '#939b62' }}
+                      onClick={handleSubmit}
+                      size="small"
+                    >
+                      Save changes
+                    </Button>
+                  )}
+
                   <Button
                     variant="contained"
-                    color="primary"
-                    onClick={() => setEditing(true)}
+                    color="secondary"
+                    onClick={toggle}
                     size="small"
                   >
-                    Edit
+                    Close
                   </Button>
-                )}
-
-                {isProfile && editing && (
-                  <Button
-                    variant="contained"
-                    style={{ backgroundColor: '#939b62' }}
-                    onClick={handleSubmit}
-                    size="small"
-                  >
-                    Save changes
-                  </Button>
-                )}
-
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={toggle}
-                  size="small"
-                >
-                  Close
-                </Button>
-              </DialogActions>
-            </>
-          </Form>
-        )}
-      </Formik>
+                </DialogActions>
+              </>
+            </Form>
+          )}
+        </Formik>
+      )}
     </Dialog>
   );
 }
