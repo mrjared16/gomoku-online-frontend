@@ -40,7 +40,7 @@ const useStyles = makeStyles({
 	},
 });
 
-function ModalAcceptJoinRoom({
+function ModalInviteJoinRoom({
 	open = false,
 	toggle = () => { },
 	userInfo,
@@ -109,4 +109,4 @@ function ModalAcceptJoinRoom({
 	);
 }
 
-export default ModalAcceptJoinRoom;
+export default ModalInviteJoinRoom;

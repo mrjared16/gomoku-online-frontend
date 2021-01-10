@@ -1,6 +1,5 @@
 import { makeStyles } from '@material-ui/core';
 import axiosClient from 'api/axiosClient';
-import leaderBoardApi from 'api/leaderBoardApi';
 import { setRoomID } from 'app/roomSlice';
 import { setUser, setLoadingProfile } from 'app/userSlice';
 import Header from 'components/Header';
@@ -15,7 +14,7 @@ import LeaderBoard from './pages/LeaderBoard';
 import userApi from 'api/userApi';
 import History from 'features/Home/pages/History';
 import WatchingHistory from './pages/WatchingHistory';
-import ModalAcceptJoinRoom from './components/ModalAcceptJoinRoom';
+import ModalInviteJoinRoom from './components/ModalInviteJoinRoom';
 
 const useStyles = makeStyles({
   root: {
@@ -117,7 +116,7 @@ function Home() {
           <Route exact path="/history" component={History} />
           <Route exact path="/watching-history/:id" component={WatchingHistory} />
         </Switch>
-				<ModalAcceptJoinRoom />
+				<ModalInviteJoinRoom />
       </div>
     </>
   );
