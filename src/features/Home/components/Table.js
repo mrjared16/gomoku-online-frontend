@@ -1,6 +1,6 @@
 import { Box, Icon, makeStyles } from '@material-ui/core';
 import AvatarCustom from 'components/AvatarCustom';
-import React from 'react';
+import React, { useState } from 'react';
 import Timer from './Timer';
 import BrushIcon from '@material-ui/icons/Brush';
 import LeaveTableButton from './LeaveTableButton';
@@ -116,6 +116,7 @@ function Table({
 		photo: '',
 		username: '',
 	};
+	const [timer, setTimer] = useState(60);
 
 	return (
 		<div className={classes.container}>
@@ -126,7 +127,7 @@ function Table({
 					{userInfo && <RankCustom symbol={getRankSymbol(rank)} />}
 				</Box>
 				<div className={classes.time}>
-					{userInfo && <Timer value={60} start={isStart && playerTurn} />}
+					{userInfo && isStart && playerTurn && <Timer timerProp={timer} setTimerProp={setTimer} />}
 					{playerTurn && (
 						<BrushIcon style={{ color: 'blue' }} />
 					)}
