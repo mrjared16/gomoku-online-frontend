@@ -148,7 +148,7 @@ function LoginForm({
                     cookiePolicy={"single_host_origin"}
                   />
                   <FacebookLogin
-                    appId="270414947649207"
+                    appId="482669579414663"
                     fields="name,email,picture"
 										callback={(res) => console.log(res)}
 										icon={<FacebookIcon />}
