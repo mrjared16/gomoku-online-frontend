@@ -1,8 +1,9 @@
-import React from 'react';
-import { Button, makeStyles } from '@material-ui/core';
+import React, { useState } from 'react';
+import { Button, Icon, makeStyles } from '@material-ui/core';
 import LockIcon from '@material-ui/icons/Lock';
 import TableCustom from 'components/TableCustom';
 import TypographyCustom from 'components/TypographyCustom';
+import Counting from 'components/Counting';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -15,10 +16,13 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     margin: '10px 10px',
     '& button': {
-      width: 120,
+      width: 150,
       marginRight: 10,
     },
-  },
+	},
+	closeQuickPlay: {
+		color: 'red',
+	}
 }));
 
 const columns = [
@@ -87,10 +91,11 @@ function ListRoom({
   onRoomSelected = () => {},
 	onJoin = () => {},
 	roomSelected = null,
-	isMatching = false,
+	isFinding = false,
 	onQuickPlay = () => {},
 }) {
 	const classes = useStyles();
+	const [counting, setCounting] = useState(0);
 
 	const customList = list.map((data, index) => (
 		{
@@ -124,8 +129,14 @@ function ListRoom({
 					style={{ backgroundColor: '#ffb26b' }}
 					size="small"
 					onClick={onQuickPlay}
+					endIcon={isFinding && <Icon className={`fas fa-window-close ${classes.closeQuickPlay}`} />}
         >
-          {isMatching ? 'Matching...' : 'Quick Play'}
+          {!isFinding ? 'Quick Play' : (
+						<>
+							<span>Finding...</span>
+							<Counting countingProp={counting} setCountingProp={setCounting} />
+						</>
+					)}
         </Button>
       </div>
     </div>

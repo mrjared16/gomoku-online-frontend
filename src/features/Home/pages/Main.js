@@ -130,7 +130,7 @@ function Main({ onlineUsers = [] }) {
 	const [roomSelected, setRoomSelected] = useState(null);
 	const [loading, setLoading] = useState(true);
 	const dispatch = useDispatch();
-	const [isMatching, setIsMatching] = useState(false);
+	const [isFinding, setIsFinding] = useState(false);
 
 	useEffect(() => {
 		fetchRooms();
@@ -187,7 +187,7 @@ function Main({ onlineUsers = [] }) {
 	};
 
 	const handleQuickPlayClick = () => {
-		setIsMatching(!isMatching);
+		setIsFinding(!isFinding);
 	};
 
 	const handleJoinWithIDClick = (id) => {
@@ -212,7 +212,7 @@ function Main({ onlineUsers = [] }) {
 					onRoomSelected={handleRoomSelected}
 					onJoin={handleJoinClick}
 					roomSelected={roomSelected}
-					isMatching={isMatching}
+					isFinding={isFinding}
 					onQuickPlay={handleQuickPlayClick}
 				/>
 			</Grid>
