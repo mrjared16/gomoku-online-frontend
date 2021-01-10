@@ -91,7 +91,7 @@ function ModalUserInfo({
 
   return (
     <Dialog open={open} onClose={toggle} className={classes.root}>
-      {loading ? (
+      {loading && !userInfo ? (
         <Loading />
       ) : (
         <Formik
@@ -124,7 +124,7 @@ function ModalUserInfo({
                       alignItems="center"
                     >
                       <AvatarCustom photo={userInfo?.photo} size="extraLarge" />
-                      {isProfile && !editing && (
+                      {!editing && (
                         <TypographyCustom
                           className={classes.name}
                           text={values.name || ''}

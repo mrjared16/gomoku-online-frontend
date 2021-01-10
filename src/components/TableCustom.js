@@ -126,7 +126,7 @@ function TableCustom({
 	columns = [],
 	onRowClick = () => { },
 	selectable = true,
-	pageSize = 10,
+	pageSize = 20,
 }) {
 	const classes = useStyles();
 
