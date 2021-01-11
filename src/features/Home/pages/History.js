@@ -23,6 +23,9 @@ const useStyles = makeStyles((theme) => ({
 	lose: {
 		color: 'red',
 	},
+	tie: {
+		color: 'grey',
+	},
 	sideXColumn: {
 		backgroundColor: '#ef4f4f',
 		color: 'white',
@@ -61,12 +64,17 @@ function History() {
 		})
 	}, [])
 
-	const renderResult = (res) => {
-		if (res === 'WIN') {
+	const renderResult = (gameResult, playerSide) => {
+		if (gameResult == null || playerSide == null) return;
+		if (gameResult === playerSide) {
 			return <span className={classes.win}>Win</span>;
 		}
-		if (res === 'LOSE') {
-			return <span className={classes.lose}>Lose</span>;
+		if (gameResult !== playerSide) {
+			if (gameResult !== 2) {
+				return <span className={classes.lose}>Lose</span>;
+			} else {
+				return <span className={classes.tie}>Tie</span>;
+			}
 		}
 	};
 
@@ -81,6 +89,11 @@ function History() {
 			return (
 				<span className={classes.lose}>{`${oldRank} (-${oldRank - newRank
 					})`}</span>
+			);
+		}
+		if (oldRank === newRank) {
+			return (
+				<span className={classes.tie}>{`${oldRank}`}</span>
 			);
 		}
 	};
@@ -108,7 +121,7 @@ function History() {
 			headerName: 'Result',
 			headerAlign: 'center',
 			cellClassName: 'custom-cell__center',
-			renderCell: (param) => <span>{param.value?.gameResult === param.value?.playerSide ? renderResult('WIN') : renderResult('LOSE')}</span>,
+			renderCell: (param) => <span>{renderResult(param.value?.gameResult, param.value?.playerSide)}</span>,
 			width: 120,
 		},
 		{

@@ -4,7 +4,7 @@ import Board from 'features/Home/components/Board';
 import Table from 'features/Home/components/Table';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import TurnHistory from 'features/Home/components/TurnHistory';
 import Chat from 'features/Home/components/Chat';
 import { resetHistory } from 'app/historySlice';
@@ -26,10 +26,10 @@ const useStyles = makeStyles({
 		display: 'flex',
 		flexDirection: 'column',
 		// justifyContent: 'center',	
-		marginTop: 120,
 		alignItems: 'center',
 		marginLeft: 30,
 		marginRight: 30,
+		minWidth: 240,
 		'& button': {
 			width: 115,
 			marginTop: 52,
@@ -46,6 +46,26 @@ const useStyles = makeStyles({
 			marginTop: 0,
 		}
 	},
+	tie: {
+		fontSize: '2rem',
+		color: 'grey',
+	},
+	win: {
+		fontSize: '2rem',
+		color: 'green',
+	},
+	lose: {
+		fontSize: '2rem',
+		color: 'red',
+	},
+	resultContainer: {
+		marginTop: 52,
+		marginBottom: 30,
+		minHeight: 67,
+	},
+	reason: {
+		marginTop: 10,
+	}
 });
 
 function WatchingHistory() {
@@ -59,6 +79,9 @@ function WatchingHistory() {
 	const [gameMoves, setGameMoves] = useState([]);
 	const [moveIndex, setMoveIndex] = useState(0);
 	const [listMessage, setListMessage] = useState([]);
+	const [reason, setReason] = useState('');
+
+	const { currentUserInfo } = useSelector(state => state.user);
 
 	const dispatch = useDispatch();
 	const classes = useStyles();
@@ -116,6 +139,25 @@ function WatchingHistory() {
 		})
 	}, [])
 
+	const renderGameResult = (gameStatus) => {
+		if (!gameStatus) return;
+		const { isDraw = false, isXWin = false } = statusFinishGame;
+		if (isDraw) {
+			return <span className={classes.tie}>TIE</span>
+		}
+		let isWinner = false;
+		if (isXWin) {
+			isWinner = XPlayer?.id === currentUserInfo?.id;
+		} else {
+			isWinner = OPlayer?.id === currentUserInfo?.id;
+		}
+		if (isWinner) {
+			return <span className={classes.win}>WIN</span>
+		} else {
+			return <span className={classes.lose}>LOSE</span>
+		}
+	}
+
 	return (
 		<div className={classes.root}>
 			<div className={classes.container}>
@@ -132,6 +174,11 @@ function WatchingHistory() {
 						/>
 					</Box>
 					<div className={classes.userInfoContainer}>
+						<Box display='flex' flexDirection='column' alignItems='center' className={classes.resultContainer}>
+							{currentUserInfo && XPlayer && OPlayer && renderGameResult(statusFinishGame)}
+							<span className={classes.reason}>{reason}</span>
+						</Box>
+
 						<Table
 							userInfo={XPlayer}
 							symbol="X"
