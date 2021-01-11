@@ -15,6 +15,7 @@ import userApi from 'api/userApi';
 import History from 'features/Home/pages/History';
 import WatchingHistory from './pages/WatchingHistory';
 import ModalInviteJoinRoom from './components/ModalInviteJoinRoom';
+import ModalMatchMaking from './components/ModalMatchMaking';
 
 const useStyles = makeStyles({
   root: {
@@ -117,6 +118,7 @@ function Home() {
           <Route exact path="/watching-history/:id" component={WatchingHistory} />
         </Switch>
 				<ModalInviteJoinRoom />
+				<ModalMatchMaking />
       </div>
     </>
   );

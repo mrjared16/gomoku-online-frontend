@@ -45,13 +45,24 @@ function ModalInviteJoinRoom({
 	toggle = () => { },
 	userInfo,
 	onAccept = () => { },
-	title = 'INVITE JOIN ROOM',
+	onDecline = () => { },
+	title = '',
 }) {
 	const classes = useStyles();
 
+	const handleAccept = () => {
+		onAccept();
+		toggle();
+	};
+
+	const handleDecline = () => {
+		onDecline();
+		toggle();
+	};
+
 	return (
 		<Dialog open={open} onClose={toggle} className={classes.root}>
-			<DialogTitle>{title}</DialogTitle>
+			<DialogTitle>Invite Join Room</DialogTitle>
 			<DialogContent>
 				<Box
 					display="flex"
@@ -91,7 +102,7 @@ function ModalInviteJoinRoom({
 				<Button
 					variant="contained"
 					color="primary"
-					onClick={onAccept}
+					onClick={handleAccept}
 					size="small"
 				>
 					Accept
@@ -99,10 +110,10 @@ function ModalInviteJoinRoom({
 				<Button
 					variant="contained"
 					color="secondary"
-					onClick={toggle}
+					onClick={handleDecline}
 					size="small"
 				>
-					Cancel
+					Decline
         </Button>
 			</DialogActions>
 		</Dialog>
