@@ -11,6 +11,7 @@ import { removeToken } from "app/userSlice";
 import { showToast } from "utils/showToast";
 import { setRoomID } from 'app/roomSlice';
 import { setIdHistory, setIsWatchingHistory } from "app/historySlice";
+import { uniqBy } from "lodash";
 
 function a11yProps(index) {
 	return {
@@ -153,6 +154,7 @@ function Header() {
 			const newCurrentTabs = currentTabs.filter(tab => tab.label !== 'Room');
 			setCurrentTabs(newCurrentTabs);
 		}
+		setCurrentTabs(tab => uniqBy(tab, 'label'));
 	}, [currentRoomID])
 
 	useEffect(() => {
@@ -178,6 +180,7 @@ function Header() {
 			});
 			setCurrentTabs(newCurrentTabs);
 		}
+		setCurrentTabs(tab => uniqBy(tab, 'label'));
 	}, [isWatchingHistory])
 
 	return (
