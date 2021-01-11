@@ -17,7 +17,7 @@ import { getRankSymbol } from 'utils/rank';
 
 const useStyles = makeStyles((theme) => ({
 	name: {
-		marginRight: 5,
+		marginLeft: 5,
 		overflow: 'hidden',
 		maxWidth: 'calc(100% - 30px)',
 		'& h6': {
@@ -92,10 +92,10 @@ function ListUserOnline({ list = [], onClickUser = () => { } }) {
 						</ListItemAvatar>
 						<ListItemText>
 							<Box display='flex' alignItems='center'>
+								<RankCustom symbol={getRankSymbol(rank)} />
 								<div className={classes.name}>
 									<Typography variant="subtitle1">{username}</Typography>
 								</div>
-								<RankCustom symbol={getRankSymbol(rank)} />
 							</Box>
 						</ListItemText>
 						{currentUserInfo && currentUserInfo.id !== id && (

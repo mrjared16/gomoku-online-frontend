@@ -85,7 +85,7 @@ const useStyles = makeStyles({
 	username: {
 		marginTop: 10,
 		marginBottom: 10,
-		marginRight: 5,
+		marginLeft: 5,
 		maxWidth: 'calc(100% - 30px)',
 	},
 	container: {
@@ -123,8 +123,8 @@ function Table({
 			<div className={classes.root} onClick={onProfileClick}>
 				{userInfo && <AvatarCustom online={online} photo={photo} size="large" />}
 				<Box display='flex' alignItems='center' className={classes.usernameContainer}>
-					<TypographyCustom text={username} className={classes.username} />
 					{userInfo && <RankCustom symbol={getRankSymbol(rank)} />}
+					<TypographyCustom text={username} className={classes.username} />
 				</Box>
 				<div className={classes.time}>
 					{userInfo && isStart && playerTurn && <Timer timerProp={timer} setTimerProp={setTimer} />}

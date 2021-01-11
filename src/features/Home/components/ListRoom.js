@@ -4,6 +4,8 @@ import LockIcon from '@material-ui/icons/Lock';
 import TableCustom from 'components/TableCustom';
 import TypographyCustom from 'components/TypographyCustom';
 import Counting from 'components/Counting';
+import RankCustom from 'components/RankCustom';
+import { getRankSymbol } from 'utils/rank';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,68 +24,11 @@ const useStyles = makeStyles((theme) => ({
 	},
 	closeQuickPlay: {
 		color: 'red',
+	},
+	containerRank: {
+		marginRight: 10,
 	}
 }));
-
-const columns = [
-	{
-		field: 'index',
-		headerName: 'ID',
-		headerAlign: 'center',
-		cellClassName: 'custom-cell__center',
-		renderCell: (param) => <span>{param.value + 1}</span>,
-		width: 70,
-	},
-	{
-		field: 'host',
-		headerName: 'Host',
-		headerAlign: 'center',
-		cellClassName: 'custom-cell__center',
-		renderCell: (param) => <TypographyCustom text={param.value.username} />,
-		sortable: false,
-		width: 230,
-	},
-	{
-		field: 'XPlayer',
-		headerName: 'X Player',
-		headerAlign: 'center',
-		cellClassName: 'custom-cell__center',
-		renderCell: (param) => <TypographyCustom text={param.value.username} />,
-		sortable: false,
-		width: 230,
-	},
-	{
-		field: 'OPlayer',
-		headerName: 'O Player',
-		headerAlign: 'center',
-		cellClassName: 'custom-cell__center',
-		renderCell: (param) => <TypographyCustom text={param.value.username} />,
-		sortable: false,
-		width: 230,
-	},
-	{
-		field: 'gameID',
-		headerName: 'Status',
-		headerAlign: 'center',
-		cellClassName: 'custom-cell__center',
-		renderCell: (param) => (
-			<span style={{ color: param.value ? 'red' : 'green' }}>
-				{param.value ? 'Playing' : 'Waiting'}
-			</span>
-		),
-		width: 100,
-	},
-	{
-		field: 'requirePass',
-		headerName: 'Password',
-		headerAlign: 'center',
-		cellClassName: 'custom-cell__center',
-		renderCell: (param) => (param.value ? <LockIcon fontSize="small" /> : ''),
-		sortable: false,
-		width: 100,	
-	},
-];
-
 
 function ListRoom({
 	loading = true,
@@ -94,6 +39,7 @@ function ListRoom({
 	isFinding = false,
 	onQuickPlay = () => {},
 }) {
+  console.log("🚀 ~ file: ListRoom.js ~ line 42 ~ list", list)
 	const classes = useStyles();
 	const [counting, setCounting] = useState(0);
 
@@ -103,6 +49,76 @@ function ListRoom({
 			index,
 		}
 	));
+
+	const renderUsernameColumn = (username, rank) => {
+		return (
+			<>
+				<div className={classes.containerRank}>
+					{rank && <RankCustom symbol={getRankSymbol(rank)} />}
+				</div>
+				<TypographyCustom text={username} />
+			</>
+		)
+	}
+	
+	const columns = [
+		{
+			field: 'index',
+			headerName: 'ID',
+			headerAlign: 'center',
+			cellClassName: 'custom-cell__center',
+			renderCell: (param) => <span>{param.value + 1}</span>,
+			width: 70,
+		},
+		{
+			field: 'host',
+			headerName: 'Host',
+			headerAlign: 'center',
+			cellClassName: 'custom-cell__center',
+			renderCell: (param) => renderUsernameColumn(param.value?.username, param.value?.gameProfile?.rank),
+			sortable: false,
+			width: 230,
+		},
+		{
+			field: 'XPlayer',
+			headerName: 'X Player',
+			headerAlign: 'center',
+			cellClassName: 'custom-cell__center',
+			renderCell: (param) => renderUsernameColumn(param.value?.username, param.value?.gameProfile?.rank),
+			sortable: false,
+			width: 230,
+		},
+		{
+			field: 'OPlayer',
+			headerName: 'O Player',
+			headerAlign: 'center',
+			cellClassName: 'custom-cell__center',
+			renderCell: (param) => renderUsernameColumn(param.value?.username, param.value?.gameProfile?.rank),
+			sortable: false,
+			width: 230,
+		},
+		{
+			field: 'gameID',
+			headerName: 'Status',
+			headerAlign: 'center',
+			cellClassName: 'custom-cell__center',
+			renderCell: (param) => (
+				<span style={{ color: param.value ? 'red' : 'green' }}>
+					{param.value ? 'Playing' : 'Waiting'}
+				</span>
+			),
+			width: 100,
+		},
+		{
+			field: 'requirePass',
+			headerName: 'Password',
+			headerAlign: 'center',
+			cellClassName: 'custom-cell__center',
+			renderCell: (param) => (param.value ? <LockIcon fontSize="small" /> : ''),
+			sortable: false,
+			width: 100,	
+		},
+	];
 	
   return (
     <div className={classes.root}>
