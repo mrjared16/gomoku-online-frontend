@@ -18,6 +18,15 @@ const roomApi = {
     };
 
     return axiosClient.post(url, body);
+	},
+	verifyRoom: (roomID, passwordRoom) => {
+    const url = "/rooms/verify";
+    const body = {
+			roomID,
+			passwordRoom,
+    };
+
+    return axiosClient.post(url, body);
   },
 };
 

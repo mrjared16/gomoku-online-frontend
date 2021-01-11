@@ -16,6 +16,7 @@ import History from 'features/Home/pages/History';
 import WatchingHistory from './pages/WatchingHistory';
 import ModalInviteJoinRoom from './components/ModalInviteJoinRoom';
 import ModalMatchMaking from './components/ModalMatchMaking';
+import PrivateRoomRoute from 'components/PrivateRoomRoute';
 
 const useStyles = makeStyles({
   root: {
@@ -112,7 +113,8 @@ function Home() {
       <div className={classes.root}>
         <Switch>
           <Route exact path="/" component={() => <Main onlineUsers={onlineUsers} />} />
-          <Route exact path="/rooms/:id" component={RoomPage} />
+          {/* <Route exact path="/rooms/:id" component={RoomPage} /> */}
+          <PrivateRoomRoute exact path="/rooms/:id" component={RoomPage} />
           <Route exact path="/rank" component={LeaderBoard} />
           <Route exact path="/history" component={History} />
           <Route exact path="/watching-history/:id" component={WatchingHistory} />
