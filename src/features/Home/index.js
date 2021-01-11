@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core';
 import axiosClient from 'api/axiosClient';
-import { setRoomID } from 'app/roomSlice';
+import { setOpenModalInputPassword, setRoomID } from 'app/roomSlice';
 import { setUser, setLoadingProfile } from 'app/userSlice';
 import Header from 'components/Header';
 import Main from 'features/Home/pages/Main';
@@ -17,6 +17,7 @@ import WatchingHistory from './pages/WatchingHistory';
 import ModalInviteJoinRoom from './components/ModalInviteJoinRoom';
 import ModalMatchMaking from './components/ModalMatchMaking';
 import PrivateRoomRoute from 'components/PrivateRoomRoute';
+import ModalInputPassword from './components/ModalInputPassword';
 
 const useStyles = makeStyles({
   root: {
@@ -49,7 +50,8 @@ function Home() {
 
 	const [onlineUsers, setOnlineUsers] = useState([]);
 
-  const { token } = useSelector((state) => state.user);
+	const { token } = useSelector((state) => state.user);
+	const { openModalInputPassword } = useSelector(state => state.room);
 
   const fetchUserData = async () => {
 		const response = await userApi.fetch();
@@ -120,6 +122,7 @@ function Home() {
           <Route exact path="/watching-history/:id" component={WatchingHistory} />
         </Switch>
 				<ModalInviteJoinRoom />
+				<ModalInputPassword open={openModalInputPassword} />
 				<ModalMatchMaking />
       </div>
     </>

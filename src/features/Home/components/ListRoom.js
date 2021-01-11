@@ -37,9 +37,7 @@ function ListRoom({
   roomSelected = null,
   isFinding = false,
   onQuickPlay = () => {},
-  loadingVerify = true,
 }) {
-  console.log('🚀 ~ file: ListRoom.js ~ line 42 ~ list', list);
   const classes = useStyles();
   const [counting, setCounting] = useState(0);
 
@@ -148,11 +146,7 @@ function ListRoom({
           onClick={onJoin}
           size="small"
         >
-          {loadingVerify ? (
-            <CircularProgress style={{ color: 'white' }} size={18} />
-          ) : (
-            'Join'
-          )}
+          Join
         </Button>
         <Button
           variant="contained"

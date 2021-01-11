@@ -2,14 +2,14 @@ import HeaderOption from 'features/Home/components/HeaderOption';
 import ListRoom from 'features/Home/components/ListRoom';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { roomSocket } from 'socket/roomSocket';
 import axiosClient from 'api/axiosClient';
 import { Grid, makeStyles } from '@material-ui/core';
 import HomeInfoLeft from '../components/HomeInfoLeft';
 import { find } from 'lodash';
 import { showToast } from 'utils/showToast';
-import { setRoomIDCreated } from 'app/roomSlice';
+import { setOpenModalInputPassword, setRoomID } from 'app/roomSlice';
 
 const DEFAULT_ROOM_RESPONSE = {
 	id: '',
@@ -130,11 +130,8 @@ function Main({ onlineUsers = [] }) {
 	const { token } = useSelector((state) => state.user);
 	const [roomSelected, setRoomSelected] = useState(null);
 	const [loading, setLoading] = useState(true);
-	const dispatch = useDispatch();
 	const [isFinding, setIsFinding] = useState(false);
-	const [loadingVerify, setLoadingVerify] = useState(false);
-	const { passwordRoom, roomIDCreated } = useSelector((state) => state.room);
-	const location = useLocation();
+	const dispatch = useDispatch();
 
 	useEffect(() => {
 		fetchRooms();
@@ -177,7 +174,6 @@ function Main({ onlineUsers = [] }) {
 				if (!response) return;
 				const { roomID } = response;
 				history.push(`/rooms/${roomID}`);
-				dispatch(setRoomIDCreated(roomID));
 			}
 		);
 	};
@@ -185,19 +181,11 @@ function Main({ onlineUsers = [] }) {
 	const handleJoinClick = () => {
 		if (!roomSelected) return;
 		const { id: roomID } = roomSelected;
-		const isHost = roomIDCreated === roomID;
 
 		//Check room has password and is host room
-		if (!isHost && true) {
-			setLoadingVerify(true);
-			// roomApi.verifyRoom(roomID, passwordRoom).then((response) => {
-			// setVerify(response);
-			// setLoadingVerify(false);
-			setTimeout(() => {
-				setLoadingVerify(false);
-				history.push(`/rooms/${roomSelected.id}`);
-			}, 2000)
-			// });
+		if (false) {
+			dispatch(setRoomID(roomID));
+			dispatch(setOpenModalInputPassword(true));
 		} else {
 			history.push(`/rooms/${roomSelected.id}`);
 		}
@@ -235,7 +223,6 @@ function Main({ onlineUsers = [] }) {
 					roomSelected={roomSelected}
 					isFinding={isFinding}
 					onQuickPlay={handleQuickPlayClick}
-					loadingVerify={loadingVerify}
 				/>
 			</Grid>
 		</Grid>

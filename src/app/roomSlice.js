@@ -4,6 +4,7 @@ const initialState = {
 	currentRoomID: null,
 	passwordRoom: localStorage.getItem('passwordRoom'),
 	roomIDCreated: localStorage.getItem('roomIDCreated'),
+	openModalInputPassword: false,
 };
 
 const roomSlice = createSlice({
@@ -27,7 +28,10 @@ const roomSlice = createSlice({
 		setRoomIDCreated: (state, action) => {
 			state.roomIDCreated = action.payload;
 			localStorage.setItem('roomIDCreated', action.payload);
-		}
+		},
+		setOpenModalInputPassword: (state, action) => {
+			state.openModalInputPassword = action.payload;
+		},
   },
 });
 
@@ -38,5 +42,6 @@ export const {
 	setPasswordRoom,
 	removePasswordRoom,
 	setRoomIDCreated,
+	setOpenModalInputPassword,
 } = actions;
 export default reducer;
