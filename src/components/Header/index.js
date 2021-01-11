@@ -141,7 +141,7 @@ function Header() {
 
 	useEffect(() => {
 		if (currentRoomID) {
-			setCurrentTabs([
+			const newTabs = uniqBy([
 				...currentTabs,
 				{
 					label: "Room",
@@ -149,38 +149,40 @@ function Header() {
 					value: getTabValue('Room'),
 					disabled: false,
 				},
-			])
+			], 'label');
+			setCurrentTabs(newTabs);
 		} else {
-			const newCurrentTabs = currentTabs.filter(tab => tab.label !== 'Room');
-			setCurrentTabs(newCurrentTabs);
+			const tabs = currentTabs.filter(tab => tab.label !== 'Room');
+			const newTabs = uniqBy(tabs, 'label');
+			setCurrentTabs(newTabs);
 		}
-		setCurrentTabs(tab => uniqBy(tab, 'label'));
 	}, [currentRoomID])
 
 	useEffect(() => {
 		if (isWatchingHistory) {
-			const newCurrentTabs = currentTabs.map(tab => {
+			const tabs = currentTabs.map(tab => {
 				tab.disabled = true;
 				return tab;
 			});
-			setCurrentTabs([
-				...newCurrentTabs,
+			const newTabs = uniqBy([
+				...tabs,
 				{
 					label: "Watching History",
 					url: `/watching-history/${historyID}`,
 					value: getTabValue('Watching History'),
 					disabled: false,
 				},
-			])
+			], 'label');
+			setCurrentTabs(newTabs)
 		} else {
-			let newCurrentTabs = currentTabs.filter(tab => tab.label !== 'Watching History');
-			newCurrentTabs = newCurrentTabs.map(tab => {
+			let tabs = currentTabs.filter(tab => tab.label !== 'Watching History');
+			tabs = tabs.map(tab => {
 				tab.disabled = false;
 				return tab;
 			});
-			setCurrentTabs(newCurrentTabs);
+			const newTabs = uniqBy(tabs, 'label');
+			setCurrentTabs(newTabs);
 		}
-		setCurrentTabs(tab => uniqBy(tab, 'label'));
 	}, [isWatchingHistory])
 
 	return (
