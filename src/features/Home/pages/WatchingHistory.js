@@ -106,7 +106,7 @@ function WatchingHistory() {
 
 	const handleExitRoom = () => {
 		dispatch(resetHistory());
-		history.push('/');
+		history.push('/history');
 	};
 
 	const getWinLinePosition = (line) => {
@@ -193,14 +193,14 @@ function WatchingHistory() {
 						<Table
 							userInfo={XPlayer}
 							symbol="X"
-							isWinner={statusFinishGame?.isXWin}
+							isWinner={statusFinishGame && !statusFinishGame?.isDraw && statusFinishGame?.isXWin}
 							online={false}
 							isShowWinSymbol={isShowWin}
 						/>
 						<Table
 							userInfo={OPlayer}
 							symbol="O"
-							isWinner={statusFinishGame && !statusFinishGame.isXWin}
+							isWinner={statusFinishGame && !statusFinishGame?.isDraw && !statusFinishGame?.isXWin}
 							online={false}
 							isShowWinSymbol={isShowWin}
 						/>

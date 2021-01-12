@@ -555,7 +555,7 @@ function RoomPage() {
 							symbol="X"
 							playerTurn={isTurn(XPlayer, idPlayerTurn)}
 							onProfileClick={() => handleClickTable(0)}
-							isWinner={statusFinishGame?.isXWin}
+							isWinner={statusFinishGame && !statusFinishGame?.isDraw && statusFinishGame?.isXWin}
 							isOwner={currentUserInfo?.id === XPlayer?.id}
 							isHost={currentUserInfo?.id === hostInfo?.id}
 							isStart={isStart}
@@ -567,7 +567,7 @@ function RoomPage() {
 							symbol="O"
 							playerTurn={isTurn(OPlayer, idPlayerTurn)}
 							onProfileClick={() => handleClickTable(1)}
-							isWinner={statusFinishGame && !statusFinishGame.isXWin}
+							isWinner={statusFinishGame && !statusFinishGame?.isDraw && !statusFinishGame.isXWin}
 							isOwner={currentUserInfo?.id === OPlayer?.id}
 							isHost={currentUserInfo?.id === hostInfo?.id}
 							isStart={isStart}
