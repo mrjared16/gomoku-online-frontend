@@ -1,10 +1,10 @@
 import { Box, makeStyles } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import RegisterForm from "features/Auth/components/RegisterForm";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import authApi from "api/authApi";
 import { setToken } from "app/userSlice";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { showToast } from "utils/showToast";
 import logo from 'assets/images/logo-navigation.png';
 import ForgotPasswordForm from "../components/ForgotPasswordForm";
@@ -43,6 +43,8 @@ function ResetPassword() {
 
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const history = useHistory();
+	const location = useLocation();
+	const token = location.pathname.split('/').pop();
 
 	const dispatch = useDispatch();
 
@@ -51,9 +53,25 @@ function ResetPassword() {
 	}
 
 	const handleSubmit = (values) => {
+		const { newPassword, confirmNewPassword } = values;
 		setIsSubmitting(true);
-		showToast('success', 'Reset password successful');
+		authApi.postResetPassword(token, newPassword, confirmNewPassword).then(response => {
+			showToast('success', response.message);
+			setIsSubmitting(false);
+			history.push('/login');
+		}).catch(err => {
+			showToast('error', err.response.data.message);
+		}) 
+		.showToast('success', 'Reset password successful');
 	};
+
+	useEffect(() => {
+		authApi.getResetPassword(token).then((response) => {
+			showToast('success', response.message);
+		}).catch(err => {
+			showToast('error', err.response.data.message);
+		})
+	}, [])
 
 	return (
 		<>

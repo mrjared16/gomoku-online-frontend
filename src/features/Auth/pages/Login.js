@@ -51,14 +51,16 @@ function Login() {
 			.login(username, password)
 			.then((res) => {
 				const { accessToken } = res;
-				dispatch(setToken(accessToken));
+				if (accessToken) {
+					dispatch(setToken(accessToken));
+				}
 				setIsSubmitting(false);
 				history.push("/");
 				showToast("success", "Login successful")
 			})
 			.catch((err) => {
 				setIsSubmitting(false);
-				showToast("error", err.message);
+				showToast("error", err.response.data.message);
 			});
 	};
 

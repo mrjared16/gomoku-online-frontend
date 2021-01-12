@@ -38,7 +38,38 @@ const authApi = {
       token,
     };
     return axiosClient.post(url, body);
-  },
+	},
+	forgotPassword: (email) => {
+		const url = "/auth/forgotPassword";
+    const body = {
+      email,
+    };
+
+		return axiosClient.post(url, body);
+	},
+	getResetPassword: (token) => {
+    const url = `/auth/resetPassword/${token}`;
+
+		return axiosClient.get(url);
+	},
+	postResetPassword: (token, newPassword, confirmNewPassword) => {
+		const url = "/auth/resetPassword";
+    const body = {
+			token,
+			newPassword,
+			confirmNewPassword,
+    };
+
+		return axiosClient.post(url, body);
+	},
+	activateUser: (token) => {
+		const url = `/auth/activate`;
+		const body = {
+			token,
+		}
+
+		return axiosClient.post(url, body);
+	},
 };
 
 export default authApi;

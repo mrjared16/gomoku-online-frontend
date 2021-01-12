@@ -43,15 +43,20 @@ function ForgotPassword() {
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const history = useHistory();
 
-	const dispatch = useDispatch();
-
 	const handleClickLogo = () => {
 		history.push("/");
 	}
 
 	const handleSubmit = (values) => {
+		const { email } = values;
 		setIsSubmitting(true);
-		showToast('success', 'Please check your email');
+		authApi.forgotPassword(email).then((response) => {
+			showToast('success', response.message);
+			setIsSubmitting(false);
+		}).catch(err => {
+			showToast('error', err.response.data.message);
+			setIsSubmitting(false);
+		})
 	};
 
 	return (

@@ -49,13 +49,15 @@ function Register() {
 		const { name, username, email, password } = values;
 		authApi.register(name, username, email, password).then((res) => {
 			const { accessToken } = res;
-			dispatch(setToken(accessToken));
+			if (accessToken) {
+				dispatch(setToken(accessToken));
+			}
 			setIsSubmitting(false);
 			history.push("/");
 			showToast("success", "Register successful")
 		}).catch(err => {
 			setIsSubmitting(false);
-			showToast("error", err.message)
+			showToast("error", err.response.data.message)
 		})
 	};
 
@@ -79,7 +81,7 @@ function Register() {
 				</div>
 			</div>
 		</>
-	);
+	);	
 }
 
 export default Register;

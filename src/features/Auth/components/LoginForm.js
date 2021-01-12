@@ -160,7 +160,7 @@ function LoginForm({
                     </Link>
                   </Typography>
 									<Typography variant="subtitle1" className="text-grey">
-                    <Link className="custom-link" to="/forgot-password">
+                    <Link className="custom-link" to="/forgotPassword">
 											Forgot password?{" "}
                     </Link>
                   </Typography>
