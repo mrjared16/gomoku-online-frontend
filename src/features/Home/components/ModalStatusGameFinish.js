@@ -70,15 +70,18 @@ function ModalStatusGameFinish({
 	isDraw = false,
 	isXWin = false,
 	isPlayer = -1,
+	rankRecords = [],
+	gameEndingType = '',
 }) {
 	const classes = useStyles();
+
 	const getTitleStatusGameFinish = () => {
 		if (isDraw)
 			return 'Draw';
 		if (isPlayer === -1) {
 			return (isXWin ? 'X Player win' : 'O Player win');
 		}
-		return (isPlayer === 0 && isXWin || isPlayer === 1 && !isXWin) ? 'You win' : 'You lose';
+		return ((isPlayer === 0 && isXWin) || (isPlayer === 1 && !isXWin)) ? 'You win' : 'You lose';
 
 	}
 	const getTitleClass = {
@@ -89,6 +92,23 @@ function ModalStatusGameFinish({
 		'You lose': classes.lose,
 	}
 
+	const renderRankRecord = (rankRecord, isWinner) => {
+		if (!rankRecord || rankRecord.length === 0) return;
+		const { newRank, oldRank } = rankRecord;
+		if (isWinner) {
+			return <span style={{ color: 'green' }}>{`${newRank} (+${newRank - oldRank})`}</span>
+		} else {
+			return <span style={{ color: 'red' }}>{`${newRank} (-${oldRank - newRank})`}</span>
+		}
+	}
+
+	const renderGameEndingType = (type) => {
+		if (!type || type === 'normal') return;
+		if (type === 'timeout') {
+			return <span>{isXWin ? 'O' : 'X'} timeout</span>
+		}
+	}
+
 	const title = getTitleStatusGameFinish();
 	return (
 		<Dialog open={open} onClose={toggle} className={classes.root}>
@@ -97,6 +117,7 @@ function ModalStatusGameFinish({
 					<Box display='flex' flexDirection='column' alignItems='center'>
 						<Typography variant="h4" className={getTitleClass[title]}>{title}</Typography>
 						<Typography variant="subtitle1">{moment(duration * 1000).format('mm:ss')}</Typography>
+						{renderGameEndingType(gameEndingType)}
 					</Box>
 					<Box display='flex' justifyContent='space-around'>
 						<div className={classes.playerInfo}>
@@ -104,7 +125,7 @@ function ModalStatusGameFinish({
 							<span>{XPlayer?.username}</span>
 							<div className={classes.elo}>
 								<Icon className="fas fa-trophy" style={{ color: 'yellow', width: 'fit-content' }} />
-								<span style={{ color: 'green' }}>50 (+25)</span>
+								{rankRecords.length !== 0 && renderRankRecord(rankRecords[0], isXWin)}
 							</div>
 						</div>
 						<div className={classes.playerInfo}>
@@ -112,7 +133,7 @@ function ModalStatusGameFinish({
 							<span>{OPlayer?.username}</span>
 							<div className={classes.elo}>
 								<Icon className="fas fa-trophy" style={{ color: 'yellow', width: 'fit-content' }} />
-								<span style={{ color: 'red' }}>25 (-25)</span>
+								{rankRecords.length !== 0 && renderRankRecord(rankRecords[1], !isXWin)}
 							</div>
 						</div>
 					</Box>

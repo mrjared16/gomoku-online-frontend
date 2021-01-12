@@ -138,7 +138,7 @@ function History() {
 			headerName: 'Duration',
 			headerAlign: 'center',
 			cellClassName: 'custom-cell__center',
-			renderCell: (param) => <span>{param?.value && moment.unix(param.value).utc().format('HH:mm:ss')}</span>,
+			renderCell: (param) => <span>{param?.value && moment.unix(param.value).utc().format('mm:ss')}</span>,
 			width: 150,
 		},
 		{

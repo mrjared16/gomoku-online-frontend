@@ -9,6 +9,7 @@ import TurnHistory from 'features/Home/components/TurnHistory';
 import Chat from 'features/Home/components/Chat';
 import { resetHistory } from 'app/historySlice';
 import gameHistoryApi from 'api/gameHistoryApi';
+import moment from 'moment';
 
 const DEFAULT_SIZE = 20;
 
@@ -63,7 +64,7 @@ const useStyles = makeStyles({
 		marginBottom: 30,
 		minHeight: 67,
 	},
-	reason: {
+	gameEndingType: {
 		marginTop: 10,
 	}
 });
@@ -79,7 +80,6 @@ function WatchingHistory() {
 	const [gameMoves, setGameMoves] = useState([]);
 	const [moveIndex, setMoveIndex] = useState(0);
 	const [listMessage, setListMessage] = useState([]);
-	const [reason, setReason] = useState('');
 
 	const { currentUserInfo } = useSelector(state => state.user);
 
@@ -118,7 +118,7 @@ function WatchingHistory() {
 		gameHistoryApi.getGameHistory(gameHistoryId).then((response) => {
 			if (!response) return;
 			const { game } = response;
-			const { players, moveRecord, boardSize, result, chatRecord } = game;
+			const { players, moveRecord, boardSize, result, chatRecord, gameEndingType, duration, winningLine } = game;
 			const { X, O } = players;
 
 			setXPlayer(X);
@@ -134,7 +134,9 @@ function WatchingHistory() {
 			setStatusFinishGame({
 				isDraw,
 				isXWin,
-				winLine: getWinLinePosition('1-2-3-4-5'),
+				winLine: getWinLinePosition(winningLine),
+				gameEndingType,
+				duration,	
 			})
 		})
 	}, [])
@@ -158,6 +160,14 @@ function WatchingHistory() {
 		}
 	}
 
+	const renderGameEndingType = (type) => {
+		const { isXWin = false } = statusFinishGame;
+		if (!type || type === 'normal') return;
+		if (type === 'timeout') {
+			return <span>{isXWin ? 'O' : 'X'} timeout</span>
+		}
+	}
+
 	return (
 		<div className={classes.root}>
 			<div className={classes.container}>
@@ -176,7 +186,8 @@ function WatchingHistory() {
 					<div className={classes.userInfoContainer}>
 						<Box display='flex' flexDirection='column' alignItems='center' className={classes.resultContainer}>
 							{currentUserInfo && XPlayer && OPlayer && renderGameResult(statusFinishGame)}
-							<span className={classes.reason}>{reason}</span>
+							<span className={classes.gameEndingType}>{statusFinishGame && renderGameEndingType(statusFinishGame?.gameEndingType)}</span>
+							<span className={classes.gameEndingType}>Duration: {statusFinishGame && moment.unix(statusFinishGame?.duration).utc().format('mm:ss')}</span>
 						</Box>
 
 						<Table

@@ -310,16 +310,17 @@ function RoomPage() {
 
 	const handleEndGame = (data) => {
 		console.log({ data });
-		// const { winnerID, line, rankRecord, duration } = data;
-		const gameResult = 0;
+		const { gameResult, rankRecords, duration, winningLine, gameEndingType } = data;
 		const isDraw = gameResult === 2;
 		const isXWin = gameResult === 0;
 
-		const line = '1-3-4-5-6';
 		setStatusFinishGame({
 			isDraw,
 			isXWin,
-			winLine: line ? getWinLinePosition(line) : [],
+			winLine: winningLine ? getWinLinePosition(winningLine) : [],
+			gameEndingType,
+			rankRecords,
+			duration,
 		})
 		setOpenModalStatusGameFinish(true);
 		// TODO: handle end game
@@ -554,11 +555,13 @@ function RoomPage() {
 			<ModalStatusGameFinish
 				open={openModalStatusGameFinish}
 				toggle={() => setOpenModalStatusGameFinish(!openModalStatusGameFinish)}
-				duration={620}
+				duration={statusFinishGame?.duration}
 				XPlayer={XPlayer}
 				OPlayer={OPlayer}
 				isDraw={statusFinishGame?.isDraw}
 				isXWin={statusFinishGame?.isXWin}
+				rankRecords={statusFinishGame?.rankRecords}
+				gameEndingType={statusFinishGame?.gameEndingType}
 				isPlayer={isPlayer()}
 			/>
 			<ModalConfirmNewGame open={openModalConfirmNewGame} toggle={() => setOpenModalConfirmNewGame(!openModalConfirmNewGame)} onSubmit={initialGameState} />
