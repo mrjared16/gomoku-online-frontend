@@ -54,7 +54,7 @@ function Register() {
 			}
 			setIsSubmitting(false);
 			history.push("/");
-			showToast("success", "Register successful")
+			showToast("success", "Please check your email to verify")
 		}).catch(err => {
 			setIsSubmitting(false);
 			showToast("error", err.response.data.message)
