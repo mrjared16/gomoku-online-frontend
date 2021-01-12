@@ -53,9 +53,13 @@ function HomeInfoLeft({ onlineUsers = [] }) {
 
 	const handleClickProfile = () => {
 		if (loadingProfile) return;
-		setUserInfoState(profileData);
-		setOpenModalUserInfo(!openModalUserInfo);
-		setLoadingUserInfo(false);
+		setOpenModalUserInfo(true);
+		userApi.fetch().then((response) => {
+			if (!response) return;
+			const userInfoData = userDTOToProp(response.user);
+			setUserInfoState(userInfoData);
+			setLoadingUserInfo(false);
+		})
 	};
 
 	const handleClickUser = (id) => {
