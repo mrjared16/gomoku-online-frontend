@@ -7,7 +7,10 @@ function Timer({ timerProp = 0, setTimerProp = () => {} }) {
 
 	useEffect(() => {
 		const	timerInterval = setInterval(() => {
-				setTimer((currentTimer) => currentTimer - 1);
+				setTimer((currentTimer) => {
+					if (currentTimer === 0) return 0;
+					return currentTimer - 1;
+				});
 			}, 1000);
     return () => clearInterval(timerInterval);
 	});
