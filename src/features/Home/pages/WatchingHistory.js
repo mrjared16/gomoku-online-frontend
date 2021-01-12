@@ -62,7 +62,7 @@ const useStyles = makeStyles({
 	resultContainer: {
 		marginTop: 52,
 		marginBottom: 30,
-		minHeight: 67,
+		minHeight: 96,
 	},
 	gameEndingType: {
 		marginTop: 10,
@@ -163,8 +163,8 @@ function WatchingHistory() {
 	const renderGameEndingType = (type) => {
 		const { isXWin = false } = statusFinishGame;
 		if (!type || type === 'normal') return;
-		if (type === 'timeout') {
-			return <span>{isXWin ? 'O' : 'X'} timeout</span>
+		if (type === 'timeout' || type === 'quit') {
+			return <span>{isXWin ? `${OPlayer?.username} (O)` : `${OPlayer?.username} (X)`} {type}</span>
 		}
 	}
 
@@ -187,7 +187,7 @@ function WatchingHistory() {
 						<Box display='flex' flexDirection='column' alignItems='center' className={classes.resultContainer}>
 							{currentUserInfo && XPlayer && OPlayer && renderGameResult(statusFinishGame)}
 							<span className={classes.gameEndingType}>{statusFinishGame && renderGameEndingType(statusFinishGame?.gameEndingType)}</span>
-							<span className={classes.gameEndingType}>Duration: {statusFinishGame && moment.unix(statusFinishGame?.duration).utc().format('mm:ss')}</span>
+							<span className={classes.gameEndingType}>{statusFinishGame && `Duration: ${moment.unix(statusFinishGame?.duration).format('mm:ss')}`}</span>
 						</Box>
 
 						<Table

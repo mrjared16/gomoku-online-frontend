@@ -77,7 +77,8 @@ function ModalStatusGameFinish({
 
 	const getTitleStatusGameFinish = () => {
 		if (isDraw)
-			return 'Draw';
+			// return 'Draw';
+			return 'Tie';
 		if (isPlayer === -1) {
 			return (isXWin ? 'X Player win' : 'O Player win');
 		}
@@ -85,7 +86,8 @@ function ModalStatusGameFinish({
 
 	}
 	const getTitleClass = {
-		'Draw': classes.draw,
+		// 'Draw': classes.draw,
+		'Tie': classes.draw,
 		'X Player win': classes.xWin,
 		'O Player win': classes.oWin,
 		'You win': classes.win,
@@ -116,7 +118,7 @@ function ModalStatusGameFinish({
 				<div className={classes.content}>
 					<Box display='flex' flexDirection='column' alignItems='center'>
 						<Typography variant="h4" className={getTitleClass[title]}>{title}</Typography>
-						<Typography variant="subtitle1">{moment(duration * 1000).format('mm:ss')}</Typography>
+						<Typography variant="subtitle1">Duration: {moment.unix(duration).format('mm:ss')}</Typography>
 						{renderGameEndingType(gameEndingType)}
 					</Box>
 					<Box display='flex' justifyContent='space-around'>

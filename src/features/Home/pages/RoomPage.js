@@ -21,6 +21,7 @@ import userApi from 'api/userApi';
 import { userDTOToProp } from 'utils/mapResponseToProp';
 import { chatSocket } from 'socket/chatSocket';
 import gameApi from 'api/gameApi';
+import ModalRequestTie from '../components/ModalRequestTie';
 
 const DEFAULT_SIZE = 20;
 
@@ -47,7 +48,10 @@ const handleGameEvent = {
 	},
 	onFinish: (handleEndGame, data) => {
 		handleEndGame(data);
-	}
+	},
+	onTieRequest: (handleReceivedRequestTie, data) => {
+		handleReceivedRequestTie();
+	},
 };
 
 const handleChatEvent = {
@@ -115,6 +119,8 @@ function RoomPage() {
 	const [userInfoState, setUserInfoState] = useState(null);
 	const [loadingUserInfo, setLoadingUserInfo] = useState(true);
 	const [openModalUserInfo, setOpenModalUserInfo] = useState(false);
+	const [openModalRequestTie, setOpenModalRequestTie] = useState(false);
+	const [userSendRequestTie, setUserSendRequestTie] = useState(null);
 
 	const [listMessage, setListMessage] = useState([]);
 	const [chatChannelID, setChatChannelID] = useState(null);
@@ -240,9 +246,9 @@ function RoomPage() {
 		if (!currentUserInfo) {
 			res = -1;
 		}
-		if (XPlayer && (currentUserInfo.id === XPlayer.id))
+		if (XPlayer && (currentUserInfo?.id === XPlayer.id))
 			res = 0;
-		if (OPlayer && (currentUserInfo.id === OPlayer.id))
+		if (OPlayer && (currentUserInfo?.id === OPlayer.id))
 			res = 1;
 
 		return res;
@@ -261,7 +267,7 @@ function RoomPage() {
 		// );
 		const response = await gameApi.getGame(roomID);
 		console.log({ response });
-		
+
 		const { game, gameState } = response;
 		if (!game || game.id == null) {
 			return;
@@ -298,7 +304,8 @@ function RoomPage() {
 			const getSetter = {
 				onHit: hit,
 				changeTurn: setIdPlayerTurn,
-				onFinish: handleEndGame
+				onFinish: handleEndGame,
+				onTieRequest: handleReceivedRequestTie,
 			};
 			handleGameEvent[event](getSetter[event], data);
 		});
@@ -389,7 +396,7 @@ function RoomPage() {
 	const handleLeaveTable = () => {
 		roomSocket.emit('joinTable', {
 			action: 'leave',
-			data: { 
+			data: {
 				token: token,
 				roomID: roomID,
 			},
@@ -399,10 +406,10 @@ function RoomPage() {
 	const handleKickUser = (playerId) => {
 		roomSocket.emit('joinTable', {
 			action: 'kick',
-      data: {
+			data: {
 				token: token,
-        roomID: roomID,
-        playerId: playerId,
+				roomID: roomID,
+				playerId: playerId,
 			},
 		})
 	};
@@ -426,13 +433,13 @@ function RoomPage() {
 
 	const addMessage = (user, content, createdAt) => {
 		setListMessage((prevState) => prevState.concat([{
-			user: {...user},
+			user: { ...user },
 			content: content,
 			createdAt: createdAt,
 		}]));
 	};
 
-	const fetchChatState = () => {};
+	const fetchChatState = () => { };
 
 	//handle chat event
 	useEffect(() => {
@@ -461,6 +468,48 @@ function RoomPage() {
 			chatSocket.off('chatEventMsg');
 		};
 	}, [chatChannelID]);
+
+	const handleSurrender = () => {
+		gameSocket.emit('request', {
+			action: 'surrender',
+			data: {
+				roomID: roomID,
+				gameID: gameID,
+				token: token,
+			}
+		});
+	};
+
+	const handleSendRequestTie = () => {
+		gameSocket.emit('request', {
+			action: 'tie',
+			data: {
+				roomID: roomID,
+				gameID: gameID,
+				token: token,
+			}
+		});
+	};
+
+	const handleReceivedRequestTie = () => {
+		if (XPlayer && currentUserInfo?.id === XPlayer?.id) {
+			setUserSendRequestTie(OPlayer);
+		} else {
+			setUserSendRequestTie(XPlayer);
+		}
+		setOpenModalRequestTie(true);
+	}
+
+	const handleSubmitRequestTie = () => {
+		gameSocket.emit('request', {
+			action: 'onTieAccept',
+			data: {
+				roomID: roomID,
+				gameID: gameID,
+				token: token,
+			}
+		});
+	}
 
 	return (
 		<div className={classes.root}>
@@ -532,6 +581,7 @@ function RoomPage() {
 								variant="contained"
 								style={{ backgroundColor: '#939b62' }}
 								size="small"
+								onClick={handleSurrender}
 							>
 								Surrender
 							</Button>
@@ -541,6 +591,7 @@ function RoomPage() {
 								color="secondary"
 								className="caro-button"
 								size="small"
+								onClick={handleSendRequestTie}
 							>
 								Tie
 							</Button>
@@ -567,6 +618,7 @@ function RoomPage() {
 			<ModalConfirmNewGame open={openModalConfirmNewGame} toggle={() => setOpenModalConfirmNewGame(!openModalConfirmNewGame)} onSubmit={initialGameState} />
 			<ModalSpectator open={openModalSpectator} toggle={() => setOpenModalSpectator(!openModalSpectator)} list={spectator} hostID={hostInfo?.id} onClick={handleClickUser} />
 			<ModalUserInfo open={openModalUserInfo} toggle={() => setOpenModalUserInfo(!openModalUserInfo)} userInfo={userInfoState} loading={loadingUserInfo} />
+			<ModalRequestTie open={openModalRequestTie} toggle={() => setOpenModalRequestTie(!openModalRequestTie)} onSubmit={handleSubmitRequestTie} userInfo={userSendRequestTie} />
 		</div>
 	);
 }
