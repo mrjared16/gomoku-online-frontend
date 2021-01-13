@@ -187,15 +187,7 @@ function Main({ onlineUsers = [] }) {
 
 	const handleJoinClick = () => {
 		if (!roomSelected) return;
-		const { id: roomID } = roomSelected;
-
-		//Check room has password and is host room
-		if (false) {
-			dispatch(setRoomID(roomID));
-			dispatch(setOpenModalInputPassword(true));
-		} else {
-			history.push(`/rooms/${roomSelected.id}`);
-		}
+		history.push(`/rooms/${roomSelected.id}`);
 	};
 
 	const handleRoomSelected = (row) => {
