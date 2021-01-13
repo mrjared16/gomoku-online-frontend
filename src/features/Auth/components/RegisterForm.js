@@ -63,9 +63,9 @@ const useStyles = makeStyles({
 });
 
 const initialValues = {
-	// firstName: "",
-	// lastName: "",
-	name: "",
+	firstName: "",
+	lastName: "",
+	// name: "",
 	username: "",
 	email: "",
 	password: "",
@@ -73,9 +73,9 @@ const initialValues = {
 };
 
 const validationSchema = Yup.object().shape({
-	// firstName: Yup.string().trim().required("Required"),
-	// lastName: Yup.string().trim().required("Required"),
-	name: Yup.string().trim().required("Required"),
+	firstName: Yup.string().trim().required("Required"),
+	lastName: Yup.string().trim().required("Required"),
+	// name: Yup.string().trim().required("Required"),
 	username: Yup.string().trim().required("Required").min(6, "Username must be at least 6 characters"),
 	email: Yup.string().email("Email is not valid").required("Required"),
 	password: Yup.string()
@@ -105,7 +105,7 @@ function RegisterForm({ onSubmit = () => { }, isSubmitting = false }) {
 
 							<CardContent>
 								<div className={classes.formContent}>
-									{/* <Grid container>
+									<Grid container>
 										<Grid
 											item
 											xs={6}
@@ -140,8 +140,8 @@ function RegisterForm({ onSubmit = () => { }, isSubmitting = false }) {
 												size="small"
 											/>
 										</Grid>
-									</Grid> */}
-									<TextField
+									</Grid>
+									{/* <TextField
 										name="name"
 										label="Name"
 										variant="outlined"
@@ -151,7 +151,7 @@ function RegisterForm({ onSubmit = () => { }, isSubmitting = false }) {
 										error={Boolean(errors.name) && touched.name}
 										helperText={touched.name && errors.name}
 										size="small"
-									/>
+									/> */}
 									<TextField
 										name="username"
 										label="Username"

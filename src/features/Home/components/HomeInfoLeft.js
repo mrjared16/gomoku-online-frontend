@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -40,30 +40,23 @@ const useStyles = makeStyles((theme) => ({
 function HomeInfoLeft({ onlineUsers = [] }) {
 	const classes = useStyles();
 	const [openUserOnline, setOpenUserOnline] = React.useState(true);
-	const { loadingProfile } = useSelector((state) => state.user);
 	const [openModalUserInfo, setOpenModalUserInfo] = useState(false);
-	const { currentUserInfo } = useSelector((state) => state.user);
-	const profileData = userDTOToProp(currentUserInfo);
 	const [userInfoState, setUserInfoState] = useState(null);
 	const [loadingUserInfo, setLoadingUserInfo] = useState(true);
+	const [profileState, setProfileState] = useState(null);
+	const [loadingProfileState, setLoadingProfileState] = useState(null);
 
 	const handleClickDropDownUserOnline = () => {
 		setOpenUserOnline(!openUserOnline);
 	};
 
 	const handleClickProfile = () => {
-		if (loadingProfile) return;
-		setLoadingUserInfo(true);
+		setUserInfoState(profileState);
 		setOpenModalUserInfo(true);
-		userApi.fetch().then((response) => {
-			if (!response) return;
-			const userInfoData = userDTOToProp(response.user);
-			setUserInfoState(userInfoData);
-			setLoadingUserInfo(false);
-		})
 	};
 
 	const handleClickUser = (id) => {
+		setUserInfoState(null);
 		setLoadingUserInfo(true);
 		setOpenModalUserInfo(true);
 		userApi.getUserInfoByID(id).then((response) => {
@@ -73,6 +66,16 @@ function HomeInfoLeft({ onlineUsers = [] }) {
 		})
 	}
 
+	useEffect(() => {
+		setLoadingProfileState(true);
+		userApi.fetch().then((response) => {
+			if (!response) return;
+			const userInfoData = userDTOToProp(response.user);
+			setProfileState(userInfoData);
+			setLoadingProfileState(false);
+		})
+	}, [])
+
 	return (
 		<>
 			<List
@@ -81,10 +84,10 @@ function HomeInfoLeft({ onlineUsers = [] }) {
 				className={classes.root}
 			>
 				<ListItem button onClick={handleClickProfile}>
-					{loadingProfile ? (
+					{loadingProfileState ? (
 						<Loading />
 					) : (
-							<Profile dataProp={profileData} />
+							<Profile dataProp={profileState} />
 						)}
 				</ListItem>
 				<ListItem button onClick={handleClickDropDownUserOnline} className={classes.userOnlineDropdown}>

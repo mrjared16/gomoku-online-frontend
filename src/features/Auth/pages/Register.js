@@ -46,8 +46,8 @@ function Register() {
 
 	const handleSubmit = (values) => {
 		setIsSubmitting(true);
-		const { name, username, email, password } = values;
-		authApi.register(name, username, email, password).then((res) => {
+		const { firstName, lastName, username, email, password } = values;
+		authApi.register(firstName, lastName, username, email, password).then((res) => {
 			const { accessToken } = res;
 			if (accessToken) {
 				dispatch(setToken(accessToken));
