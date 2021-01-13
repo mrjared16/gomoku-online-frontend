@@ -87,13 +87,13 @@ function History() {
 		}
 		if (oldRank > newRank) {
 			return (
-				<span className={classes.lose}>{`${oldRank} (-${oldRank - newRank
+				<span className={classes.lose}>{`${newRank} (-${oldRank - newRank
 					})`}</span>
 			);
 		}
 		if (oldRank === newRank) {
 			return (
-				<span className={classes.tie}>{`${oldRank}`}</span>
+				<span className={classes.tie}>{`${newRank}`}</span>
 			);
 		}
 	};
