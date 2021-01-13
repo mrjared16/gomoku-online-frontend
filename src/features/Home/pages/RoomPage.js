@@ -486,6 +486,7 @@ function RoomPage() {
 	};
 
 	const handleSendRequestTie = () => {
+		showToast('success', 'Sent request tie');
 		gameSocket.emit('request', {
 			action: 'tie',
 			data: {
@@ -497,6 +498,7 @@ function RoomPage() {
 	};
 
 	const handleReceivedRequestTie = () => {
+		if (isPlayer() === -1) return;
 		if (XPlayer && currentUserInfo?.id === XPlayer?.id) {
 			setUserSendRequestTie(OPlayer);
 		} else {
