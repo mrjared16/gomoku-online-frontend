@@ -106,9 +106,11 @@ function Table({
 	isOwner = false,
 	isStart = false,
 	online = true,
-	onLeave = () => {},
-	onKick = () => {},
+	onLeave = () => { },
+	onKick = () => { },
 	isShowWinSymbol = true,
+	timer = 0,
+	setTimer = () => { },
 }) {
 	const classes = useStyles();
 	const { name, photo, username, id: playerId, rank = 1000 } = userInfo || {
@@ -116,7 +118,6 @@ function Table({
 		photo: '',
 		username: '',
 	};
-	const [timer, setTimer] = useState(60);
 
 	return (
 		<div className={classes.container}>

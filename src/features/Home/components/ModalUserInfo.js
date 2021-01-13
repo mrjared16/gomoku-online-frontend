@@ -76,7 +76,6 @@ function ModalUserInfo({
 	userInfo = null,
 	loading = true,
 }) {
-	console.log("🚀 ~ file: ModalUserInfo.js ~ line 79 ~ userInfo", userInfo)
 	const classes = useStyles();
 	const [editing, setEditing] = useState(false);
 	const { currentUserInfo } = useSelector((state) => state.user);

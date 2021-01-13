@@ -42,9 +42,7 @@ const handleGameEvent = {
 	changeTurn: (setTurn, data) => {
 		const { turn } = data;
 		const { playerID, remainingTime } = turn;
-		setTurn(() => {
-			return playerID;
-		});
+		setTurn(playerID, remainingTime);
 	},
 	onFinish: (handleEndGame, data) => {
 		handleEndGame(data);
@@ -121,6 +119,7 @@ function RoomPage() {
 	const [openModalUserInfo, setOpenModalUserInfo] = useState(false);
 	const [openModalRequestTie, setOpenModalRequestTie] = useState(false);
 	const [userSendRequestTie, setUserSendRequestTie] = useState(null);
+	const [timer, setTimer] = useState(0);
 
 	const [listMessage, setListMessage] = useState([]);
 	const [chatChannelID, setChatChannelID] = useState(null);
@@ -275,11 +274,12 @@ function RoomPage() {
 		const { id, startAt } = game;
 		const { move, turn } = gameState;
 		const { playerID, remainingTime } = turn;
+    console.log("🚀 ~ file: RoomPage.js ~ line 277 ~ fetchGameState ~ turn", turn)
 		if (!isStart) {
 			setGameID(id);
 		}
 		setGameMoves(move);
-		setIdPlayerTurn(playerID);
+		handleChangeTurn(playerID, remainingTime);
 	};
 
 	// handle game event
@@ -303,7 +303,7 @@ function RoomPage() {
 			console.log('receive gameEventMsg emit: ', { response })
 			const getSetter = {
 				onHit: hit,
-				changeTurn: setIdPlayerTurn,
+				changeTurn: handleChangeTurn,
 				onFinish: handleEndGame,
 				onTieRequest: handleReceivedRequestTie,
 			};
@@ -314,6 +314,11 @@ function RoomPage() {
 			gameSocket.off('gameEventMsg');
 		};
 	}, [gameID]);
+
+	const handleChangeTurn = (playerID, remainingTime) => {
+		setIdPlayerTurn(playerID);
+		setTimer(remainingTime);
+	}
 
 	const handleEndGame = (data) => {
 		console.log({ data });
@@ -561,6 +566,8 @@ function RoomPage() {
 							isStart={isStart}
 							onLeave={handleLeaveTable}
 							onKick={handleKickUser}
+							timer={timer}
+							setTimer={setTimer}
 						/>
 						<Table
 							userInfo={OPlayer}
@@ -573,6 +580,8 @@ function RoomPage() {
 							isStart={isStart}
 							onLeave={handleLeaveTable}
 							onKick={handleKickUser}
+							timer={timer}
+							setTimer={setTimer}
 						/>
 
 						<div className={classes.footerButton}>

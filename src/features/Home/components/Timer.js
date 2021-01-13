@@ -3,11 +3,10 @@ import AccessAlarmsIcon from '@material-ui/icons/AccessAlarms';
 import moment from 'moment';
 
 function Timer({ timerProp = 0, setTimerProp = () => {} }) {
-	const [timer, setTimer] = useState(timerProp);
 
 	useEffect(() => {
 		const	timerInterval = setInterval(() => {
-				setTimer((currentTimer) => {
+			setTimerProp((currentTimer) => {
 					if (currentTimer === 0) return 0;
 					return currentTimer - 1;
 				});
@@ -19,7 +18,7 @@ function Timer({ timerProp = 0, setTimerProp = () => {} }) {
 		<>
 			<AccessAlarmsIcon style={{ color: 'red' }} />
 			<span>
-				{moment.unix(timer).format('mm:ss')}
+				{moment.unix(timerProp).format('mm:ss')}
 			</span>
 		</>
 	);
