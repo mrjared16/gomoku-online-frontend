@@ -53,6 +53,7 @@ function HomeInfoLeft({ onlineUsers = [] }) {
 
 	const handleClickProfile = () => {
 		if (loadingProfile) return;
+		setLoadingUserInfo(true);
 		setOpenModalUserInfo(true);
 		userApi.fetch().then((response) => {
 			if (!response) return;
