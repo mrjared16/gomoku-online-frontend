@@ -1,4 +1,4 @@
-import { Avatar, makeStyles } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 import AvatarCustom from "components/AvatarCustom";
 import React from "react";
 
@@ -12,13 +12,13 @@ const useStyles = makeStyles({
 	},
 });
 
-function UserInfo({ fullName = "", photo = "" }) {
+function UserInfo({ name = "", photo = "" }) {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
-			<AvatarCustom alt={fullName} src={photo} />
-      <div className="fullName">{fullName}</div>
+			<AvatarCustom alt={name} src={photo} />
+      <div className="fullName">{name}</div>
     </div>
   );
 }

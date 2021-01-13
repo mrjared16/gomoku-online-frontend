@@ -12,6 +12,7 @@ import { showToast } from "utils/showToast";
 import { setRoomID } from 'app/roomSlice';
 import { setIdHistory, setIsWatchingHistory } from "app/historySlice";
 import { uniqBy } from "lodash";
+import UserInfo from "./components/UserInfo";
 
 function a11yProps(index) {
 	return {
@@ -80,7 +81,7 @@ function Header() {
 
 	const history = useHistory();
 	const dispatch = useDispatch();
-	const { token } = useSelector((state) => state.user);
+	const { token, currentUserInfo } = useSelector((state) => state.user);
 	const [value, setValue] = useState(0);
 	const location = useLocation();
 	const { currentRoomID } = useSelector((state) => state.room);
@@ -204,7 +205,7 @@ function Header() {
 
 				{token && (
 					<div style={{ display: "flex" }}>
-						{/* <UserInfo fullName={name} /> */}
+						<UserInfo name={currentUserInfo?.name} />
 						<Dropdown onLogout={handleLogout} />
 					</div>
 				)}
