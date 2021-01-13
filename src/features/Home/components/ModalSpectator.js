@@ -56,7 +56,7 @@ function ModalSpectator({
 			<DialogContent>
 				<List>
 					{list &&
-						list.map(({ id, online = false, name = '', photo = '', rank }, index) => (
+						list.map(({ id, online = false, username = '', photo = '', rank }, index) => (
 							<ListItem key={id} button onClick={() => onClick(id)}>
 								<ListItemAvatar>
 									<AvatarCustom photo={photo} online={true} />
@@ -65,7 +65,7 @@ function ModalSpectator({
 									<Box display='flex' alignItems='center' className={classes.nameContainer}>
 										<RankCustom symbol={getRankSymbol(rank)} className={classes.rank} />
 										<div className={classes.name}>
-											<TypographyCustom text={name} />
+											<TypographyCustom text={username} />
 										</div>
 									</Box>
 								</ListItemText>

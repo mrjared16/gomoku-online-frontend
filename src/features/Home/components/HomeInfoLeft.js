@@ -43,16 +43,18 @@ function HomeInfoLeft({ onlineUsers = [] }) {
 	const [openModalUserInfo, setOpenModalUserInfo] = useState(false);
 	const [userInfoState, setUserInfoState] = useState(null);
 	const [loadingUserInfo, setLoadingUserInfo] = useState(true);
-	const [profileState, setProfileState] = useState(null);
-	const [loadingProfileState, setLoadingProfileState] = useState(null);
+	const { loadingProfile, currentUserInfo } = useSelector(state => state.user);
+	const profileData = userDTOToProp(currentUserInfo);
 
 	const handleClickDropDownUserOnline = () => {
 		setOpenUserOnline(!openUserOnline);
 	};
 
 	const handleClickProfile = () => {
-		setUserInfoState(profileState);
+		if (loadingProfile) return;
+		setLoadingUserInfo(false);
 		setOpenModalUserInfo(true);
+		setUserInfoState(profileData);
 	};
 
 	const handleClickUser = (id) => {
@@ -66,16 +68,6 @@ function HomeInfoLeft({ onlineUsers = [] }) {
 		})
 	}
 
-	useEffect(() => {
-		setLoadingProfileState(true);
-		userApi.fetch().then((response) => {
-			if (!response) return;
-			const userInfoData = userDTOToProp(response.user);
-			setProfileState(userInfoData);
-			setLoadingProfileState(false);
-		})
-	}, [])
-
 	return (
 		<>
 			<List
@@ -84,10 +76,10 @@ function HomeInfoLeft({ onlineUsers = [] }) {
 				className={classes.root}
 			>
 				<ListItem button onClick={handleClickProfile}>
-					{loadingProfileState ? (
+					{loadingProfile ? (
 						<Loading />
 					) : (
-							<Profile dataProp={profileState} />
+							<Profile dataProp={profileData} />
 						)}
 				</ListItem>
 				<ListItem button onClick={handleClickDropDownUserOnline} className={classes.userOnlineDropdown}>
