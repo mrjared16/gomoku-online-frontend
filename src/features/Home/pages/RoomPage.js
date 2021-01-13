@@ -9,12 +9,12 @@ import { roomSocket } from 'socket/roomSocket';
 import { gameSocket } from 'socket/gameSocket';
 import axiosClient from 'api/axiosClient';
 import ModalStatusGameFinish from 'features/Home/components/ModalStatusGameFinish';
-import ModalConfirmNewGame from 'features/Home/components/ModalConfirmNewGame';
+import ModalConfirmAction from 'features/Home/components/ModalConfirmAction';
 import SpectatorButton from 'features/Home/components/SpectatorButton';
 import ModalSpectator from 'features/Home/components/ModalSpectator';
 import TurnHistory from 'features/Home/components/TurnHistory';
 import Chat from 'features/Home/components/Chat';
-import { removeRoomID, setRoomID } from 'app/roomSlice';
+import { removeRoomID, setIsHost, setRoomID } from 'app/roomSlice';
 import { showToast } from 'utils/showToast';
 import ModalUserInfo from '../components/ModalUserInfo';
 import userApi from 'api/userApi';
@@ -111,7 +111,7 @@ function RoomPage() {
 	// const [board, setBoard] = useState(initialBoard);
 	//Modal
 	const [openModalStatusGameFinish, setOpenModalStatusGameFinish] = useState(false);
-	const [openModalConfirmNewGame, setOpenModalConfirmNewGame] = useState(false);
+	const [openModalConfirmAction, setOpenModalConfirmAction] = useState(false);
 	const [openModalSpectator, setOpenModalSpectator] = useState(false);
 
 	const [userInfoState, setUserInfoState] = useState(null);
@@ -190,8 +190,9 @@ function RoomPage() {
 
 
 	const setRoomState = (response) => {
-		const { host } = response;
-		if (!host) {
+		const { id, isKicked } = response;
+    console.log("🚀 ~ file: RoomPage.js ~ line 194 ~ setRoomState ~ response", response)
+		if (!id) {
 			// TODO: show message for user
 			console.log('this room is no longer exist');
 			history.push('/');
@@ -200,9 +201,10 @@ function RoomPage() {
 			return;
 		}
 
-		const { players, roomOption, gameID, users, chatChannelID } = response;
+		const { players, roomOption, gameID, users, chatChannelID, host } = response;
 
 		setHostInfo(host);
+		dispatch(setIsHost(currentUserInfo && host && host.id === currentUserInfo.id))
 
 		const { boardSize } = roomOption;
 		setSizeBoard(boardSize);
@@ -256,7 +258,7 @@ function RoomPage() {
 	const initialGameState = () => {
 		setGameMoves([]);
 		setStatusFinishGame(null);
-		setOpenModalConfirmNewGame(false);
+		setOpenModalConfirmAction(false);
 		setOpenModalStatusGameFinish(false);
 	};
 
@@ -389,6 +391,7 @@ function RoomPage() {
 	}
 
 	const handleClickUser = (id) => {
+		setUserInfoState(null);
 		setLoadingUserInfo(true);
 		setOpenModalUserInfo(true);
 		userApi.getUserInfoByID(id).then((response) => {
@@ -550,7 +553,7 @@ function RoomPage() {
 							variant="contained"
 							color="primary"
 							className="caro-button"
-							onClick={() => setOpenModalConfirmNewGame(true)}
+							onClick={() => setOpenModalConfirmAction(true)}
 							size="small"
 						>
 							New Game
@@ -626,7 +629,7 @@ function RoomPage() {
 				gameEndingType={statusFinishGame?.gameEndingType}
 				isPlayer={isPlayer()}
 			/>
-			<ModalConfirmNewGame open={openModalConfirmNewGame} toggle={() => setOpenModalConfirmNewGame(!openModalConfirmNewGame)} onSubmit={initialGameState} />
+			<ModalConfirmAction open={openModalConfirmAction} toggle={() => setOpenModalConfirmAction(!openModalConfirmAction)} onSubmit={initialGameState} />
 			<ModalSpectator open={openModalSpectator} toggle={() => setOpenModalSpectator(!openModalSpectator)} list={spectator} hostID={hostInfo?.id} onClick={handleClickUser} />
 			<ModalUserInfo open={openModalUserInfo} toggle={() => setOpenModalUserInfo(!openModalUserInfo)} userInfo={userInfoState} loading={loadingUserInfo} />
 			<ModalRequestTie open={openModalRequestTie} toggle={() => setOpenModalRequestTie(!openModalRequestTie)} onSubmit={handleSubmitRequestTie} userInfo={userSendRequestTie} />

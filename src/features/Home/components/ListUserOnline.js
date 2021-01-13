@@ -44,10 +44,11 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
-function ListUserOnline({ list = [], onClickUser = () => { } }) {
+function ListUserOnline({ list = [], onClickUser = () => { }, onInvite = () => {} }) {
 	const classes = useStyles();
 	const [listInvited, setListInvited] = useState({});
 	const { currentUserInfo } = useSelector((state) => state.user);
+	const { isHost } = useSelector((state) => state.room);
 
 	useEffect(() => {
 		const initialList = list.map(({ id }) => ({
@@ -58,12 +59,13 @@ function ListUserOnline({ list = [], onClickUser = () => { } }) {
 		setListInvited(initialList);
 	}, []);
 
-	const handleInvited = (index, value) => {
+	const handleInvited = (index, value, username) => {
 		listInvited[index] = {
 			...listInvited[index],
 			invited: !value,
 		};
 		setListInvited([...listInvited]);
+		onInvite(username);
 	};
 
 	return (
@@ -78,6 +80,7 @@ function ListUserOnline({ list = [], onClickUser = () => { } }) {
 						time = '',
 						username = '',
 						rank = 1000,
+						roomID = null,
 					},
 					index
 				) => (
@@ -98,14 +101,14 @@ function ListUserOnline({ list = [], onClickUser = () => { } }) {
 								</div>
 							</Box>
 						</ListItemText>
-						{currentUserInfo && currentUserInfo.id !== id && (
+						{isHost && currentUserInfo && currentUserInfo.id !== id && (
 							<ListItemSecondaryAction className={classes.inviteContainer}>
 								<IconButton className={
 									listInvited[index]?.invited
 										? classes.invited
 										: classes.invite
 								} onClick={() =>
-									handleInvited(index, listInvited[index]?.invited)
+									handleInvited(index, listInvited[index]?.invited, username)
 								}>
 									<Icon className={listInvited[index]?.invited ? 'fas fa-user-check' : 'fas fa-user-plus'} />
 								</IconButton>

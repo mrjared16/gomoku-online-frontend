@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-function HomeInfoLeft({ onlineUsers = [] }) {
+function HomeInfoLeft({ onlineUsers = [], onInvite = () => {} }) {
 	const classes = useStyles();
 	const [openUserOnline, setOpenUserOnline] = React.useState(true);
 	const [openModalUserInfo, setOpenModalUserInfo] = useState(false);
@@ -91,7 +91,7 @@ function HomeInfoLeft({ onlineUsers = [] }) {
 				</ListItem>
 				<Collapse in={openUserOnline} timeout="auto" unmountOnExit>
 					<List component="div" disablePadding>
-						<ListUserOnline list={onlineUsers} onClickUser={handleClickUser} />
+						<ListUserOnline list={onlineUsers} onClickUser={handleClickUser} onInvite={onInvite} />
 					</List>
 				</Collapse>
 			</List>

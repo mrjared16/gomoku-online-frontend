@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
 	currentRoomID: null,
+	isHost: false,
 };
 
 const roomSlice = createSlice({
@@ -14,6 +15,9 @@ const roomSlice = createSlice({
     removeRoomID: (state, action) => {
 			state.currentRoomID = null;
 		},
+		setIsHost: (state, action) => {
+			state.isHost = action.payload;
+		},
   },
 });
 
@@ -21,5 +25,6 @@ const { reducer, actions } = roomSlice;
 export const {
   setRoomID,
 	removeRoomID,
+	setIsHost,
 } = actions;
 export default reducer;

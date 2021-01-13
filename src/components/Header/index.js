@@ -9,7 +9,7 @@ import Logo from "components/Header/components/Logo";
 import Dropdown from "components/Header/components/Dropdown";
 import { removeToken } from "app/userSlice";
 import { showToast } from "utils/showToast";
-import { setRoomID } from 'app/roomSlice';
+import { setIsHost, setRoomID } from 'app/roomSlice';
 import { setIdHistory, setIsWatchingHistory } from "app/historySlice";
 import { uniqBy } from "lodash";
 import UserInfo from "./components/UserInfo";
@@ -156,6 +156,7 @@ function Header() {
 			const tabs = currentTabs.filter(tab => tab.label !== 'Room');
 			const newTabs = uniqBy(tabs, 'label');
 			setCurrentTabs(newTabs);
+			dispatch(setIsHost(false));
 		}
 	}, [currentRoomID])
 

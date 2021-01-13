@@ -9,7 +9,6 @@ import { Grid, makeStyles } from '@material-ui/core';
 import HomeInfoLeft from '../components/HomeInfoLeft';
 import { find } from 'lodash';
 import { showToast } from 'utils/showToast';
-import { setOpenModalInputPassword, setRoomID } from 'app/roomSlice';
 
 const DEFAULT_ROOM_RESPONSE = {
 	id: '',
@@ -123,7 +122,7 @@ const useStyles = makeStyles({
 	}
 })
 
-function Main({ onlineUsers = [] }) {
+function Main({ onlineUsers = [], onInvite = () => {} }) {
 	const classes = useStyles();
 	const [roomList, setRoomList] = useState([]);
 	const history = useHistory();
@@ -210,7 +209,7 @@ function Main({ onlineUsers = [] }) {
 	return (
 		<Grid container className={classes.root}>
 			<Grid item xs={2} className={classes.homeInfoLeft}>
-				<HomeInfoLeft onlineUsers={onlineUsers} />
+				<HomeInfoLeft onlineUsers={onlineUsers} onInvite={onInvite} />
 			</Grid>
 			<Grid item xs={10}>
 				<HeaderOption onCreateRoom={handleCreateRoom} onJoinRoomWithID={handleJoinWithIDClick} />

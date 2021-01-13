@@ -5,7 +5,7 @@ const getWinRate = (numberOfMatches, numberOfWonMatches) => {
 	return formatRate;
 }
 
-function userDTOToProp(user) {
+function userDTOToProp(user, roomID) {
 	if (!user)
 		return null;
 	const { id, username, name, gameProfile } = user;
@@ -21,6 +21,7 @@ function userDTOToProp(user) {
 		numberOfMatches: numberOfMatches,
 		numberOfWonMatches: numberOfWonMatches,
 		winRate: winRate,
+		roomID: roomID,
 		// time: null
 	};
 }
