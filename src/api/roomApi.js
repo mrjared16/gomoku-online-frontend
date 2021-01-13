@@ -19,11 +19,13 @@ const roomApi = {
 
     return axiosClient.post(url, body);
 	},
-	verifyRoom: (roomID, passwordRoom) => {
+	verifyRoom: (roomID, password) => {
     const url = "/rooms/verify";
     const body = {
 			roomID,
-			passwordRoom,
+			roomRequirement: {
+				password,
+			}
     };
 
     return axiosClient.post(url, body);

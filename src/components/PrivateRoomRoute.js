@@ -1,31 +1,47 @@
+import roomApi from 'api/roomApi';
+import ModalInputPassword from 'features/Home/components/ModalInputPassword';
 import React, { useEffect, useState } from 'react';
-import { Route, Redirect, useLocation } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { Route, useHistory, useLocation } from 'react-router-dom';
+import { showToast } from 'utils/showToast';
 import Loading from './Loading';
-import { setOpenModalInputPassword } from 'app/roomSlice';
 
 const PrivateRoomRoute = ({ component: Component, ...rest }) => {
-	const { passwordRoom } = useSelector((state) => state.room);
 	const [verify, setVerify] = useState(false);
 	const [loadingVerify, setLoadingVerify] = useState(true);
-	const dispatch = useDispatch();
+	const [openModalPassword, setOpenModalPassword] = useState(false);
+	const history = useHistory();
+	const [passwordRoom, setPasswordRoom] = useState(null);
+	const [triggerSubmit, setTriggerSubmit] = useState(0);
 	
 	const location = useLocation();
 	const { pathname } = location;
 	const roomID = pathname.split('/').pop();
 	
 	useEffect(() => {
-		setLoadingVerify(false);
-		setVerify(true);
-		// if (!passwordRoom) {
-		// 	dispatch(setOpenModalInputPassword(true));
-		// 	return;
-		// }
-		// roomApi.verifyRoom(roomID, passwordRoom).then((response) => {
-			// setVerify(response);
-			// setLoadingVerify(false);
-		// });
-	}, [passwordRoom])
+		setLoadingVerify(true);
+		roomApi.verifyRoom(roomID, passwordRoom).then((response) => {
+			setVerify(true);
+			setLoadingVerify(false);
+		}).catch((err) => {
+			const { statusCode, message } = err.response?.data;
+			if (statusCode === 403) {
+				setOpenModalPassword(true);
+				if (passwordRoom) {
+					showToast('error', message);
+				}
+			} else if (statusCode === 404) {
+				showToast('error', message);
+				history.push('/');
+			}
+			setVerify(false);
+			setLoadingVerify(false);
+		})
+	}, [triggerSubmit])
+
+	const handleSubmitPassword = (password) => {
+		setTriggerSubmit((prev) => prev + 1);
+		setPasswordRoom(() => password);
+	}
 
   return (
     <>
@@ -34,11 +50,10 @@ const PrivateRoomRoute = ({ component: Component, ...rest }) => {
       ) : (
         <Route
           {...rest}
-          render={(props) =>
-            verify ? <Component {...props} /> : <Redirect to="/" />
-          }
+					render={(props) => verify && <Component {...props} />}
         />
       )}
+			{!loadingVerify && !verify && <ModalInputPassword open={true} toggle={() => setOpenModalPassword(!openModalPassword)} onSubmit={handleSubmitPassword} />}
     </>
   );
 };

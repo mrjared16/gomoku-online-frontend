@@ -7,10 +7,9 @@ import {
 	Button,
 	TextField,
 } from '@material-ui/core';
-import { setPasswordRoom } from 'app/roomSlice';
+import { removeRoomID, setPasswordRoom } from 'app/roomSlice';
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { setOpenModalInputPassword } from 'app/roomSlice';
+import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { showToast } from 'utils/showToast';
 
@@ -24,16 +23,13 @@ const useStyles = makeStyles({
 
 function ModalInputPassword({
 	open = false,
+	toggle = () => {},
+	onSubmit = () => {},
 }) {
 	const classes = useStyles();
-	const [password, setPassword] = useState(null);
+	const [password, setPassword] = useState('');
 	const dispatch = useDispatch();
-	const { openModalInputPassword, currentRoomID } = useSelector(state => state.room); 
 	const history = useHistory();
-
-	const toggleModalInputPassword = () => {
-		dispatch(setOpenModalInputPassword(!openModalInputPassword));
-	}
 
 	const handleChange = (event) => {
 		setPassword(event.target.value);
@@ -44,18 +40,17 @@ function ModalInputPassword({
 			showToast('error', 'Password is required');
 			return;
 		};
-		dispatch(setPasswordRoom(password));
-		toggleModalInputPassword();
-		history.push(`/rooms/${currentRoomID}`);
+		onSubmit(password);
 	};
 
 	const handleCancel = () => {
-		toggleModalInputPassword();
+		toggle();
+		dispatch(removeRoomID());
 		history.push('/');
 	}
 
 	return (
-		<Dialog open={open} onClose={toggleModalInputPassword} className={classes.root}>
+		<Dialog open={open} onClose={toggle} className={classes.root}>
 			<DialogTitle>Enter Room Password</DialogTitle>
 			<DialogContent>
 					<TextField

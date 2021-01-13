@@ -2,9 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
 	currentRoomID: null,
-	passwordRoom: localStorage.getItem('passwordRoom'),
-	roomIDCreated: localStorage.getItem('roomIDCreated'),
-	openModalInputPassword: false,
 };
 
 const roomSlice = createSlice({
@@ -17,21 +14,6 @@ const roomSlice = createSlice({
     removeRoomID: (state, action) => {
 			state.currentRoomID = null;
 		},
-		setPasswordRoom: (state, action) => {
-			state.passwordRoom = action.payload;
-			localStorage.setItem('passwordRoom', action.payload);
-		},
-		removePasswordRoom: (state, action) => {
-			state.passwordRoom = null;
-			localStorage.removeItem('passwordRoom');
-		},
-		setRoomIDCreated: (state, action) => {
-			state.roomIDCreated = action.payload;
-			localStorage.setItem('roomIDCreated', action.payload);
-		},
-		setOpenModalInputPassword: (state, action) => {
-			state.openModalInputPassword = action.payload;
-		},
   },
 });
 
@@ -39,9 +21,5 @@ const { reducer, actions } = roomSlice;
 export const {
   setRoomID,
 	removeRoomID,
-	setPasswordRoom,
-	removePasswordRoom,
-	setRoomIDCreated,
-	setOpenModalInputPassword,
 } = actions;
 export default reducer;

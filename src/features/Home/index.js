@@ -122,7 +122,6 @@ function Home() {
           <Route exact path="/watching-history/:id" component={WatchingHistory} />
         </Switch>
 				<ModalInviteJoinRoom />
-				<ModalInputPassword open={openModalInputPassword} />
 				<ModalMatchMaking />
       </div>
     </>
