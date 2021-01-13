@@ -163,11 +163,18 @@ function Main({ onlineUsers = [] }) {
 			});
 	};
 
-	const handleCreateRoom = () => {
+	const handleCreateRoom = (values) => {
+		const { password, boardSize, time } = values;
+
 		roomSocket.emit(
 			'create',
 			{
 				token: token,
+				roomOption: {
+					password: password,
+					boardSize: boardSize,
+					time: time,
+				}
 			},
 			(response) => {
 				console.log('create room response', { response });
