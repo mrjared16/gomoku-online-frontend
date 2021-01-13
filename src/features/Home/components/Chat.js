@@ -6,14 +6,16 @@ import {
 	InputAdornment,
 	makeStyles,
 	OutlinedInput,
+	Popover,
 	Typography,
 } from '@material-ui/core';
 import { Form, Formik } from 'formik';
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import * as Yup from 'yup';
 import moment from 'moment';
-
+import { Picker } from 'emoji-mart';
+import 'emoji-mart/css/emoji-mart.css'
 const useStyles = makeStyles({
 	root: {
 		height: 550,
@@ -77,6 +79,7 @@ function Chat({ list = [], onSubmit = () => { } }) {
 	const classes = useStyles();
 	const { isWatchingHistory } = useSelector((state) => state.history);
 	const { currentUserInfo } = useSelector(state => state.user);
+	const [showEmoji, setShowEmoji] = useState(null);
 
 	const isHighLight = (sender) => {
 		let result = false;
@@ -102,6 +105,14 @@ function Chat({ list = [], onSubmit = () => { } }) {
 		);
 	};
 
+	const handleClickEmoji = (event) => {
+		setShowEmoji(event.currentTarget);
+	};
+
+	const handleCloseEmoji = () => {
+		setShowEmoji(null);
+	};
+
 	return (
 		<div className={classes.root}>
 			<Box
@@ -123,42 +134,81 @@ function Chat({ list = [], onSubmit = () => { } }) {
 						validationSchema={validationMessageSchema}
 						onSubmit={onSubmit}
 					>
-						{({ values, handleSubmit, handleChange, handleBlur }) => (
-							<Form>
-								<FormControl variant="outlined" size="small" fullWidth>
-									<OutlinedInput
-										value={values.content}
-										onChange={handleChange}
-										name="content"
-										placeholder="Aaa..."
-										autoComplete="off"
-										multiline
-										onKeyDown={(event) => {
-											if (event.key === 'Enter' && !event.shiftKey) {
-												const inputMessage = document.getElementById(
-													'input-message'
-												);
-												inputMessage.getElementsByTagName(
-													'textarea'
-												)[0].style.height = 'auto';
-												handleSubmit(values);
-												event.preventDefault();
+						{({ values, handleSubmit, handleChange, handleBlur, setFieldValue }) => {
+							const handleSelectEmoji = (emoji) => {
+								setFieldValue(
+									"content",
+									values.content + emoji.native
+								);
+							};
+
+							return (
+								<Form>
+									<FormControl variant="outlined" size="small" fullWidth>
+										<OutlinedInput
+											value={values.content}
+											onChange={handleChange}
+											name="content"
+											placeholder="Aaa..."
+											autoComplete="off"
+											multiline
+											onKeyDown={(event) => {
+												if (event.key === 'Enter' && !event.shiftKey) {
+													const inputMessage = document.getElementById(
+														'input-message'
+													);
+													inputMessage.getElementsByTagName(
+														'textarea'
+													)[0].style.height = 'auto';
+													handleSubmit(values);
+													event.preventDefault();
+												}
+											}}
+											endAdornment={
+												<InputAdornment position="end">
+													<IconButton onClick={handleSubmit} edge="end">
+														<Icon
+															className="fas fa-paper-plane"
+															style={{ color: '#939b62' }}
+														/>
+													</IconButton>
+												</InputAdornment>
 											}
-										}}
-										endAdornment={
-											<InputAdornment position="end">
-												<IconButton onClick={handleSubmit} edge="end">
-													<Icon
-														className="fas fa-paper-plane"
-														style={{ color: '#939b62' }}
-													/>
-												</IconButton>
-											</InputAdornment>
-										}
-									/>
-								</FormControl>
-							</Form>
-						)}
+											startAdornment={
+												<InputAdornment position="start">
+													<IconButton onClick={handleClickEmoji} edge="start">
+														<Icon
+															className="fas fa-smile"
+															style={{ color: '#939b62' }}
+														/>
+													</IconButton>
+													<Popover
+														open={Boolean(showEmoji)}
+														anchorEl={showEmoji}
+														anchorOrigin={{
+															vertical: "top",
+															horizontal: "center",
+														}}
+														transformOrigin={{
+															vertical: "bottom",
+															horizontal: "center",
+														}}
+														onClose={handleCloseEmoji}
+													>
+														<Picker
+															set="twitter"
+															title="Pick your emoji"
+															emoji="point_up"
+															onSelect={handleSelectEmoji}
+														/>
+													</Popover>
+												</InputAdornment>
+											}
+										/>
+									</FormControl>
+								</Form>
+							)
+						}}
 					</Formik>
 				</div>
 			)}

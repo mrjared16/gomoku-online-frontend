@@ -62,12 +62,15 @@ const handleChatEvent = {
 const useStyles = makeStyles({
 	root: {
 		padding: '20px 25px',
+		display: 'flex',
+		justifyContent: 'center',
 	},
 	container: {
 		display: 'flex',
 		// justifyContent: 'space-between',
 		height: 'calc(100vh - 88px)',
 		overflow: 'auto',
+		maxWidth: 1500,
 	},
 	userInfoContainer: {
 		display: 'flex',

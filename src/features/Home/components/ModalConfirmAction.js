@@ -15,16 +15,17 @@ const useStyles = makeStyles({
 	},
 });
 
-function ModalConfirmNewGame({
+function ModalConfirmAction({
 	open = false,
 	toggle = () => { },
 	onSubmit = () => { },
+	title = '',
 }) {
 	const classes = useStyles();
 
 	return (
 		<Dialog open={open} onClose={toggle} className={classes.root}>
-			<DialogTitle>Are you sure create new game?</DialogTitle>
+			<DialogTitle>{title}</DialogTitle>
 			<DialogActions>
 				<Button
 					variant="contained"
@@ -49,4 +50,4 @@ function ModalConfirmNewGame({
 	);
 }
 
-export default ModalConfirmNewGame;
+export default ModalConfirmAction;
