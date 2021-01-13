@@ -34,9 +34,9 @@ const authApi = {
     return axiosClient.post(url, body);
 	},
 	loginWithFacebook: (token) => {
-    const url = "";
+    const url = "/auth/oauth/facebook";
     const body = {
-      token,
+      idToken: token,
     };
     return axiosClient.post(url, body);
 	},

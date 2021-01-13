@@ -64,6 +64,7 @@ function Login() {
 			});
 	};
 
+
 	const handleLoginWithGoogle = (res) => {
 		setIsSubmitting(true);
 
@@ -71,6 +72,25 @@ function Login() {
 
 		authApi
 			.loginWithGoogle(token)
+			.then((res) => {
+				const { accessToken } = res;
+				dispatch(setToken(accessToken));
+				setIsSubmitting(false);
+				history.push("/");
+				showToast("success", "Login successful")
+			})
+			.catch((err) => {
+				setIsSubmitting(false);
+				showToast("error", err.message);
+			});
+	};
+
+	const handleLoginWithFacebook = (res) => {
+		setIsSubmitting(true);
+		const { accessToken:token } = res;
+
+		authApi
+			.loginWithFacebook(token)
 			.then((res) => {
 				const { accessToken } = res;
 				dispatch(setToken(accessToken));
@@ -103,6 +123,7 @@ function Login() {
 							isSubmitting={isSubmitting}
 							onSubmit={handleSubmit}
 							onLoginWithGoogle={handleLoginWithGoogle}
+							onLoginWithFacebook={handleLoginWithFacebook}
 						/>
 					</div>
 				</div>
