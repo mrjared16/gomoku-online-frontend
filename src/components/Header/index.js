@@ -205,7 +205,7 @@ function Header() {
 
 				{token && (
 					<div style={{ display: "flex" }}>
-						<UserInfo name={currentUserInfo?.name} />
+						<UserInfo name={currentUserInfo?.username} />
 						<Dropdown onLogout={handleLogout} />
 					</div>
 				)}
