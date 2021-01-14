@@ -69,6 +69,7 @@ function LeaderBoard() {
 
 	const handleClickUser = ({ row }) => {
 		setLoadingUserInfo(true);
+		setUserInfoState(null);
 		setOpenModalUserInfo(true);
 		userApi.getUserInfoByID(row.id).then((response) => {
 			const userInfoData = userDTOToProp(response.user);

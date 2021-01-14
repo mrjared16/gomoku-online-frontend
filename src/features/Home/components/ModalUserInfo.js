@@ -23,6 +23,7 @@ const useStyles = makeStyles({
 	root: {
 		'& .MuiDialog-paper': {
 			width: 300,
+			height: 354,
 		},
 	},
 	container: {
