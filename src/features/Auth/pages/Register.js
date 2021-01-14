@@ -57,7 +57,7 @@ function Register() {
 			showToast("success", "Please check your email to verify")
 		}).catch(err => {
 			setIsSubmitting(false);
-			showToast("error", err.response.data.message)
+			showToast("error", err.response?.data?.message || 'Internal Server')
 		})
 	};
 

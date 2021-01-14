@@ -54,7 +54,7 @@ function ForgotPassword() {
 			showToast('success', response.message);
 			setIsSubmitting(false);
 		}).catch(err => {
-			showToast('error', err.response.data.message);
+			showToast('error', err.response?.data?.message || 'Internal Server');
 			setIsSubmitting(false);
 		})
 	};

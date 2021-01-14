@@ -13,7 +13,7 @@ function ActivateUser() {
 			showToast('success', response.message);
 			history.push("/login");
 		}).catch(err => {
-			showToast("error", err.response.data.message);
+			showToast("error", err.response?.data?.message || 'Internal Server');
 			history.push("/login");
 		})
 	}, [])

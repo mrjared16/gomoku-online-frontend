@@ -60,7 +60,7 @@ function Login() {
 			})
 			.catch((err) => {
 				setIsSubmitting(false);
-				showToast("error", err.response.data.message);
+				showToast("error", err.response?.data?.message || 'Internal Server');
 			});
 	};
 

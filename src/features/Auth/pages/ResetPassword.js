@@ -60,7 +60,7 @@ function ResetPassword() {
 			setIsSubmitting(false);
 			history.push('/login');
 		}).catch(err => {
-			showToast('error', err.response.data.message);
+			showToast('error', err.response?.data?.message || 'Internal Server');
 		}) 
 		.showToast('success', 'Reset password successful');
 	};
@@ -69,7 +69,7 @@ function ResetPassword() {
 		authApi.getResetPassword(token).then((response) => {
 			showToast('success', response.message);
 		}).catch(err => {
-			showToast('error', err.response.data.message);
+			showToast('error', err.response?.data?.message || 'Internal Server');
 		})
 	}, [])
 
