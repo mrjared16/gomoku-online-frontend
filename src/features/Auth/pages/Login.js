@@ -81,7 +81,7 @@ function Login() {
 			})
 			.catch((err) => {
 				setIsSubmitting(false);
-				showToast("error", err.message);
+				showToast("error", err.response?.data?.message || 'Internal Server');
 			});
 	};
 
@@ -100,7 +100,7 @@ function Login() {
 			})
 			.catch((err) => {
 				setIsSubmitting(false);
-				showToast("error", err.message);
+				showToast("error", err.response?.data?.message || 'Internal Server');
 			});
 	};
 
