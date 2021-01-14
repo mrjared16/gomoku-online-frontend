@@ -111,18 +111,18 @@ function ListRoom({
       headerAlign: 'center',
       cellClassName: 'custom-cell__center',
       renderCell: (param) => (
-        <span style={{ color: param.value ? 'red' : 'green' }}>
+        <span style={{ color: param.value ? 'green' : 'red' }}>
           {param.value ? 'Playing' : 'Waiting'}
         </span>
       ),
       width: 100,
     },
     {
-      field: 'requirePass',
+      field: 'roomOption',
       headerName: 'Password',
       headerAlign: 'center',
       cellClassName: 'custom-cell__center',
-      renderCell: (param) => (param.value ? <LockIcon fontSize="small" /> : ''),
+      renderCell: (param) => <span>{param.value?.hasPassword ? <LockIcon fontSize="small" /> : ''}</span>,
       sortable: false,
       width: 100,
     },
