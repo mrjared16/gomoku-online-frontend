@@ -106,7 +106,6 @@ function Table({
 	isHost = false,
 	isOwner = false,
 	isStart = false,
-	online = true,
 	onLeave = () => { },
 	onKick = () => { },
 	isShowWinSymbol = true,
@@ -115,7 +114,7 @@ function Table({
 }) {
 	const classes = useStyles();
 	const mapUserInfo = userDTOToProp(userInfo);
-	const { name, photo, username, id: playerId, rank = 1000 } = mapUserInfo || {
+	const { name, photo, username, id: playerId, rank = 1000, online } = mapUserInfo || {
 		name: '',
 		photo: '',
 		username: '',

@@ -22,6 +22,7 @@ import { userDTOToProp } from 'utils/mapResponseToProp';
 import { chatSocket } from 'socket/chatSocket';
 import gameApi from 'api/gameApi';
 import ModalRequestTie from '../components/ModalRequestTie';
+import ModalConfirmExitRoom from '../components/ModalConfirmExitRoom';
 
 const DEFAULT_SIZE = 20;
 
@@ -120,6 +121,7 @@ function RoomPage() {
   const [openModalConfirmAction, setOpenModalConfirmAction] = useState(false);
 	const [openModalSpectator, setOpenModalSpectator] = useState(false);
 	const [titleAction, setTitleAction] = useState('');
+  const [openModalConfirmExitRoom, setOpenModalConfirmExitRoom] = useState(false);
 
   const [userInfoState, setUserInfoState] = useState(null);
   const [loadingUserInfo, setLoadingUserInfo] = useState(true);
@@ -154,7 +156,15 @@ function RoomPage() {
   }, [gameMoves]);
 
   const handleExitRoom = () => {
-    dispatch(removeRoomID());
+    if (isPlayer() !== -1 && isStart) {
+			setOpenModalConfirmExitRoom(true);
+		} else {
+			exitRoom();
+		}
+	};
+	
+	const exitRoom = () => {
+		dispatch(removeRoomID());
     history.push('/');
     roomSocket.emit('join', {
       action: 'leave',
@@ -163,7 +173,7 @@ function RoomPage() {
         roomID: roomID,
       },
     });
-  };
+	}
 
   // handle room event
   useEffect(() => {
@@ -709,6 +719,11 @@ function RoomPage() {
         onSubmit={handleSubmitRequestTie}
         userInfo={userSendRequestTie}
       />
+			<ModalConfirmExitRoom
+				open={openModalConfirmExitRoom}
+				toggle={() => setOpenModalConfirmExitRoom(!openModalConfirmExitRoom)}
+				onSubmit={exitRoom}
+			/>
     </div>
   );
 }
