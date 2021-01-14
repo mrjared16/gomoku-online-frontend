@@ -107,7 +107,8 @@ function ModalStatusGameFinish({
 	const renderGameEndingType = (type) => {
 		if (!type || type === 'normal') return;
 		if (type === 'timeout' || type === 'quit' || type === 'surrender') {
-			return <span>{isXWin ? `${OPlayer?.username} (O)` : `${XPlayer?.username} (X)`} {type}</span>
+			// return <span>{isXWin ? `${OPlayer?.username} (O)` : `${XPlayer?.username} (X)`} {type}</span>
+			return <span>{`${isXWin ? 'O' : 'X'} ${type}`}</span>
 		}
 	}
 
