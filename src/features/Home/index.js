@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core';
 import axiosClient from 'api/axiosClient';
-import { setUser, setLoadingProfile } from 'app/userSlice';
+import { setUser, setLoadingProfile, removeToken } from 'app/userSlice';
 import Header from 'components/Header';
 import Main from 'features/Home/pages/Main';
 import RoomPage from 'features/Home/pages/RoomPage';
@@ -58,9 +58,14 @@ function Home() {
 	const { token } = useSelector((state) => state.user);
 
 	const fetchUserData = async () => {
-		const response = await userApi.fetch();
-		dispatch(setUser(response));
-		dispatch(setLoadingProfile(false));
+		try {
+			const response = await userApi.fetch();
+			dispatch(setUser(response));
+			dispatch(setLoadingProfile(false));
+		} catch (err) {
+			dispatch(removeToken());
+			history.push("/login");
+		}
 	};
 
 	const fetchOnlineUsers = () => {

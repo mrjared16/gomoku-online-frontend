@@ -98,7 +98,7 @@ function Header() {
 	const handleLogout = () => {
 		dispatch(removeToken());
 		history.push("/login");
-		showToast("success", "Logout successful")
+		showToast("success", "Logout successful");
 	};
 
 	const getTabValue = (label) => {

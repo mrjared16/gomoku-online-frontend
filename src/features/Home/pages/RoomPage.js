@@ -118,7 +118,8 @@ function RoomPage() {
     false
   );
   const [openModalConfirmAction, setOpenModalConfirmAction] = useState(false);
-  const [openModalSpectator, setOpenModalSpectator] = useState(false);
+	const [openModalSpectator, setOpenModalSpectator] = useState(false);
+	const [titleAction, setTitleAction] = useState('');
 
   const [userInfoState, setUserInfoState] = useState(null);
   const [loadingUserInfo, setLoadingUserInfo] = useState(true);
@@ -548,7 +549,12 @@ function RoomPage() {
         token: token,
       },
     });
-  };
+	};
+	
+	const handleNewGameClick = () => {
+		setOpenModalConfirmAction(true);
+		setTitleAction('Are you sure create new game?')
+	}
 
   return (
     <div className={classes.root}>
@@ -587,7 +593,7 @@ function RoomPage() {
                 variant="contained"
                 color="primary"
                 className="caro-button"
-                onClick={() => setOpenModalConfirmAction(true)}
+                onClick={handleNewGameClick}
                 size="small"
               >
                 New Game
@@ -681,7 +687,8 @@ function RoomPage() {
       <ModalConfirmAction
         open={openModalConfirmAction}
         toggle={() => setOpenModalConfirmAction(!openModalConfirmAction)}
-        onSubmit={initialGameState}
+				onSubmit={initialGameState}
+				title={titleAction}
       />
       <ModalSpectator
         open={openModalSpectator}
