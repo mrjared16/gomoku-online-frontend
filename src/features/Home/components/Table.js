@@ -8,6 +8,7 @@ import KickButton from './KickButton';
 import TypographyCustom from 'components/TypographyCustom';
 import RankCustom from 'components/RankCustom';
 import { getRankSymbol } from 'utils/rank';
+import { userDTOToProp } from 'utils/mapResponseToProp';
 
 const useStyles = makeStyles({
 	root: {
@@ -113,7 +114,8 @@ function Table({
 	setTimer = () => { },
 }) {
 	const classes = useStyles();
-	const { name, photo, username, id: playerId, rank = 1000 } = userInfo || {
+	const mapUserInfo = userDTOToProp(userInfo);
+	const { name, photo, username, id: playerId, rank = 1000 } = mapUserInfo || {
 		name: '',
 		photo: '',
 		username: '',

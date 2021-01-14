@@ -13,6 +13,7 @@ import { setIsHost, setRoomID } from 'app/roomSlice';
 import { setIdHistory, setIsWatchingHistory } from "app/historySlice";
 import { uniqBy } from "lodash";
 import UserInfo from "./components/UserInfo";
+import { userDTOToProp } from "utils/mapResponseToProp";
 
 function a11yProps(index) {
 	return {
@@ -187,6 +188,16 @@ function Header() {
 		}
 	}, [isWatchingHistory])
 
+	const renderUserInfo = () => {
+		const mapUserInfo = userDTOToProp(currentUserInfo);
+		const { username, photo } = mapUserInfo;
+
+		return (
+			<UserInfo name={username} photo={photo} />
+		)
+	}
+
+
 	return (
 		<div className={classes.root}>
 			<AppBar position="static">
@@ -206,7 +217,7 @@ function Header() {
 
 				{token && (
 					<div style={{ display: "flex" }}>
-						<UserInfo name={currentUserInfo?.username} />
+						{currentUserInfo && renderUserInfo()}
 						<Dropdown onLogout={handleLogout} />
 					</div>
 				)}

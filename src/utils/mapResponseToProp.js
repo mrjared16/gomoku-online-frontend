@@ -8,7 +8,7 @@ const getWinRate = (numberOfMatches, numberOfWonMatches) => {
 function userDTOToProp(user, roomID) {
 	if (!user)
 		return null;
-	const { id, username, name, gameProfile } = user;
+	const { id, username, name, gameProfile, photoURL } = user;
 	const { rank, numberOfMatches, numberOfWonMatches } = gameProfile;
 	const winRate = getWinRate(numberOfMatches, numberOfWonMatches);
 	return {
@@ -22,6 +22,7 @@ function userDTOToProp(user, roomID) {
 		numberOfWonMatches: numberOfWonMatches,
 		winRate: winRate,
 		roomID: roomID,
+		photo: photoURL,
 		// time: null
 	};
 }

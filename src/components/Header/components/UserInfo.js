@@ -17,7 +17,7 @@ function UserInfo({ name = "", photo = "" }) {
 
   return (
     <div className={classes.root}>
-			<AvatarCustom alt={name} src={photo} />
+			<AvatarCustom alt={name} photo={photo} />
       <div className="fullName">{name}</div>
     </div>
   );
