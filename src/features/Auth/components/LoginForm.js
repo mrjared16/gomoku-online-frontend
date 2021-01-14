@@ -78,6 +78,7 @@ const validationSchema = Yup.object().shape({
 function LoginForm({
   onSubmit = () => {},
   onLoginWithGoogle = () => {},
+  onLoginWithFacebook = () => {},
   isSubmitting = false,
 }) {
   const classes = useStyles();
@@ -141,16 +142,16 @@ function LoginForm({
                     )}
                   </Button>
                   <GoogleLogin
-                    clientId="545392822117-njg9uu012uoo6c6nd9m7hjc7fpv3ejun.apps.googleusercontent.com"
+                    clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
                     buttonText="LOGIN WITH GOOGLE"
                     onSuccess={onLoginWithGoogle}
                     onFailure={() => {}}
                     cookiePolicy={"single_host_origin"}
                   />
                   <FacebookLogin
-                    appId="482669579414663"
+                    appId={process.env.REACT_APP_FACEBOOK_APP_ID}
                     fields="name,email,picture"
-										callback={(res) => console.log(res)}
+										callback={onLoginWithFacebook}
 										icon={<FacebookIcon />}
                   />
                   <Typography variant="subtitle1" className="text-grey">
