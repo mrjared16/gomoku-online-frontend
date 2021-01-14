@@ -60,12 +60,14 @@ function ListUserOnline({ list = [], onClickUser = () => { }, onInvite = () => {
 	}, []);
 
 	const handleInvited = (index, value, username) => {
+		if (!listInvited[index].invited) {
+			onInvite(username);
+		}
 		listInvited[index] = {
 			...listInvited[index],
 			invited: !value,
 		};
 		setListInvited([...listInvited]);
-		onInvite(username);
 	};
 
 	return (
