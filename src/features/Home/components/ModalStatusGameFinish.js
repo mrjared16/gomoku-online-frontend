@@ -11,6 +11,7 @@ import {
 import AvatarCustom from 'components/AvatarCustom';
 import React from 'react';
 import moment from 'moment';
+import TypographyCustom from 'components/TypographyCustom';
 
 const useStyles = makeStyles({
 	root: {
@@ -53,6 +54,10 @@ const useStyles = makeStyles({
 	oWin: {
 		color: 'green',
 	},
+	username: {
+		width: 100,
+		textAlign: 'center',
+	}
 });
 
 function ModalStatusGameFinish({
@@ -125,7 +130,10 @@ function ModalStatusGameFinish({
 					<Box display='flex' justifyContent='space-around'>
 						<div className={classes.playerInfo}>
 							<AvatarCustom online={true} photo={XPlayer?.photo} />
-							<span>{XPlayer?.username}</span>
+							{/* <span>{XPlayer?.username}</span> */}
+							<div className={classes.username}>
+								<TypographyCustom text={XPlayer?.username} />
+							</div>
 							<div className={classes.elo}>
 								<Icon className="fas fa-trophy" style={{ color: 'yellow', width: 'fit-content' }} />
 								{rankRecords.length !== 0 && renderRankRecord(rankRecords[0], isXWin)}
@@ -133,7 +141,10 @@ function ModalStatusGameFinish({
 						</div>
 						<div className={classes.playerInfo}>
 							<AvatarCustom online={true} photo={OPlayer?.photo} />
-							<span>{OPlayer?.username}</span>
+							{/* <span>{OPlayer?.username}</span> */}
+							<div className={classes.username}>
+								<TypographyCustom text={OPlayer?.username} />
+							</div>
 							<div className={classes.elo}>
 								<Icon className="fas fa-trophy" style={{ color: 'yellow', width: 'fit-content' }} />
 								{rankRecords.length !== 0 && renderRankRecord(rankRecords[1], !isXWin)}
