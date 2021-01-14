@@ -73,10 +73,11 @@ const handleRoomListOnchangeEvent = {
 			numberOfUsers = 0,
 			roomOption,
 			gameID,
+			isRemoved = false,
 		} = DEFAULT_ROOM_RESPONSE
 	) => {
 		setRoomList((current = []) => {
-			if (!host) {
+			if (isRemoved) {
 				return current.filter((room) => room.id !== id);
 			}
 			const changedRoom = {
