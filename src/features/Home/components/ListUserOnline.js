@@ -76,7 +76,7 @@ function ListUserOnline({ list = [], onClickUser = () => { }, onInvite = () => {
 				(
 					{
 						id,
-						online = false,
+						online = true,
 						name = '',
 						photo = '',
 						time = '',
