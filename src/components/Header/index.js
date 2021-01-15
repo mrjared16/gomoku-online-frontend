@@ -77,7 +77,7 @@ const tabs = [
 	},
 ];
 
-function Header() {
+function Header({onLogOut = () => {}}) {
 	const classes = useStyles();
 
 	const history = useHistory();
@@ -96,6 +96,7 @@ function Header() {
 	};
 
 	const handleLogout = () => {
+		onLogOut();
 		dispatch(removeToken());
 		history.push("/login");
 		showToast("success", "Logout successful");

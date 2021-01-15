@@ -124,8 +124,8 @@ function Home() {
 		})
 
 		return () => {
-			socketClient.off('userEventMsg', () => { });
-			socketClient.off('reconnectEventMsg', () => { });
+			socketClient.off('userEventMsg');
+			socketClient.off('reconnectEventMsg');
 			socketClient.close();
 		};
 	}, [token]);
@@ -147,10 +147,12 @@ function Home() {
 	const handleAcceptMatchMaking = () => {
 
 	}
-
+	const emitLogOut = () => {
+		socketClient.emit('logout', { token });
+	}
 	return (
 		<>
-			<Header />
+			<Header onLogOut={emitLogOut} />
 			<div className={classes.root}>
 				<Switch>
 					<Route exact path="/" component={() => <Main onlineUsers={onlineUsers} onInvite={handleInviteUser} />} />
