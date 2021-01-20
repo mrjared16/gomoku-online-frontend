@@ -79,8 +79,8 @@ const useStyles = makeStyles({
     // justifyContent: 'space-around',s
     alignItems: 'center',
     marginLeft: 30,
-		marginRight: 30,
-		minWidth: 240,
+    marginRight: 30,
+    minWidth: 240,
     '& button': {
       width: 115,
       marginTop: 52,
@@ -119,9 +119,11 @@ function RoomPage() {
     false
   );
   const [openModalConfirmAction, setOpenModalConfirmAction] = useState(false);
-	const [openModalSpectator, setOpenModalSpectator] = useState(false);
-	const [titleAction, setTitleAction] = useState('');
-  const [openModalConfirmExitRoom, setOpenModalConfirmExitRoom] = useState(false);
+  const [openModalSpectator, setOpenModalSpectator] = useState(false);
+  const [titleAction, setTitleAction] = useState('');
+  const [openModalConfirmExitRoom, setOpenModalConfirmExitRoom] = useState(
+    false
+  );
 
   const [userInfoState, setUserInfoState] = useState(null);
   const [loadingUserInfo, setLoadingUserInfo] = useState(true);
@@ -157,14 +159,14 @@ function RoomPage() {
 
   const handleExitRoom = () => {
     if (isPlayer() !== -1 && isStart) {
-			setOpenModalConfirmExitRoom(true);
-		} else {
-			exitRoom();
-		}
-	};
-	
-	const exitRoom = () => {
-		dispatch(removeRoomID());
+      setOpenModalConfirmExitRoom(true);
+    } else {
+      exitRoom();
+    }
+  };
+
+  const exitRoom = () => {
+    dispatch(removeRoomID());
     history.push('/');
     roomSocket.emit('join', {
       action: 'leave',
@@ -173,7 +175,7 @@ function RoomPage() {
         roomID: roomID,
       },
     });
-	}
+  };
 
   // handle room event
   useEffect(() => {
@@ -559,12 +561,12 @@ function RoomPage() {
         token: token,
       },
     });
-	};
-	
-	const handleNewGameClick = () => {
-		setOpenModalConfirmAction(true);
-		setTitleAction('Are you sure create new game?')
-	}
+  };
+
+  const handleNewGameClick = () => {
+    setOpenModalConfirmAction(true);
+    setTitleAction('Are you sure create new game?');
+  };
 
   return (
     <div className={classes.root}>
@@ -582,6 +584,7 @@ function RoomPage() {
               board={board}
               onSquareClick={handleSquareClick}
               winLine={statusFinishGame?.winLine}
+              lastIndex={gameMoves[moveIndex - 1]?.position || null}
             />
           </Box>
           <div className={classes.userInfoContainer}>
@@ -697,8 +700,8 @@ function RoomPage() {
       <ModalConfirmAction
         open={openModalConfirmAction}
         toggle={() => setOpenModalConfirmAction(!openModalConfirmAction)}
-				onSubmit={initialGameState}
-				title={titleAction}
+        onSubmit={initialGameState}
+        title={titleAction}
       />
       <ModalSpectator
         open={openModalSpectator}
@@ -719,11 +722,11 @@ function RoomPage() {
         onSubmit={handleSubmitRequestTie}
         userInfo={userSendRequestTie}
       />
-			<ModalConfirmExitRoom
-				open={openModalConfirmExitRoom}
-				toggle={() => setOpenModalConfirmExitRoom(!openModalConfirmExitRoom)}
-				onSubmit={exitRoom}
-			/>
+      <ModalConfirmExitRoom
+        open={openModalConfirmExitRoom}
+        toggle={() => setOpenModalConfirmExitRoom(!openModalConfirmExitRoom)}
+        onSubmit={exitRoom}
+      />
     </div>
   );
 }
