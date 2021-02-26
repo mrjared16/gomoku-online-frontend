@@ -65,6 +65,7 @@ const useStyles = makeStyles({
     padding: '20px 25px',
     display: 'flex',
     justifyContent: 'center',
+    backgroundColor: 'var(--color-background)',
   },
   container: {
     display: 'flex',

@@ -22,11 +22,15 @@ const useStyles = makeStyles({
     '& .MuiDialog-paper': {
       width: 400,
     },
+    '& h2': {
+      color: 'var(--color-text)',
+    },
   },
   switchContainer: {
     display: 'flex',
     alignItems: 'center',
     marginBottom: 15,
+    color: 'var(--color-text)',
   },
   sizeBoard: {
     marginBottom: 20,
@@ -65,10 +69,10 @@ function ModalCreateRoom({
   };
 
   const handleSubmit = (values) => {
-		if (isPrivate && !values.password) {
-			showToast('error', 'Password is required');
-			return;
-		}
+    if (isPrivate && !values.password) {
+      showToast('error', 'Password is required');
+      return;
+    }
     onSubmit(values);
     toggle();
   };
@@ -76,10 +80,7 @@ function ModalCreateRoom({
   return (
     <Dialog open={open} onClose={toggle} className={classes.root}>
       <DialogTitle>CREATE ROOM</DialogTitle>
-      <Formik
-        initialValues={initialValues}
-        onSubmit={handleSubmit}
-      >
+      <Formik initialValues={initialValues} onSubmit={handleSubmit}>
         {({
           handleSubmit,
           values,
@@ -96,7 +97,8 @@ function ModalCreateRoom({
                   onChange={handleChangePrivateSwitch}
                   color="primary"
                 />
-                {isPrivate ? 'Private room' : 'Public room'}
+                {/* {isPrivate ? 'Private room' : 'Public room'} */}
+                Private
               </div>
               <FormControl
                 variant="outlined"

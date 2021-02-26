@@ -122,7 +122,11 @@ function ListRoom({
       headerName: 'Password',
       headerAlign: 'center',
       cellClassName: 'custom-cell__center',
-      renderCell: (param) => <span>{param.value?.hasPassword ? <LockIcon fontSize="small" /> : ''}</span>,
+      renderCell: (param) => (
+        <span>
+          {param.value?.hasPassword ? <LockIcon fontSize="small" /> : ''}
+        </span>
+      ),
       sortable: false,
       width: 100,
     },
@@ -142,7 +146,7 @@ function ListRoom({
         <Button
           variant="contained"
           color="primary"
-          disabled={!roomSelected}
+          // disabled={!roomSelected}
           onClick={onJoin}
           size="small"
         >

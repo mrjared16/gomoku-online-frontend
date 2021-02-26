@@ -17,87 +17,106 @@ import { userDTOToProp } from 'utils/mapResponseToProp';
 import userApi from 'api/userApi';
 
 const useStyles = makeStyles((theme) => ({
-	root: {
-		width: '100%',
-		maxWidth: 360,
-		backgroundColor: theme.palette.background.paper,
-		'& .MuiIcon-root': {
-			width: 'fit-content',
-		},
-		"& span": {
-			whiteSpace: "nowrap",
-			overflow: "hidden",
-			textOverflow: "ellipsis",
-		},
-	},
-	userOnlineDropdown: {
-		'& .MuiTypography-body1': {
-			fontSize: '0.875rem',
-		},
-	},
+  root: {
+    width: '100%',
+    maxWidth: 360,
+    // backgroundColor: theme.palette.background.paper,
+    '& .MuiIcon-root': {
+      width: 'fit-content',
+    },
+    '& span': {
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      color: 'var(--color-text)',
+    },
+    backgroundColor: 'var(--color-background)',
+    '& .MuiAvatar-fallback': {
+      color: 'var(--color-background-avatar)',
+    },
+  },
+  userOnlineDropdown: {
+    '& .MuiTypography-body1': {
+      fontSize: '0.875rem',
+    },
+    '& .MuiSvgIcon-root': {
+      color: 'var(--color-text)',
+    },
+  },
 }));
 
 function HomeInfoLeft({ onlineUsers = [], onInvite = () => {} }) {
-	const classes = useStyles();
-	const [openUserOnline, setOpenUserOnline] = React.useState(true);
-	const [openModalUserInfo, setOpenModalUserInfo] = useState(false);
-	const [userInfoState, setUserInfoState] = useState(null);
-	const [loadingUserInfo, setLoadingUserInfo] = useState(true);
-	const { loadingProfile, currentUserInfo } = useSelector(state => state.user);
-	const profileData = userDTOToProp(currentUserInfo);
+  const classes = useStyles();
+  const [openUserOnline, setOpenUserOnline] = React.useState(true);
+  const [openModalUserInfo, setOpenModalUserInfo] = useState(false);
+  const [userInfoState, setUserInfoState] = useState(null);
+  const [loadingUserInfo, setLoadingUserInfo] = useState(true);
+  const { loadingProfile, currentUserInfo } = useSelector(
+    (state) => state.user
+  );
+  const profileData = userDTOToProp(currentUserInfo);
 
-	const handleClickDropDownUserOnline = () => {
-		setOpenUserOnline(!openUserOnline);
-	};
+  const handleClickDropDownUserOnline = () => {
+    setOpenUserOnline(!openUserOnline);
+  };
 
-	const handleClickProfile = () => {
-		if (loadingProfile) return;
-		setLoadingUserInfo(false);
-		setOpenModalUserInfo(true);
-		setUserInfoState(profileData);
-	};
+  const handleClickProfile = () => {
+    if (loadingProfile) return;
+    setLoadingUserInfo(false);
+    setOpenModalUserInfo(true);
+    setUserInfoState(profileData);
+  };
 
-	const handleClickUser = (id) => {
-		setUserInfoState(null);
-		setLoadingUserInfo(true);
-		setOpenModalUserInfo(true);
-		userApi.getUserInfoByID(id).then((response) => {
-			const userInfoData = userDTOToProp(response.user);
-			setUserInfoState(userInfoData);
-			setLoadingUserInfo(false);
-		})
-	}
+  const handleClickUser = (id) => {
+    setUserInfoState(null);
+    setLoadingUserInfo(true);
+    setOpenModalUserInfo(true);
+    userApi.getUserInfoByID(id).then((response) => {
+      const userInfoData = userDTOToProp(response.user);
+      setUserInfoState(userInfoData);
+      setLoadingUserInfo(false);
+    });
+  };
 
-	return (
-		<>
-			<List
-				component="nav"
-				aria-labelledby="user-online-list-subheader"
-				className={classes.root}
-			>
-				<ListItem button onClick={handleClickProfile}>
-					{loadingProfile ? (
-						<Loading />
-					) : (
-							<Profile dataProp={profileData} />
-						)}
-				</ListItem>
-				<ListItem button onClick={handleClickDropDownUserOnline} className={classes.userOnlineDropdown}>
-					<ListItemIcon>
-						<Icon className="fas fa-users" style={{ fontSize: 18 }} />
-					</ListItemIcon>
-					<ListItemText primary={`Users Online (${onlineUsers.length})`} />
-					{openUserOnline ? <ExpandLess /> : <ExpandMore />}
-				</ListItem>
-				<Collapse in={openUserOnline} timeout="auto" unmountOnExit>
-					<List component="div" disablePadding>
-						<ListUserOnline list={onlineUsers} onClickUser={handleClickUser} onInvite={onInvite} />
-					</List>
-				</Collapse>
-			</List>
-			<ModalUserInfo open={openModalUserInfo} toggle={() => setOpenModalUserInfo(!openModalUserInfo)} userInfo={userInfoState} loading={loadingUserInfo} />
-		</>
-	);
+  return (
+    <>
+      <List
+        component="nav"
+        aria-labelledby="user-online-list-subheader"
+        className={classes.root}
+      >
+        <ListItem button onClick={handleClickProfile}>
+          {loadingProfile ? <Loading /> : <Profile dataProp={profileData} />}
+        </ListItem>
+        <ListItem
+          button
+          onClick={handleClickDropDownUserOnline}
+          className={classes.userOnlineDropdown}
+        >
+          <ListItemIcon>
+            <Icon className="fas fa-users" style={{ fontSize: 18 }} />
+          </ListItemIcon>
+          <ListItemText primary={`Users Online (${onlineUsers.length})`} />
+          {openUserOnline ? <ExpandLess /> : <ExpandMore />}
+        </ListItem>
+        <Collapse in={openUserOnline} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            <ListUserOnline
+              list={onlineUsers}
+              onClickUser={handleClickUser}
+              onInvite={onInvite}
+            />
+          </List>
+        </Collapse>
+      </List>
+      <ModalUserInfo
+        open={openModalUserInfo}
+        toggle={() => setOpenModalUserInfo(!openModalUserInfo)}
+        userInfo={userInfoState}
+        loading={loadingUserInfo}
+      />
+    </>
+  );
 }
 
 export default HomeInfoLeft;

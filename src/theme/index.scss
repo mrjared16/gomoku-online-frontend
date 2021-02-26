@@ -1,0 +1,26 @@
+.light-theme {
+  --color-background: #fff;
+  --color-text: rgba(0, 0, 0, 0.87);
+  --color-button-disabled: rgba(0, 0, 0, 0.12);
+  --color-background-header: #ff7b54;
+  --color-indicator-header: #fff;
+  --color-background-avatar: #fff;
+  --color-table-row-hover: #ff7b54;
+  --color-background-modal: #fff;
+  --color-label: rgba(0, 0, 0, 0.54);
+  --color-border-input: rgba(0, 0, 0, 0.23);
+  --color-selected-input: rgba(0, 0, 0, 0.08);
+}
+.dark-theme {
+  --color-background: #212121;
+  --color-text: #fff;
+  --color-button-disabled: rgba(250, 250, 250, 0.38);
+  --color-background-header: #333;
+  --color-indicator-header: rgba(255, 255, 255, 0.7);
+  --color-background-avatar: #212121;
+  --color-table-row-hover: rgba(255, 255, 255, 0.08);
+  --color-background-modal: #424242;
+  --color-label: rgba(255, 255, 255, 0.7);
+  --color-border-input: rgba(255, 255, 255, 0.23);
+  --color-selected-input: rgba(255, 255, 255, 0.16);
+}

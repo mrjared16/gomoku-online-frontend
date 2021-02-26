@@ -16,12 +16,16 @@ const DEFAULT_SIZE = 20;
 const useStyles = makeStyles({
   root: {
     padding: '20px 25px',
+    display: 'flex',
+    justifyContent: 'center',
+    backgroundColor: 'var(--color-background)',
   },
   container: {
     display: 'flex',
     // justifyContent: 'space-between',
     height: 'calc(100vh - 88px)',
     overflow: 'auto',
+    maxWidth: 1500,
   },
   userInfoContainer: {
     display: 'flex',
@@ -49,20 +53,23 @@ const useStyles = makeStyles({
   },
   tie: {
     fontSize: '2rem',
-    color: 'grey',
+    color: 'grey !important',
   },
   win: {
     fontSize: '2rem',
-    color: 'green',
+    color: 'green !important',
   },
   lose: {
     fontSize: '2rem',
-    color: 'red',
+    color: 'red !important',
   },
   resultContainer: {
     marginTop: 52,
     marginBottom: 30,
     minHeight: 96,
+    '& span': {
+      color: 'var(--color-text)',
+    },
   },
   gameEndingType: {
     marginTop: 10,

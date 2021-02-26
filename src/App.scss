@@ -38,28 +38,22 @@
 }
 
 .text-white {
-	color: white !important;
+  color: white !important;
 }
 
 .text-grey {
-	color: rgba(0, 0, 0, 0.54) !important;
+  color: rgba(0, 0, 0, 0.54) !important;
 }
 
 .custom-link {
-	color: #ff7b54;
-	text-decoration: none;
-	&:hover {
-		text-decoration: underline;
-	}
+  color: #ff7b54;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 .custom-cell__center {
-	display: flex;
-	justify-content: center;
+  display: flex;
+  justify-content: center;
 }
-
-// span {
-// 	white-space: nowrap;
-// 	overflow: hidden;
-// 	text-overflow: ellipsis;
-// }

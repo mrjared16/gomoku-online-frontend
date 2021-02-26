@@ -35,7 +35,9 @@ function Square({ value = -1, onClick = () => {}, highlight = false }) {
     <div
       className={classes.root}
       onClick={onClick}
-      style={{ backgroundColor: highlight ? '#ffb26b' : 'white' }}
+      style={{
+        backgroundColor: highlight ? '#ffb26b' : 'var(--color-background)',
+      }}
     >
       {renderValue()}
     </div>
