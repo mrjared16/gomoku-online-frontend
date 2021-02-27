@@ -51,17 +51,15 @@ const PrivateRoomRoute = ({ component: Component, ...rest }) => {
   };
 
   return (
-    <>
+    <div
+      style={{
+        width: '100%',
+        height: '100%',
+        backgroundColor: 'var(--color-background)',
+      }}
+    >
       {loadingVerify ? (
-        <div
-          style={{
-            width: '100%',
-            height: '100%',
-            backgroundColor: 'var(--color-background)',
-          }}
-        >
-          <Loading />
-        </div>
+        <Loading />
       ) : (
         <Route
           {...rest}
@@ -75,7 +73,7 @@ const PrivateRoomRoute = ({ component: Component, ...rest }) => {
           onSubmit={handleSubmitPassword}
         />
       )}
-    </>
+    </div>
   );
 };
 
