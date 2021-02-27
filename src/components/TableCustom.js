@@ -24,10 +24,13 @@ const useStyles = makeStyles((theme) => ({
       cursor: 'pointer',
     },
     '& .MuiDataGrid-root': {
-      border: '1px solid var(--color-background)',
+      // border: '1px solid var(--color-background)',
     },
     '& .MuiDataGrid-cell': {
       color: 'var(--color-text)',
+    },
+    '& .MuiDataGrid-overlay': {
+      backgroundColor: 'var(--color-background) !important',
     },
     height: '100%',
   },
