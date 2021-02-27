@@ -25,6 +25,8 @@ const useStyles = makeStyles({
       width: 300,
       minHeight: 354,
       backgroundColor: 'var(--color-background-modal)',
+      display: 'flex',
+      justifyContent: 'center',
     },
     // '& input': {
     //   color: 'var(--color-text)',
@@ -96,7 +98,8 @@ function ModalUserInfo({
 
   return (
     <Dialog open={open} onClose={toggle} className={classes.root}>
-      {loading && !userInfo ? (
+      {/* {loading && !userInfo ? ( */}
+      {true ? (
         <Loading />
       ) : (
         <Formik

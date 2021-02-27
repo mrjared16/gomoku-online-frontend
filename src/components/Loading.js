@@ -5,7 +5,7 @@ const useStyles = makeStyles((theme) => ({
   loading: {
     height: '100%',
     width: '100%',
-    backgroundColor: 'var(--color-background)',
+    backgroundColor: 'inherit',
   },
 }));
 
