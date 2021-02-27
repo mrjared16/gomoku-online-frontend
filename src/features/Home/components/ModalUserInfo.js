@@ -98,8 +98,7 @@ function ModalUserInfo({
 
   return (
     <Dialog open={open} onClose={toggle} className={classes.root}>
-      {/* {loading && !userInfo ? ( */}
-      {true ? (
+      {loading && !userInfo ? (
         <Loading />
       ) : (
         <Formik
